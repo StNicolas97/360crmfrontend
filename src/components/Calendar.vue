@@ -1,0 +1,380 @@
+<template>
+  <div class="calendar-container">
+    <h1>Calendrier</h1>
+    
+    <!-- Section des filtres -->
+    <div class="filters-section mb-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Filtrer par type de tâche</h5>
+          <div class="filter-group">
+            <label class="form-check-label me-3" v-for="taskType in availableTaskTypes" :key="taskType">
+              <input 
+                type="checkbox" 
+                class="form-check-input me-1"
+                :value="taskType"
+                v-model="activeFilters.taskTypes"
+                @change="applyFilters"
+              >
+              {{ getTaskTypeLabel(taskType) }}
+            </label>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <h5>Actions</h5>
+          <div class="filter-actions">
+            <button class="btn btn-sm btn-outline-primary me-2" @click="selectAllTaskTypes">
+              Tout sélectionner
+            </button>
+            <button class="btn btn-sm btn-outline-secondary me-2" @click="deselectAllTaskTypes">
+              Tout désélectionner
+            </button>
+            <!-- <button class="btn btn-sm btn-outline-info" @click="resetFilters">
+              Réinitialiser
+            </button> -->
+          </div>
+          <div class="mt-2">
+            <small class="text-muted">
+              {{ visibleEventsCount }} tâche(s) affichée(s) sur {{ totalEventsCount }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <FullCalendar :options="calendarOptions" v-if="showComponent"/>
+    <TacheModal :date="this.date" @submit="refreshSectionCalendar()"/>
+  </div>
+</template>
+
+<script>
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import TacheModal from '../components/TacheModal.vue';
+import { getService } from '../api/services/get.service'
+import { ref } from 'vue';
+
+export default {
+  name: "MonCalendrier",
+  components: {
+    FullCalendar,
+    TacheModal,
+  },
+  data() {
+    return {
+      calendarOptions: {
+        plugins: [dayGridPlugin, interactionPlugin],
+        initialView: 'dayGridMonth',
+        editable: true,
+        selectable: true,
+        eventMinHeight: 1,
+        locale: 'fr',
+        buttonText: {
+          today: 'Aujourd\'hui'
+        },        
+        weekends: true,
+        events: [],
+        dateClick: this.handleDateClick,
+        eventClick: this.handleEventClick,
+        eventColor: '',
+        // Fonction de filtrage pour les événements
+        eventClassNames: this.getEventClassNames
+      },
+      taches: [],
+      notes : [],
+      date: null,
+      allEvents: [], // Stockage de tous les événements
+      
+      // Système de filtrage
+      activeFilters: {
+        taskTypes: [] // Types de tâches sélectionnés
+      },
+      availableTaskTypes: [], // Types de tâches disponibles
+      
+      // Statistiques
+      visibleEventsCount: 0,
+      totalEventsCount: 0
+    };
+  },
+  setup(){
+    const showComponent = ref(true);
+    const refreshSectionCalendar = () =>{
+      this.fetchTask();
+      showComponent = ref(false);
+      showComponent = ref(true);
+    }
+
+    return {
+      showComponent,
+      refreshSectionCalendar
+    }
+  },
+  
+  async mounted() {
+    this.showTaskByRole();
+    this.fetchNotes();
+  },
+  
+  methods: {
+    handleDateClick(info) {
+      this.date = info.dateStr;
+      const modal = new bootstrap.Modal(document.getElementById('modaltask'));
+      modal.show();
+    },
+
+    async fetchTask() {
+      try {
+        this.taches = [];
+        const response = await getService.getDataCalendar();
+
+       if(response.data.length > 0){
+        this.taches = [...this.taches, ...response.data];
+      }      
+        this.createEventsFromTasks();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
+      }
+    },
+    /*async fetchNotes() {
+      try {
+        const response = await getService.getNote();
+        if(response.data.length > 0){
+          this.notes = [...this.notes,...response.data];
+        }
+        this.createEventsFromNotes();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des notes dans le calendrier:", error);
+      }
+    },*/
+    async fecthTaskUser(){
+      try {
+        let taches = [];
+        const user = JSON.parse(localStorage.getItem("user"));
+        const id = user.id;
+        const response = await getService.getEmployeAllTask(id);
+        taches = response.data;
+        this.taches = taches;
+        
+        this.createEventsFromTasks();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
+      }
+    },
+
+    createEventsFromTasks() {
+      const tachesTransformees = this.taches.map(task => {
+        const id = task.idPpf || task.idLett || task.idAff || task.idSoustraitance || null;
+        const { idPpf, idLett, idAff, idSoustraitance, ...autresProps } = task;
+        return { ...autresProps, id };
+      });
+
+      const events = tachesTransformees.map(task => ({
+        id: task.id,
+        title: task.titre,
+        start: task.datedebut,
+        end: task.datefin,
+        allDay: !task.heuredebut,
+        color: task.couleur,
+        extendedProps: {
+          typeTask: task.typeTask,
+        }
+      }));
+
+      this.allEvents = events;
+      this.totalEventsCount = events.length;
+      this.calendarOptions.events = events;
+      
+      this.extractAvailableTaskTypes();
+      this.initializeFilters();
+    },
+
+    /*createEventsFromNotes() {
+      const events = this.notes.map(note => ({
+        id: note.id,
+        title: note.commentaire,
+        start: note.datedebut,
+        end: note.datefin,
+        allDay: !note.heuredebut,
+        color: "#000000",
+      }));
+      this.calendarOptions.events =  [...this.calendarOptions.events, ...events];
+      console.log("Notes récupérées:", events);
+    },*/
+
+
+    extractAvailableTaskTypes() {
+      const taskTypes = new Set();
+      this.allEvents.forEach(event => {
+        if (event.extendedProps.typeTask) {
+          taskTypes.add(event.extendedProps.typeTask);
+        }
+      });
+      this.availableTaskTypes = Array.from(taskTypes).sort();
+    },
+
+    initializeFilters() {
+      this.activeFilters.taskTypes = [...this.availableTaskTypes];
+      this.updateEventCount();
+    },
+
+    getEventClassNames(info) {
+      const taskType = info.event.extendedProps.typeTask;
+      
+      if (this.activeFilters.taskTypes.includes(taskType)) {
+        return []; 
+      } else {
+        return ['hidden-event']; 
+      }
+    },
+
+    applyFilters() {
+      this.$nextTick(() => {
+        this.calendarOptions = { ...this.calendarOptions };
+        this.updateEventCount();
+      });
+    },
+
+    updateEventCount() {
+      this.visibleEventsCount = this.allEvents.filter(event => 
+        this.activeFilters.taskTypes.includes(event.extendedProps.typeTask)
+      ).length;
+    },
+
+    selectAllTaskTypes() {
+      this.activeFilters.taskTypes = [...this.availableTaskTypes];
+      this.applyFilters();
+    },
+
+    deselectAllTaskTypes() {
+      this.activeFilters.taskTypes = [];
+      this.applyFilters();
+    },
+
+    resetFilters() {
+      this.activeFilters.taskTypes = [...this.availableTaskTypes];
+      this.applyFilters();
+    },
+
+    getTaskTypeLabel(taskType) {
+      const labels = {
+        'ppf': 'PPF',
+        'lettrage': 'Lettrage',
+        'affichage' : 'Affichage',
+        'soustraitance': 'Sous-traitance'
+      };
+      return labels[taskType] || taskType;
+    },
+
+    showTaskByRole() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const role = user?.role;
+      this.fetchTask();
+      /*if (role === 'admin') {
+        this.fetchTask();
+      } else if (role === 'employee') {
+        this.fecthTaskUser();
+        this.calendarOptions.dateClick = null;
+      } else {
+        console.error("Role inconnu ou utilisateur non authentifié");
+      }*/
+    },
+
+    handleEventClick(info) {
+      this.$emit('view', info.event.extendedProps.typeTask, info.event.id);
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Styles pour les filtres */
+.filters-section {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #dee2e6;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+/* Classe pour cacher les événements filtrés */
+:deep(.hidden-event) {
+  display: none !important;
+}
+
+/* Optionnel : Style pour les événements semi-transparents */
+:deep(.filtered-event) {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-group {
+    flex-direction: column;
+  }
+  
+  .filter-actions {
+    flex-direction: column;
+  }
+  
+  .filter-actions button {
+    width: 100%;
+  }
+}
+
+/* Réduction de la taille des événements du calendrier */
+:deep(.fc-event),
+:deep(.fc-daygrid-event) {
+  min-height: 18px !important;
+  height: 18px !important;
+  padding: 0 4px !important;
+  font-size: 0.75rem !important;
+  line-height: 1.1 !important;
+  border-radius: 4px !important;
+}
+:deep(.fc-event-title) {
+  font-size: 0.75rem !important;
+  padding: 0 !important;
+  line-height: 1.1 !important;
+}
+:deep(.fc-daygrid-event-dot) {
+  margin: 0 2px 0 0 !important;
+  width: 6px !important;
+  height: 6px !important;
+}
+:deep(.fc-daygrid-event-harness) {
+  min-height: 18px !important;
+} 
+</style>
+
+<style>
+.fc {
+  height: 100vh;
+}
+
+.fc-daygrid-body {
+  border-color: black;
+}
+
+.fc-col-header-cell-cushion {
+  color: black;
+}
+
+.fc-daygrid-day-number {
+  color: black;
+}
+</style>
