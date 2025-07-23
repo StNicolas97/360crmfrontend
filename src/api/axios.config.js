@@ -17,7 +17,7 @@ instance.interceptors.request.use(
     return request;
   },
   (error) => {
-    console.log(error);
+    console.log("erreur axios : " + error);
     return Promise.reject(error);
   }
 );
