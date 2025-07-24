@@ -36,7 +36,6 @@
                   <option value="Nano">Nano</option>
                   <option value="Or">Or</option>
                   <option value="Platinium">Platinium</option>
-                  <option value="René">René</option>
                   <option value="Réparation">Réparation</option>
                   <option value="courtoisie">Véhicule de courtoisie</option>
                   <option value="teintées">Vitres teintées</option>
@@ -671,10 +670,15 @@ export default {
         isValid = false;
       }
 
-      // if(new Date(obj.datedebut).getTime() > Date.now()){
-      //   alert("la date de début doit être inférieure à la date actuelle")
-      //   isValid = false;
-      // }
+      if(new Date(obj.datefin).toDateString() < new Date().toDateString()){
+        alert("la date de fin ne peut pas être antérieure ")
+        isValid = false;
+      }
+
+      if(new Date(obj.datedebut).toDateString() < new Date().toDateString()){
+        alert("la date de debut ne peut pas être antérieure ")
+        isValid = false;
+      }
 
       if (!obj.idClient) {
         const alert = document.getElementById("alertClient");
@@ -783,7 +787,6 @@ export default {
       try {
         const response = await authService.getProfile();
         this.employes = response.data;
-        console.log("utilisateur recupéré dans HomeView")
       } catch (error) {
         this.error = "Erreur lors de la récupération des utilisateurs";
         console.error(error);
@@ -794,7 +797,6 @@ export default {
       try {
         const response = await getService.getClient();
         this.clients = response.data;
-        console.log("client recupéré dans TacheModal")
       } catch (error) {
         this.error = "Erreur lors de la récupération des utilisateurs";
         console.error(error);

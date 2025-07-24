@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://three60crmbackend.onrender.com/",
+  baseURL: "http://localhost:3000",
+  // "https://three60crmbackend.onrender.com/",
   headers: {
     "Content-Type": "application/json",
   },

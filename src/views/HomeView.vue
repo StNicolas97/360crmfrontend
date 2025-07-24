@@ -19,7 +19,6 @@
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
             <span v-if="hovered === 'dashboard'" class="sidebar-tooltip">Dashboard</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
-
           </a>
         </li>
         <li>
@@ -325,7 +324,7 @@
                     :class="{ 'selected': selectedTask?.id === tache.id }" 
                     @dblclick="editTask(tache.typeTask, tache.id)">
                   <td>
-                    <span class="task-id">#{{ tache.id }}</span>
+                    <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
                   <td>
                     <div class="task-title">

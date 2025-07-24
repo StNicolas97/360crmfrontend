@@ -114,7 +114,7 @@ export default {
   
   async mounted() {
     this.showTaskByRole();
-    this.fetchNotes();
+    //this.fetchNotes();
   },
   
   methods: {

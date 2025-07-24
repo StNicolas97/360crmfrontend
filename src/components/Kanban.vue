@@ -139,9 +139,7 @@ export default {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('itemID', tache.idTache || tache.id);
       this.draggedTask = tache;
-      
-      // Ajouter une classe pour indiquer qu'un élément est en cours de déplacement
-      document.body.classList.add('dragging-active');
+            document.body.classList.add('dragging-active');
     },
     
     endDrag() {
@@ -258,9 +256,9 @@ export default {
     
     getPriorityIndicator(priorite) {
       const priorityIndicators = {
-        'Urgent': 'priority-urgent',
-        'Normal': 'priority-normal',
-        'Basse': 'priority-low'
+        'Urgent': 'badge-danger',
+        'Normal': 'badge-success',
+        'Basse': 'badge-warning'
       };
       return priorityIndicators[priorite] || 'priority-normal';
     },

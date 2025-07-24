@@ -226,11 +226,9 @@
           async fetchTask() {
               const id = this.idTask;
               const lien = this.endPoint;
-              console.log("nous sommes dans tache et voici l'id qui est envoyé : " + id + " et le endpoint est " + lien);
               try {
                   const response = await getService.getTaskId(lien, id);
                   this.task = response.data;
-                  console.log(`La tâche avec l'ID ${id} a ces données :`, response.data);
               } catch (error) {
                   console.error("Erreur lors de la récupération de la tâche :", error);
               }
@@ -253,7 +251,6 @@
               const id = this.task.idTache;
               const url = this.task.typeTask;
               const data = this.task;
-              console.log(data);
               const valider = window.confirm("Confirmer les modifications de cette tâche?");
   
               if (valider) {
@@ -280,7 +277,6 @@
   
               if(valider){
                   const response = await addService.addInvoice(data);
-                  console.log(data);
                   if(!response){
                       alert("Erreur lors de la creation de la facture !");
                   }else{
@@ -293,7 +289,6 @@
           },
           connectedUser() {
               const localUser = localStorage.getItem('user');
-              console.log("user localstorage ", JSON.parse(localUser));
               this.username = JSON.parse(localUser).username;
               this.role = JSON.parse(localUser).role;
           },
