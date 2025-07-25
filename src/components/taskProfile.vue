@@ -41,7 +41,7 @@
                   <option value="Production">Production</option>
                   <option value="Installation">Installation</option>
                   <option value="Facturation">Facturation</option>
-
+                  <option value="Facturation">Termine</option>
                 </select>
               </li>
               <li class="list-group-item">

@@ -820,6 +820,10 @@ export default {
   display: none;
 }
 
+.modal{
+  z-index: 500000;
+}
+
 .form-control,
 .form-select {
   border: none;

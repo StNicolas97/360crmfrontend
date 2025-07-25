@@ -78,7 +78,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
           <li>
-            <a v-if="user && user.role === 'employee'" class="dropdown-item" href="#">Profil</a>
+            <a v-if="user?.role === 'employee'" class="dropdown-item" href="#">Profil</a>
           </li>
           <li>
             <hr class="dropdown-divider">
@@ -272,6 +272,7 @@
                 <option value="Production">Production</option>
                 <option value="Installation">Installation</option>
                 <option value="Facturation">Facturation</option>
+                <option value="Termine">Termine</option>
               </select>
               <i class="bi bi-folder-plus action-icon" data-bs-toggle="modal" data-bs-target="#modaltask"></i>
             </div>

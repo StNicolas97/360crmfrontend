@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="card mb-3 widget-chart bg-dark custom-chart" style="max-height: 290px;">
@@ -23,7 +23,7 @@
                             <li class="list-group-item custom-list-item" v-for="task in tacheJour" :key="task.id"
                                 @dblclick="showTache(task.typeTask, task.id)">{{ task.titre }} - {{ task.priorite }} -
                                 {{
-                                    task.statut }}</li>
+                                    task.statut }}<i :class="getPriorityIcon(task.priorite)"></i></li>
                         </ul>
                         <ul class="list-group list-group-flush" v-else>
                             <li class="list-group-item custom-list-item" style="margin: auto;">
@@ -214,6 +214,14 @@ export default {
                 console.error(error);
             }
         },
+        getPriorityIcon(priority) {
+        const icons = {
+            'Urgent': 'bi bi-exclamation-triangle-fill',
+            'Normal': 'bi bi-circle-fill',
+            'Bas': 'bi bi-arrow-down-circle-fill'
+        }
+        return icons[priority] || 'bi bi-circle-fill'
+        },
         showEmploye(id) {
             this.$emit('showemploye', id);
         },
@@ -397,6 +405,27 @@ i {
     margin-right: 0.5em;
     color: #ff9800;
 }
+
+li i{
+    margin-left : 0.5em;
+    font-size : 1.1rem;
+}
+
+.bi-exclamation-triangle-fill{
+    color : rgb(204, 78, 78);
+}
+
+.bi-circle-fill{
+    color : rgb(55, 136, 55);
+}
+
+.bi-arrow-down-circle-fill{
+    color : rgb(95, 95, 233)
+}
+
+
+
+
 
 @media (max-width: 768px) {
     .stat-card {

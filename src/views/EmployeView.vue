@@ -2,34 +2,38 @@
   <div class="d-flex page bg-dark">
 
     <!-- Section Barre de navigation -->
-    <div class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar" style="width: 100px; min-height: 100vh;">
+    <div class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar" 
+    :class="{'sidebar-mobile': isMobile, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen && isMobile}">
       <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center">
-        <img class="fs-4 img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" style="width: 40px;">
+        <img class="fs-4 img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
       </a>
       <hr class="text-white">
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="#" @click.prevent="currentSection = 'dashboard'" class="nav-link d-flex justify-content-center align-items-center"
+          <a href="#" @click.prevent="currentSection = 'dashboard';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center"
             :class="{ 'active': currentSection === 'dashboard' }"
             @mouseenter="hovered = 'dashboard'" @mouseleave="hovered = null">
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
             <span v-if="hovered === 'dashboard'" class="sidebar-tooltip">Dashboard</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'calendrier'" class="nav-link d-flex justify-content-center align-items-center text-white"
+          <a href="#" @click.prevent="currentSection = 'calendrier';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
             :class="{ 'active': currentSection === 'calendrier' }"
             @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
             <i class="bi bi-calendar" :title="'Calendrier'"></i>
             <span v-if="hovered === 'calendrier'" class="sidebar-tooltip">Calendrier</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'table'" class="nav-link d-flex justify-content-center align-items-center text-white"
+          <a href="#" @click.prevent="currentSection = 'table';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
             :class="{ 'active': currentSection === 'table' }"
             @mouseenter="hovered = 'table'" @mouseleave="hovered = null">
             <i class="bi bi-table" :title="'Tableau'"></i>
             <span v-if="hovered === 'table'" class="sidebar-tooltip">Tableau</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
           </a>
         </li>
       </ul>
@@ -49,8 +53,19 @@
       </div>
     </div>
 
+        <!-- Navbar mobile/tablette -->
+        <nav class="mobile-navbar d-md-none">
+          <button
+            class="btn btn-hamburger"
+            @click="isSidebarOpen = !isSidebarOpen"
+            aria-label="Ouvrir le menu">
+            <i class="bi bi-list"></i>
+          </button>
+          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid" style="width: 30%; margin: 30%;" ></span>
+        </nav>
+
     <!-- Contenu principal -->
-    <main class="flex-grow-1 p-3">  
+    <main class="flex-grow-1 p-3 main-content">  
       <section v-if="currentSection === 'dashboard'" class="section">
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
@@ -113,6 +128,7 @@
                 <option value="Production">Production</option>
                 <option value="Installation">Installation</option>
                 <option value="Facturation">Facturation</option>
+                <option value="Termine">Termine</option>
               </select>
             </div>
           </div>
@@ -307,10 +323,17 @@ export default {
       sortField: 'datedebut',
       sortDirection: 'asc',
       currentPage: 1,
-      itemsPerPage: 10
+      itemsPerPage: 10,
+      isSidebarOpen: false,
+      isMobile: false,
     }
   },
   computed: {
+    logoStyle() {
+      return {
+        width: this.isMobile ? '30px' : '60px'
+      }
+    },
     tachesUrgentes() {
       return this.taches.filter(t => t.priorite === 'Urgent').length
     },
@@ -346,6 +369,11 @@ export default {
   async mounted() {
     await this.getUserTasks()
     this.filterTaches()
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.checkScreenSize);
   },
   methods: {
     async getUserTasks() {
@@ -418,7 +446,9 @@ export default {
       this.searchQueryTaches = ''
       this.filterTaches()
     },
-    
+    checkScreenSize() {
+      this.isMobile = window.innerWidth < 768;
+    },
     selectRow(tache) {
       this.selectedTask = tache
     },
@@ -571,7 +601,9 @@ main {
 }
 
 .sidebar {
-  width: 100%;
+  width: 100px;
+  min-width: 100px;
+  flex-shrink: 0;
 }
 
 /* Header du dashboard */
@@ -1091,24 +1123,144 @@ main {
   vertical-align: middle;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive Styles */
+@media (max-width: 1199.98px) {
   .dashboard-stats {
-    flex-direction: column;
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 991.98px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
   
-  .controls-section .row {
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .sidebar{
+    display: flex;
     flex-direction: column;
+    flex-wrap : nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+  }
+}
+
+
+@media (max-width: 767.98px) {
+  .page {
+    padding-top: 10px;
   }
   
-  .pagination-container {
+  .sidebar {
+    display: flex;
     flex-direction: column;
-    text-align: center;
+    flex-wrap : nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 80px;
+    min-width: 80px;
+    padding: 0.5rem !important;
   }
   
-  .action-buttons {
-    flex-direction: column;
+  .sidebar-mobile {
+    width: 70px;
+    min-width: 70px;
+  }
+
+  .rounded-circle{
+    width: 20%;
+  }
+  
+  .main-content {
+    padding: 1rem !important;
+  }
+  
+  .sidebar .nav-link i {
+    font-size: 1.4rem;
+  }
+  
+  .sidebar-tooltip {
+    left: 50px;
+    font-size: 0.85em;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  .search-input {
+    min-width: 150px;
+  }
+  
+  .action-icon {
+    font-size: 1.1rem;
+  }
+  
+  .table td,
+  .table th {
+    padding: 0.5rem;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.25em 0.5em;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sidebar {
+    width: 60px;
+    min-width: 60px;
+  }
+  
+  .sidebar-mobile {
+    width: 50px;
+    min-width: 50px;
+  }
+  
+  .main-content {
+    padding: 0.5rem !important;
+  }
+  
+  .sidebar .nav-link i {
+    font-size: 1.2rem;
+  }
+  
+  .sidebar-tooltip {
+    left: 40px;
+    font-size: 0.8em;
+  }
+  
+  .section-title {
+    font-size: 1.1rem;
+  }
+  
+  .search-input {
+    min-width: 120px;
+  }
+  
+  .table td,
+  .table th {
+    padding: 0.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .badge {
+    font-size: 0.65rem;
+    padding: 0.2em 0.4em;
+  }
+  
+  .action-icon {
+    font-size: 1rem;
+  }
+  
+  .dropdown-menu {
+    font-size: 0.9rem;
   }
 }
 
@@ -1128,6 +1280,80 @@ main {
     flex-basis: 20%;
     flex-shrink: 2;
     flex-grow: 1;
+  }
+
+}
+
+.mobile-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 48px;
+  background: #111;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.btn-hamburger {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 4px 8px;
+  margin-right: 12px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.btn-hamburger:active,
+.btn-hamburger:focus {
+  background: #222;
+}
+
+.navbar-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+@media (min-width: 768px) {
+  .mobile-navbar {
+    display: none !important;
+  }
+}
+
+.sidebar {
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+  z-index: 1500;
+}
+
+@media (max-width: 767.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    min-width: 180px;
+    max-width: 80vw;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    background: #222;
+    transform: translateX(-110%);
+  }
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  .sidebar.sidebar-closed {
+    transform: translateX(-110%);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main-content {
+    padding-top: 60px !important; 
   }
 }
 </style>
