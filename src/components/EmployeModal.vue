@@ -102,4 +102,8 @@ export default {
 .modal-backdrop{
     display: none;
 }
+
+.modal{
+  z-index: 500000;
+}
 </style>

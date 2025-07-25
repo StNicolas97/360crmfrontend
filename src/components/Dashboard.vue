@@ -54,7 +54,7 @@
             <div class="col-sm-12 col-md-3 col-xl-4 d-flex d-flex-wrap">
                 <div class="row w-100">
                     <!-- Stat global -->
-                    <div class="col-md-12 mb-2 mt-2 ms-1">
+                    <div class="col-sm-12 col-md-12 mb-2 mt-2 ms-1">
                         <div class="card stat-card bg-light text-dark text-center" style="height: 100%;">
                             <div class="card-body d-flex flex-column justify-content-center align-items-center p-3" style="height: 100%;">
                                 <div class="stat-block my-1">
