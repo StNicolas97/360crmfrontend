@@ -38,7 +38,7 @@
         </li>
       </ul>
       <hr class="text-white">
-      <div class="dropdown mb-4 d-flex justify-content-center">
+      <div class="dropdown mb-4 d-flex justify-content-center" v-if="!isMobile">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
           data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2 img-fluid">
@@ -61,11 +61,24 @@
             aria-label="Ouvrir le menu">
             <i class="bi bi-list"></i>
           </button>
-          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid img-ls" style="width: 100%; position: relative; margin: 0 auto; max-height: 40px;" ></span>
+          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid img-ls" style="width: 100%; margin: 0 auto; max-height: 40px;" ></span>
+          <div class="dropdown d-flex justify-content-center" v-if="isMobile">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2 img-fluid">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+              <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+            </ul>
+          </div>
         </nav>
 
     <!-- Contenu principal -->
-    <main class="flex-grow-1 p-3 main-content">  
+    <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">  
       <section v-if="currentSection === 'dashboard'" class="section">
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
@@ -211,7 +224,8 @@
                   <td class="text-center">
                     <div class="action-buttons">
                       <button 
-                        @click.stop="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @click="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))"
                         class="btn btn-action btn-view"
                         title="Voir les détails">
                         <i class="bi bi-eye"></i>
@@ -575,6 +589,10 @@ export default {
         'Prospect': 'bg-info',
       }
       return clientStatusClasses[statut] || 'badge-primary'
+    },
+    closeSideBar(){
+      if(this.isMobile && this.isSidebarOpen) 
+      this.isSidebarOpen = false;
     }
   }
 }
@@ -601,7 +619,7 @@ main {
 }
 
 .sidebar {
-  width: 100px;
+  width: 6%;
   min-width: 100px;
   flex-shrink: 0;
 }
@@ -1296,7 +1314,7 @@ main {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 48px;
   background: #111;
   z-index: 3000;
