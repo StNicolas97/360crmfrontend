@@ -40,11 +40,10 @@
                         Clients
                     </h4>
                     <div class="card-body scroll-body overflow-auto">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item custom-list-item" v-for="client in clientsActive"
-                                :key="client.id" @dblclick="showClient(client.id)">{{ client.nom }} - {{ client.statut
-                                }}</li>
-
+                        <ul class="list-unstyled mb-0">
+                            <li v-for="[nom, nb] in topClient" :key="nom">
+                                <i class="bi bi-person-circle me-2"></i> {{ nom }} : <b>{{ nb }}</b> tâche(s)
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -250,9 +249,24 @@ export default {
             });
             return map;
         },
+        workloadByClient() {
+            const map = {};
+            this.clientsActive.forEach(t => {
+                if (t.statut !== 'Facturation') {
+                    const nom = t.nom || t.id || 'Non assigné';
+                    map[nom] = (map[nom] || 0) + 1;
+                }
+            });
+            return map;
+        },
         // Top 3 employés les plus chargés
         topEmployes() {
             const arr = Object.entries(this.workloadByEmploye);
+            arr.sort((a, b) => b[1] - a[1]);
+            return arr;
+        },
+        topClient() {
+            const arr = Object.entries(this.workloadByClient);
             arr.sort((a, b) => b[1] - a[1]);
             return arr;
         },

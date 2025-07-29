@@ -61,7 +61,7 @@
             aria-label="Ouvrir le menu">
             <i class="bi bi-list"></i>
           </button>
-          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid" style="width: 30%; margin: 30%;" ></span>
+          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid img-ls" style="width: 100%; position: relative; margin: 0 auto; max-height: 40px;" ></span>
         </nav>
 
     <!-- Contenu principal -->
@@ -1265,6 +1265,14 @@ main {
 }
 
 @media (orientation : landscape) {
+    body{
+    scrollbar-width: 20px;
+  }
+
+  .img-ls{
+    width: 5px;
+  }
+
   .nav-pills{
     display: flex;
     flex-direction: column;

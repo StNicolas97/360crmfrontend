@@ -33,6 +33,7 @@
             <!-- <button class="btn btn-sm btn-outline-info" @click="resetFilters">
               Réinitialiser
             </button> -->
+            <button @click="refetchTask()">refetchEvents</button>
           </div>
           <div class="mt-2">
             <small class="text-muted">
@@ -43,8 +44,8 @@
       </div>
     </div>
 
-    <FullCalendar :options="calendarOptions" v-if="showComponent"/>
-    <TacheModal :date="this.date" @submit="refreshSectionCalendar()"/>
+    <FullCalendar ref="calendar" :options="calendarOptions"/>
+    <TacheModal :date="this.date" @submit="refetchTask()"/>
   </div>
 </template>
 
@@ -75,13 +76,16 @@ export default {
           today: 'Aujourd\'hui'
         },        
         weekends: true,
-        events: [],
+        events: this.fetchTask,
         dateClick: this.handleDateClick,
         eventClick: this.handleEventClick,
+        dayMaxEvents: false,
+        slotEventOverlap: true,
         eventColor: '',
         // Fonction de filtrage pour les événements
         eventClassNames: this.getEventClassNames
       },
+      calendarApi : null,
       taches: [],
       notes : [],
       date: null,
@@ -89,9 +93,9 @@ export default {
       
       // Système de filtrage
       activeFilters: {
-        taskTypes: [] // Types de tâches sélectionnés
+        taskTypes: [] 
       },
-      availableTaskTypes: [], // Types de tâches disponibles
+      availableTaskTypes: [],
       
       // Statistiques
       visibleEventsCount: 0,
@@ -99,22 +103,12 @@ export default {
     };
   },
   setup(){
-    const showComponent = ref(true);
-    const refreshSectionCalendar = () =>{
-      this.fetchTask();
-      showComponent = ref(false);
-      showComponent = ref(true);
-    }
 
-    return {
-      showComponent,
-      refreshSectionCalendar
-    }
   },
   
   async mounted() {
-    this.showTaskByRole();
-    //this.fetchNotes();
+    this.fetchTask();
+    this.getCalendarApi();
   },
   
   methods: {
@@ -123,8 +117,61 @@ export default {
       const modal = new bootstrap.Modal(document.getElementById('modaltask'));
       modal.show();
     },
-
     async fetchTask() {
+      try {
+      let taches = [];
+      const response = await getService.getDataCalendar();
+      taches = response.data;
+      const events = [];
+      
+      const tachesTransformees = taches.map(task => {
+        let idTask = null
+        if(task.idAff)  idTask = task.idAff
+        else if(task.idLett)  idTask = task.idLett
+        else if(task.idPpf)  idTask = task.idPpf
+        return task = {idTask, ...task}
+      });
+
+
+      for (let i = 0; i < tachesTransformees.length; i++) {
+        const task = tachesTransformees[i];
+        events.push({
+        id: task.id,
+        title: task.titre,
+        start: task.datedebut,
+        end: task.datefin,
+        allDay: !task.heuredebut,
+        color: task.couleur,
+        extendedProps: {
+          typeTask: task.typeTask,
+          idTache : task.idTask
+        }
+        });
+      }
+        console.log("la table filtré : ",  events)
+
+        this.allEvents = events;
+        this.totalEventsCount = events.length;
+        this.calendarOptions.events = events;
+        this.extractAvailableTaskTypes();
+        this.initializeFilters();
+        return events;
+      } catch (error) {
+        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
+      }
+    },
+
+    getCalendarApi(){
+      this.$nextTick(() => {
+      this.calendarApi = this.$refs.calendar.getApi();
+    });
+    },
+    refetchTask(){
+      this.calendarApi.refetchEvents();
+      this.calendarApi.render();
+    },
+
+    /*async fetchTask() {
       try {
         this.taches = [];
         const response = await getService.getDataCalendar();
@@ -137,7 +184,7 @@ export default {
         console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
       }
     },
-    /*async fetchNotes() {
+    async fetchNotes() {
       try {
         const response = await getService.getNote();
         if(response.data.length > 0){
@@ -147,7 +194,7 @@ export default {
       } catch (error) {
         console.error("Erreur lors de la récupération des notes dans le calendrier:", error);
       }
-    },*/
+    },
     async fecthTaskUser(){
       try {
         let taches = [];
@@ -188,7 +235,7 @@ export default {
       
       this.extractAvailableTaskTypes();
       this.initializeFilters();
-    },
+    },*/
 
     /*createEventsFromNotes() {
       const events = this.notes.map(note => ({
@@ -282,7 +329,7 @@ export default {
     },
 
     handleEventClick(info) {
-      this.$emit('view', info.event.extendedProps.typeTask, info.event.id);
+      this.$emit('view', info.event.extendedProps.typeTask, info.event.extendedProps.idTache);
     },
   },
 };

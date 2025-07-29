@@ -323,6 +323,7 @@
   <style>
   body, .container {
       background: #f7f8fa !important;
+      color : #000000
   }
   
   .container {

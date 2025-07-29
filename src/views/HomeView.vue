@@ -97,7 +97,7 @@
       >
         <i class="bi bi-list"></i>
       </button>
-      <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid" style="width: 30%; margin: 30%;" ></span>
+      <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid" style="width: 30%;position : relative; left: 30%;" ></span>
     </nav>
 
     <!-- Contenu principal -->
@@ -156,7 +156,7 @@
           <table class="table table-modern">
             <thead>
               <tr>
-                <th @click="sortClients('entreprise')" class="sortable"><div class="th-content">Entreprise <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
+                <th @click="sortClients('entreprise')" class="sortable d-none d-sm-table-cell" ><div class="th-content">Entreprise <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
                 <th @click="sortClients('nom')" class="sortable"><div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
                 <th @click="sortClients('email')" class="sortable d-none d-lg-table-cell"><div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
                 <th @click="sortClients('telephone')" class="sortable d-none d-sm-table-cell"><div class="th-content">Téléphone <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
@@ -1633,6 +1633,12 @@ main {
 }
 
 @media (orientation : landscape) {
+body{
+  scrollbar-width: 20px;
+}
+
+.navbar-title img{}
+
   .nav-pills{
     display: flex;
     flex-direction: column;
