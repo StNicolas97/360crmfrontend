@@ -633,6 +633,17 @@ export default {
       const bootstrapModal = bootstrap.Modal.getInstance(modal)
       bootstrapModal.hide()
     },
+    // Fonction utilitaire pour comparer les dates sans l'heure
+    compareDatesOnly(date1, date2) {
+      const d1 = new Date(date1);
+      const d2 = new Date(date2);
+      
+      // Réinitialiser l'heure à 00:00:00 pour comparer uniquement les dates
+      d1.setHours(0, 0, 0, 0);
+      d2.setHours(0, 0, 0, 0);
+      
+      return d1.getTime() - d2.getTime();
+    },
     treatData(obj) {
       let isValid = true;
       if (!obj.titre) {
@@ -670,15 +681,41 @@ export default {
         isValid = false;
       }
 
-      if(new Date(obj.datefin).toDateString() < new Date().toDateString()){
-        alert("la date de fin ne peut pas être antérieure ")
-        isValid = false;
-      }
+      //Section traitement Date 
+        const today = new Date();
+        const dateDebut = new Date(obj.datedebut);
+        const dateFin = new Date(obj.datefin);
 
-      if(new Date(obj.datedebut).toDateString() < new Date().toDateString()){
-        alert("la date de debut ne peut pas être antérieure ")
-        isValid = false;
-      }
+        // Vérifier si les dates sont valides
+        if (isNaN(dateDebut.getTime())) {
+          alert("La date de début n'est pas valide");
+          isValid = false;
+          return;
+        }
+
+        if (isNaN(dateFin.getTime())) {
+          alert("La date de fin n'est pas valide");
+          isValid = false;
+          return;
+        }
+
+        // Vérifier que la date de début n'est pas antérieure à aujourd'hui
+        // if (this.compareDatesOnly(dateDebut, today) < 0) {
+        //   alert("La date de début ne peut pas être antérieure à aujourd'hui");
+        //   isValid = false;
+        // }
+
+        // Vérifier que la date de fin n'est pas antérieure à aujourd'hui
+        if (this.compareDatesOnly(dateFin, today) < 0) {
+          alert("La date de fin ne peut pas être antérieure à aujourd'hui");
+          isValid = false;
+        }
+
+        // Vérifier que la date de fin n'est pas antérieure à la date de début
+        if (this.compareDatesOnly(dateFin, dateDebut) < 0) {
+          alert("La date de fin ne peut pas être antérieure à la date de début");
+          isValid = false;
+        } 
 
       if (!obj.idClient) {
         const alert = document.getElementById("alertClient");

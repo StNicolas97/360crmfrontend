@@ -166,9 +166,39 @@ export default {
       this.calendarApi = this.$refs.calendar.getApi();
     });
     },
-    refetchTask(){
-      this.calendarApi.refetchEvents();
-      this.calendarApi.render();
+    async refetchTask() {
+      if (!this.calendarApi) {
+        this.getCalendarApi();
+      }
+      
+      try {
+        // Supprimer tous les événements existants
+        this.calendarApi.removeAllEvents();
+        
+
+
+        
+        // Récupérer les nouvelles données
+       const events = await this.fetchTask();
+        let grand = events[0]?.id || 0;
+        let indexGrand = 0;
+
+        for (let i = 1; i < events.length; i++) {
+          if (events[i].id > grand) {
+            grand = events[i].id;
+            indexGrand = i;
+          }
+        }
+
+        console.log("Plus grand ID:", grand);
+        console.log("Index:", indexGrand);
+        
+        // Ajouter les nouveaux événements
+        this.calendarApi.addEvent(events[indexGrand]);
+        
+      } catch (error) {
+        console.error('Erreur lors du rechargement des tâches:', error);
+      }
     },
 
     /*async fetchTask() {

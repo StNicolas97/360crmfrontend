@@ -796,8 +796,11 @@ export default {
       this.fetchclients();
     },
     logout() {
+      const confirm = window.confirm("Voulez-vous vraiment vous deconnecter ?")
+      if(confirm){
       localStorage.removeItem('user')
       this.$router.push('/login')
+      }
     },
     getPriorityClass(priorite) {
       const priorityClasses = {

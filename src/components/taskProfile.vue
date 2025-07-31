@@ -10,13 +10,13 @@
         <span class="badge ms-2" :class="getTaskStatusClass(task.statut)">{{ task.statut }}</span>
       </div>
       <div>
-        <button class="btn btn-outline-primary me-2" @click="updateTask" @touchstart="updateTask" title="Modifier">
+        <button class="btn btn-outline-primary me-2" @click="updateTask" title="Modifier">
             <i class="bi bi-pencil"></i>
           </button>
-          <button class="btn btn-outline-danger me-2" @click="deleteTask" @touchstart="deleteTask" title="Supprimer">
+          <button class="btn btn-outline-danger me-2" @click="deleteTask" title="Supprimer">
             <i class="bi bi-trash"></i>
           </button>
-          <button class="btn btn-outline-success" @click="createInvoice" @touchstart="createInvoice" title="Facture">
+          <button class="btn btn-outline-success" @click="createInvoice" title="Facture">
             <i class="bi bi-receipt"></i>
           </button>
       </div>

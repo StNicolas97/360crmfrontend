@@ -61,11 +61,12 @@
             aria-label="Ouvrir le menu">
             <i class="bi bi-list"></i>
           </button>
-          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid img-ls" style="width: 100%; margin: 0 auto; max-height: 40px;" ></span>
+          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
+            style="width: 30%;position : relative; left: 30%;"></span>
           <div class="dropdown d-flex justify-content-center" v-if="isMobile">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
               data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2 img-fluid">
+              <img src="https://github.com/mdo.png" alt="" class="rounded-circle me-2 img-fluid" style="width: 70%;position : relative; left: 30%;">
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
               <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
@@ -556,8 +557,11 @@ export default {
     },
     
     logout() {
+      const confirm = window.confirm("Voulez-vous vraiment vous deconnecter ?")
+      if(confirm){
       localStorage.removeItem('user')
       this.$router.push('/login')
+      }
     },
 
     getPriorityClass(priorite) {
@@ -1191,7 +1195,7 @@ main {
   }
 
   .rounded-circle{
-    width: 20%;
+    width: 10%;
   }
   
   .main-content {
