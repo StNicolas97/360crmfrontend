@@ -333,7 +333,7 @@
                     <option v-if="formData.typeTravel === 'PPF'" v-for="client in clients" :key="client.id" :value="client.id">
                       {{ client.nom }} {{ client.prenom }}
                     </option>
-                    <option v-for="client in clients" :key="client.id" :value="client.id">
+                    <option v-if="formData.typeTravel !== 'PPF'" v-for="client in clients" :key="client.id" :value="client.id">
                       {{ client.entreprise }}  
                     </option>
                   </select>
