@@ -27,7 +27,7 @@
       </div>
 
       <div class="row parentkanban g-3">
-        <div v-for="col in columns" :key="col.key" class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-2">
+        <div v-for="col in columns" :key="col.key" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3">
           <div :class="['kanban-column', col.bgClass, { 'drag-over': dragOverColumn === col.key }]"
             @dragover.prevent="handleDragOver($event, col.key)" @dragenter.prevent="handleDragEnter(col.key)"
             @dragleave="handleDragLeave" @drop="onDrop($event, col.key)">
@@ -51,6 +51,9 @@
                           <div class="fw-bold fs-6 text-truncate title" :title="tache.titre">{{ tache.titre }}</div>
                           <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length < 17 ">
                             {{ nbJour(tache.datefin)}}
+                          </div>
+                          <div class="text-muted small text-truncate">
+                            Assigné : {{ tache.nomEmploye}}
                           </div>
                           <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length > 16 ">
                             <p class="text-danger">{{ nbJour(tache.datefin)}}</p>
@@ -497,11 +500,11 @@ export default {
   .parentkanban {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-evenly;
-    align-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
     align-items: flex-start;
-    gap: 1%;
+    /* gap: 1%; */
     margin: auto 0%;
     position: relative;
     right: 20px;
