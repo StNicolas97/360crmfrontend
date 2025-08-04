@@ -533,6 +533,7 @@ export default {
     changeSectionProfil() {
       this.previousSection = this.currentSection
       this.currentSection = 'myuserProfile'
+      if(this.isSidebarOpen) this.isSidebarOpen = false
     },
     
     previous() {

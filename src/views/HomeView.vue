@@ -78,9 +78,7 @@
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li>
-            <a class="dropdown-item" href="#">Profil</a>
-          </li>
+          <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
@@ -89,20 +87,33 @@
       </div>
     </div>
 
-    <!-- Navbar mobile/tablette -->
-    <nav class="mobile-navbar d-md-none">
-      <button
-        class="btn btn-hamburger"
-        @click="isSidebarOpen = !isSidebarOpen"
-        aria-label="Ouvrir le menu"
-      >
-        <i class="bi bi-list"></i>
-      </button>
-      <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid" style="width: 30%; margin: 30%;" ></span>
-    </nav>
+        <!-- Navbar mobile/tablette -->
+        <nav class="mobile-navbar d-md-none">
+            <button
+              class="btn btn-hamburger"
+              @click="isSidebarOpen = !isSidebarOpen"
+              aria-label="Ouvrir le menu">
+              <i class="bi bi-list"></i>
+            </button>
+            <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
+              style="width: 30%;position : relative; left: 30%;"></span>
+            <div class="dropdown d-flex justify-content-center" v-if="isMobile">
+              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://github.com/mdo.png" alt="" class="rounded-circle me-2 img-fluid" style="width: 70%;position : relative; left: 30%;">
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+              </ul>
+            </div>
+        </nav>
 
     <!-- Contenu principal -->
-    <main class="flex-grow-1 p-3 main-content">
+    <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">
 
 
       <!-- liste des modals -->
@@ -487,6 +498,10 @@
         <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()" @delete="refreshSectionTaskAfterDelete()" @showclient="editClient($event, id)"></TaskProfile>
       </section>
 
+      <section v-if="currentSection === 'myuserProfile'" class="section">
+        <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
+      </section>
+
 
 
     </main>
@@ -504,6 +519,7 @@ import Dashboard from '../components/Dashboard.vue'
 import UserProfile from '@/components/userProfile.vue'
 import ClientProfile from '@/components/clientProfile.vue'
 import TaskProfile from '@/components/taskProfile.vue'
+import myuserProfile from '@/components/myuserProfile.vue'
 import { authService } from '../api/services/auth.service'
 import { getService } from '../api/services/get.service'
 
@@ -518,8 +534,8 @@ export default {
     Dashboard,
     UserProfile,
     ClientProfile,
-    TaskProfile
-
+    TaskProfile,
+    myuserProfile
   },
   data() {
     return {
@@ -718,6 +734,11 @@ export default {
     connectedUser(){
       const localUser = localStorage.getItem('user');
       this.username = JSON.parse(localUser).username ;
+    },
+    changeSectionProfil() {
+      this.previousSection = this.currentSection
+      this.currentSection = 'myuserProfile'
+      if(this.isSidebarOpen) this.isSidebarOpen = false
     },
 
     editUser(id){
@@ -972,6 +993,10 @@ export default {
       this.searchQueryEmployes = '';
       this.filterEmployes();
     },
+    closeSideBar(){
+      if(this.isMobile && this.isSidebarOpen) 
+      this.isSidebarOpen = false;
+    }
   },
   
 }
