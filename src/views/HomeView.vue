@@ -67,7 +67,15 @@
             <i class="bi bi-person-circle" :title="'Employés'"></i>
             <span v-if="hovered === 'employe'" class="sidebar-tooltip">Employés</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Employés</span>
-
+          </a>
+        </li>
+        <li>
+          <a href="#" @click.prevent="currentSection = 'leads'; fetchTask(); isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'leads' }"
+            @mouseenter="hovered = 'employe'" @mouseleave="hovered = null">
+            <i class="bi bi-person-fill-exclamation" :title="'Employés'"></i>
+            <span v-if="hovered === 'leads'" class="sidebar-tooltip">Leads</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Leads</span>
           </a>
         </li>
       </ul>
@@ -484,6 +492,145 @@
             Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{ Math.min(employeCurrentPage * employeItemsPerPage, filteredEmployes.length) }} sur {{ filteredEmployes.length }} employés
           </div>
         </div>
+      </section>
+
+      <section v-if="currentSection==='leads'">
+                <!-- Contrôles de filtrage et recherche -->
+                <div class="controls-section mb-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="search-container">
+                <i class="bi bi-search search-icon"></i>
+                <input 
+                  type="text" 
+                  class="form-control search-input" 
+                  v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..."
+                  @input="filterTaches"
+                >
+                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
+                <option value="">Toutes les priorités</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Normal">Normal</option>
+                <option value="Bas">Bas</option>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-end">
+              <select class="form-select filter-select me-2" v-model="selectedStatusFilter" @change="filterTaches">
+                <option value="">Tous les statuts</option>
+                <option value="Leads">Leads</option>
+                <option value="Design">Design</option>
+                <option value="Approbation">Approbation</option>
+                <option value="Impression">Impression</option>
+                <option value="Production">Production</option>
+                <option value="Installation">Installation</option>
+                <option value="Facturation">Facturation</option>
+              </select>
+              <i class="bi bi-folder-plus action-icon" data-bs-toggle="modal" data-bs-target="#modaltask"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau  -->
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table table-modern">
+              <thead>
+                <tr>
+                  <th @click="sortBy('id')" class="sortable">
+                    <div class="th-content">
+                      ID
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('titre')" class="sortable">
+                    <div class="th-content">
+                      Type
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('datefin')" class="sortable">
+                    <div class="th-content">
+                      Date d'échéance
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('priorite')" class="sortable">
+                    <div class="th-content">
+                      Priorité
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('statut')" class="sortable">
+                    <div class="th-content">
+                      Statut
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="tache in paginatedTaches" :key="tache.idTache"
+                    class="table-row" 
+                    @click="selectRow(tache)"
+                    :class="{ 'selected': selectedTask?.id === tache.id }" 
+                    @dblclick="editTask(tache.typeTask, tache.id)">
+                  <td>
+                    <span class="task-id">#{{ tache.idTache }}</span>
+                  </td>
+                  <td>
+                    <div class="task-title">
+                      <i :class="getTaskIcon(tache.typeTask)" class="me-2"></i>
+                      {{ tache.titre }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="date-container">
+                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
+                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
+                        <i class="bi bi-exclamation-triangle"></i>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
+                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
+                      {{ tache.priorite }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
+                      <div class="status-indicator"></div>
+                      {{ tache.statut }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <div class="action-buttons">
+                      <button 
+                         @click="editTask(tache.typeTask ,tache.id)"
+                        class="btn btn-action btn-view"
+                        title="Voir les détails">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Message si aucune tâche -->
+            <div v-if="filteredTaches.length === 0" class="no-data">
+              <i class="bi bi-inbox"></i>
+              <p>Aucune tâche trouvée</p>
+            </div>
+          </div>
+          </div>
       </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">

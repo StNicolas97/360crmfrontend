@@ -85,11 +85,11 @@
                   <span id="alertClient"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
-                  <label for="employe">Assignés à</label>
+                  <label for="employe">Assigné à</label>
                   <select v-model="ppf.idAssigne" class="form-control" id="employe" name="employe">
                     <option value="" disabled>Sélectionnez un employé</option>
                     <option v-for="employe in employes" :key="employe.id" :value="employe.id">
-                      {{ employe.nom }} {{ employe.prenom }}
+                      {{ employe.prenom }} {{ employe.nom }}
                     </option>
                   </select>
                   <span id="alertAssign"></span>
@@ -211,11 +211,11 @@
                   <span class=" bi bi-person-add" @click="addClient"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
-                  <label for="employe">Assignés à</label>
+                  <label for="employe">Assigné à</label>
                   <select v-model="affichage.idAssigne" class="form-control" id="employe" name="employe">
                     <option value="" disabled>Sélectionnez un employé</option>
                     <option v-for="employe in employes" :key="employe.id" :value="employe.id">
-                      {{ employe.nom }} {{ employe.prenom }}
+                      {{ employe.prenom }} {{ employe.nom }}
                     </option>
                   </select>
                   <span id="alertAssign"></span>
@@ -338,11 +338,11 @@
                   <span class=" bi bi-person-add" @click="addClient"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
-                  <label for="employe">Assignés à</label>
+                  <label for="employe">Assigné à</label>
                   <select v-model="lettrage.idAssigne" class="form-control" id="employe" name="employe">
                     <option value="" disabled>Sélectionnez un employé</option>
                     <option v-for="employe in employes" :key="employe.id" :value="employe.id">
-                      {{ employe.nom }} {{ employe.prenom }}
+                      {{ employe.prenom }} {{ employe.nom }}
                     </option>
                   </select>
                   <span id="alertAssign"></span>
