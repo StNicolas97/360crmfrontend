@@ -79,7 +79,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
           <li>
-            <a v-if="user && user.role === 'employee'" class="dropdown-item" href="#">Profil</a>
+            <a class="dropdown-item" href="#">Profil</a>
           </li>
           <li>
             <hr class="dropdown-divider">

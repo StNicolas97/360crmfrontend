@@ -108,6 +108,7 @@ export default {
   
   async mounted() {
     this.fetchTask();
+    this.fetchNotes();
     this.getCalendarApi();
   },
   
@@ -213,7 +214,7 @@ export default {
       } catch (error) {
         console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
       }
-    },
+    },*/
     async fetchNotes() {
       try {
         const response = await getService.getNote();
@@ -225,7 +226,7 @@ export default {
         console.error("Erreur lors de la récupération des notes dans le calendrier:", error);
       }
     },
-    async fecthTaskUser(){
+    /*async fecthTaskUser(){
       try {
         let taches = [];
         const user = JSON.parse(localStorage.getItem("user"));
@@ -267,7 +268,7 @@ export default {
       this.initializeFilters();
     },*/
 
-    /*createEventsFromNotes() {
+    createEventsFromNotes() {
       const events = this.notes.map(note => ({
         id: note.id,
         title: note.commentaire,
@@ -278,9 +279,7 @@ export default {
       }));
       this.calendarOptions.events =  [...this.calendarOptions.events, ...events];
       console.log("Notes récupérées:", events);
-    },*/
-
-
+    },
     extractAvailableTaskTypes() {
       const taskTypes = new Set();
       this.allEvents.forEach(event => {

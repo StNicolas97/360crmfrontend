@@ -501,13 +501,13 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-content: center;
     align-items: flex-start;
     /* gap: 1%; */
     margin: auto 0%;
-    position: relative;
-    right: 20px;
+    /* position: relative;
+    right: 20px; */
     overflow-x: scroll;
     scrollbar-width: none;
   }

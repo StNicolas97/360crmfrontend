@@ -44,7 +44,7 @@
             <div class="col-md-5 border-right">
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">Profile Employe</h4><i class="bi bi-trash" @click="deleteProfile"></i>
+                        <h4 class="text-right">Profil Employe</h4><i class="bi bi-trash" @click="deleteProfile"></i>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control"
