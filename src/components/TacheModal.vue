@@ -204,7 +204,7 @@
                   <select v-model="affichage.idClient" class="form-control" id="client" name="client">
                     <option value="" disabled>Sélectionnez un client</option>
                     <option v-for="client in clients" :key="client.id" :value="client.id">
-                      {{ client.nom }} {{ client.prenom }}
+                      {{ client.entreprise }}  
                     </option>
                   </select>
                   <span id="alertClient"></span>
@@ -330,10 +330,7 @@
                   <label for="client">Client</label>
                   <select v-model="lettrage.idClient" class="form-control" id="client" name="client">
                     <option value="" disabled>Sélectionnez un client</option>
-                    <option v-if="formData.typeTravel === 'PPF'" v-for="client in clients" :key="client.id" :value="client.id">
-                      {{ client.nom }} {{ client.prenom }}
-                    </option>
-                    <option v-if="formData.typeTravel !== 'PPF'" v-for="client in clients" :key="client.id" :value="client.id">
+                    <option v-for="client in clients" :key="client.id" :value="client.id">
                       {{ client.entreprise }}  
                     </option>
                   </select>

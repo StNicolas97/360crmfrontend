@@ -44,7 +44,11 @@
             <div class="col-md-5 border-right">
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right">Profil Employe</h4><i class="bi bi-trash" @click="deleteProfile"></i>
+                        <h4 class="text-right">Profil Employe</h4>
+                        <div>
+                            <i class="bi bi-trash" @click="deleteProfile"></i>
+                            <i class="bi bi-key" @click="login=true"></i>
+                        </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control"
@@ -65,10 +69,18 @@
                         <div class="col-md-12"><label class="labels">Poste</label><input type="text"
                                 class="form-control" v-model="user.poste"></div>
                         <div class="col-md-12"><label class="labels">Couleur</label><input type="color" class="form-control"  v-model="user.couleur"></div>
-
+                    </div> 
+                    <div v-if="login===true" class="row mt-2">
+                        <h5>Modifier les identifiants</h5>
+                        <div class="col-md-6"><label class="labels">username</label><input type="text"
+                            class="form-control" v-model="user.username"></div>
+                        <div class="col-md-6"><label class="labels">password</label><input type="text"
+                                class="form-control" v-model="user.password"></div>
                     </div>
-                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" @click="updateProfile"
-                            type="button">Enregistrer</button></div>
+                    <div class="mt-5 text-center">
+                        <button class="btn btn-primary profile-button" @click="updateProfile"
+                            type="button">Enregistrer</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,7 +106,8 @@ export default {
                 role: "",
                 couleur: ""
             },
-            taches: []
+            taches: [],
+            login : false
         }
     },
     props: {
