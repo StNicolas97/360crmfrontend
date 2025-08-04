@@ -859,7 +859,7 @@ export default {
 }
 
 .modal{
-  z-index: 500000;
+  z-index: 5000;
 }
 
 .form-control,
