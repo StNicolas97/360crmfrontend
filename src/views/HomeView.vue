@@ -476,7 +476,7 @@
       </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">
-        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"></UserProfile>
+        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @submit="refreshSectionUser()" @view="editTask"></UserProfile>
       </section>
 
       <section v-if="currentSection === 'clientProfile'" class="section">

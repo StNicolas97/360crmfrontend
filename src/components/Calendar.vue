@@ -33,7 +33,7 @@
             <!-- <button class="btn btn-sm btn-outline-info" @click="resetFilters">
               Réinitialiser
             </button> -->
-            <button @click="refetchTask()">refetchEvents</button>
+            <!-- <button @click="refetchTask()">refetchEvents</button> -->
           </div>
           <div class="mt-2">
             <small class="text-muted">
@@ -336,7 +336,7 @@ export default {
 
     getTaskTypeLabel(taskType) {
       const labels = {
-        'ppf': 'PPF',
+        'PPF': 'PPF',
         'lettrage': 'Lettrage',
         'affichage' : 'Affichage',
         'soustraitance': 'Sous-traitance'

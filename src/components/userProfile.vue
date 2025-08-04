@@ -158,7 +158,7 @@ export default {
                 'Impression': 'bg-secondary',
                 'Production' : 'bg-success',
                 'Installation' : 'bg-dark',
-                'Facturation' : 'Facturation'
+                'Facturation' : 'bg-danger'
             }
             return taskStatusClasses[statut] || 'badge-primary'
         },
@@ -173,6 +173,7 @@ export default {
                     }else{
                     const response = await updateService.updateUser(id, userUpdate);
                     alert("information modifiée avec succès")
+                    this.$emit('submit');
                     }
                 }
             } catch (error) {
