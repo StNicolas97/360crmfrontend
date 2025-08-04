@@ -137,7 +137,7 @@ export default {
         const task = tachesTransformees[i];
         events.push({
         id: task.id,
-        title: task.titre,
+        title: `${task.titre} pour ${task.nomclient} ${task.prenomclient}`,
         start: task.datedebut,
         end: task.datefin,
         allDay: !task.heuredebut,

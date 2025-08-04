@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-sm-12 col-md-3">
                 <div class="card mb-3 widget-chart bg-dark custom-chart" style="max-height: 290px;">
-                    <div v-if="notifications.length" class="dashboard-notifications mb-3">
+                    <!-- <div v-if="notifications.length" class="dashboard-notifications mb-3">
                         <div v-for="(notif, idx) in notifications" :key="idx"
                             class="alert alert-warning d-flex align-items-center" role="alert">
                             <i class="bi bi-exclamation-triangle me-2"></i>
                             <span>{{ notif.message }}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                 </div>
             </div>
@@ -41,8 +41,8 @@
                     </h4>
                     <div class="card-body scroll-body overflow-auto">
                         <ul class="list-unstyled mb-0">
-                            <li v-for="[nom, nb] in topClient" :key="nom">
-                                <i class="bi bi-person-circle me-2"></i> {{ nom }} : <b>{{ nb }}</b> tâche(s)
+                            <li v-for="cli in extractionCli" :key="nom" @click="showClient(cli.id)">
+                                <i class="bi bi-person-circle me-2"></i> {{ cli.nom }} : <b>{{ cli.total }}</b> tâche(s)
                             </li>
                         </ul>
                     </div>
@@ -92,8 +92,8 @@
                             </h5>
                             <div class="card-body">
                                 <ul class="list-unstyled mb-0">
-                                    <li v-for="[nom, nb] in topEmployes" :key="nom">
-                                        <i class="bi bi-person-circle me-2"></i> {{ nom }} : <b>{{ nb }}</b> tâche(s)
+                                    <li v-for="employe in extractionEmp" :key="nom" @click="showEmploye(employe.id)"> 
+                                        <i class="bi bi-person-circle me-2"></i> {{ employe.nom }} : <b>{{ employe.total }}</b> tâche(s) 
                                     </li>
                                 </ul>
                             </div>
@@ -107,7 +107,7 @@
                             <div class="card-body overflow-auto">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item custom-list-item" v-for="urgent in taskUrgent"
-                                        @dblclick="showTache(urgent.typeTask, urgent.id)">{{ urgent.titre }}</li>
+                                        @dblclick="showTache(urgent.typeTask, urgent.idTask)">{{ urgent.titre }} - {{ nbJour(urgent.dateFin) }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -155,7 +155,6 @@ export default {
             const task = localStorage.getItem("task");
             return task ? JSON.parse(task) : null;
         },
-
         async fetchClientsWithActiveTasks() {
             try {
                 const response = await getService.getClientsWithActiveTasks();
@@ -221,16 +220,24 @@ export default {
         }
         return icons[priority] || 'bi bi-circle-fill'
         },
+        nbJour(date){
+            const datefin = date ? new Date(date).setHours(0,0,0) : new Date().setHours(0,0,0);
+            let delai = Math.round((datefin - new Date().setHours(0,0,0)) / (1000 * 60 * 60 * 24));
+            if(delai > 0) return `à livrer dans : ${delai} jours`;
+            else if(delai === 0) return "à livrer aujourd'hui";
+            else{
+                delai = -1 * delai;
+                return `${delai} jours de retard`;
+                }
+        },
         showEmploye(id) {
             this.$emit('showemploye', id);
         },
         showTache(url, id) {
-            alert("voici endpoint", url)
             this.$emit('showtache', url, id);
         },
         showClient(id) {
             this.$emit('showclient', id);
-
         }
     },
     computed: {
@@ -259,6 +266,36 @@ export default {
             });
             return map;
         },
+
+        extractionEmp() {
+            const maps = this.topEmployes;
+            const tasks = maps.map(([nomEmploye, count]) => {
+            const tachesEmploye = this.allTaches.filter(task => (task.nomEmploye === nomEmploye)
+            );
+            const id = tachesEmploye.map(task => task.idAssigne)
+            return {
+                nom: nomEmploye,
+                total: count,
+                id: id[0]
+            };
+            });
+            return tasks;
+        },
+        extractionCli() {
+            const maps = this.topClient;
+            const tasks = maps.map(([nomClient, count]) => {
+            const tachesEmploye = this.clientsActive.filter(task => (task.nom === nomClient)
+            );
+            const id = tachesEmploye.map(task => task.id)
+            return {
+                nom: nomClient,
+                total: count,
+                id: id[0]
+            };
+            });
+            return tasks;
+        },
+
         // Top 3 employés les plus chargés
         topEmployes() {
             const arr = Object.entries(this.workloadByEmploye);
@@ -436,10 +473,6 @@ li i{
 .bi-arrow-down-circle-fill{
     color : rgb(95, 95, 233)
 }
-
-
-
-
 
 @media (max-width: 768px) {
     .stat-card {

@@ -14,7 +14,6 @@
             :class="{ 'active': currentSection === 'dashboard' }"
             @mouseenter="hovered = 'dashboard'" @mouseleave="hovered = null">
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
-            <span v-if="hovered === 'dashboard'" class="sidebar-tooltip">Dashboard</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
           </a>
         </li>
@@ -23,7 +22,6 @@
             :class="{ 'active': currentSection === 'calendrier' }"
             @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
             <i class="bi bi-calendar" :title="'Calendrier'"></i>
-            <span v-if="hovered === 'calendrier'" class="sidebar-tooltip">Calendrier</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
         </li>
@@ -32,7 +30,6 @@
             :class="{ 'active': currentSection === 'table' }"
             @mouseenter="hovered = 'table'" @mouseleave="hovered = null">
             <i class="bi bi-table" :title="'Tableau'"></i>
-            <span v-if="hovered === 'table'" class="sidebar-tooltip">Tableau</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
           </a>
         </li>
@@ -188,13 +185,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedTaches" :key="tache.id" 
+                <tr v-for="tache in paginatedTaches" :key="tache.idTache" 
                     class="table-row" 
                     @click="selectRow(tache)"
                     :class="{ 'selected': selectedTask?.id === tache.id }" 
                     @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
                   <td>
-                    <span class="task-id">#{{ tache.id }}</span>
+                    <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
                   <td>
                     <div class="task-title">

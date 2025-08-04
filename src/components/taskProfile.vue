@@ -50,10 +50,15 @@
                   <option value="Urgent">Urgent</option>
                   <option value="Normal">Normal</option>
                   <option value="Basse">Basse</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
                 </select>
               </li>
-              <li class="list-group-item"><strong>Client :</strong> {{ task.nom }} {{ task.prenom }}</li>
-              <li class="list-group-item"><strong>Id Tâche :</strong> {{ task.idTache }}</li>
+              <li class="list-group-item" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.nom }} {{ task.prenom }}</a></li>
+              <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
               <li class="list-group-item"><strong>Assigné :</strong> {{task.nomEmploye}}</li>
             </ul>
@@ -68,7 +73,7 @@
             <h5 class="card-title mb-3">Détails</h5>
             <ul class="list-group list-group-flush">
               <!-- PPF -->
-              <template v-if="task.typeTask === 'ppf'">
+              <template v-if="task.typeTask === 'PPF'">
                 <li class="list-group-item">
                   <strong>Titre :</strong>
                   <select class="form-select" v-model="task.titre">
@@ -295,7 +300,9 @@ export default {
         previous(){
             this.$emit('previous');
         },
-
+        showClient(id){
+          this.$emit('showclient', id);
+        },
         getTaskStatusClass(statut) {
             const taskStatusClasses = {
                 'Leads': 'bg-warning',

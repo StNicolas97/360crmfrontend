@@ -27,7 +27,7 @@
       </div>
 
       <div class="row parentkanban g-3">
-        <div v-for="col in columns" :key="col.key" class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-1">
+        <div v-for="col in columns" :key="col.key" class="col-12 col-sm-6 col-md-4 col-lg-2 col-xl-2">
           <div :class="['kanban-column', col.bgClass, { 'drag-over': dragOverColumn === col.key }]"
             @dragover.prevent="handleDragOver($event, col.key)" @dragenter.prevent="handleDragEnter(col.key)"
             @dragleave="handleDragLeave" @drop="onDrop($event, col.key)">
@@ -49,8 +49,11 @@
                         </div>
                         <div class="flex-grow-1 min-width-0">
                           <div class="fw-bold fs-6 text-truncate title" :title="tache.titre">{{ tache.titre }}</div>
-                          <div class="text-muted small text-truncate" v-if="tache.datefin">
-                            {{ 'À livrer le : ' + formatDate(tache.datefin) }}
+                          <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length < 17 ">
+                            {{ nbJour(tache.datefin)}}
+                          </div>
+                          <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length > 16 ">
+                            <p class="text-danger">{{ nbJour(tache.datefin)}}</p>
                           </div>
                           <div class="text-muted small text-truncate" v-if="tache.client">
                             <i class="bi bi-person-fill me-1"></i>{{ tache.client }}
@@ -107,6 +110,7 @@ export default {
         { key: "Approbation", title: "Approbation", bgClass: "kanban-col-approbation", badgeClass: "bg-info" },
         { key: "Impression", title: "Impression", bgClass: "kanban-col-impression", badgeClass: "bg-secondary" },
         { key: "Production", title: "Production", bgClass: "kanban-col-production", badgeClass: "bg-success" },
+        { key: "PPF", title: "PPF", bgClass: "kanban-col-ppf", badgeClass: "bg-dark" },
         { key: "Installation", title: "Installation", bgClass: "kanban-col-installation", badgeClass: "bg-dark" },
         { key: "Facturation", title: "Facturation", bgClass: "kanban-col-facturation", badgeClass: "bg-danger" }
       ],
@@ -262,7 +266,16 @@ export default {
         return dateString;
       }
     },
-
+    nbJour(date){
+      const datefin = date ? new Date(date).setHours(0,0,0) : new Date().setHours(0,0,0);
+      let delai = Math.round((datefin - new Date().setHours(0,0,0)) / (1000 * 60 * 60 * 24));
+      if(delai > 0) return `Delai : ${delai} jours`;
+      else if(delai === 0) return "Delai aujourd'hui";
+      else{
+        delai = Math.abs(delai);
+        return `${delai} jours de retard`;
+        }
+    },
     showError(message) {
       this.error = message;
       setTimeout(() => {
@@ -326,6 +339,10 @@ export default {
 }
 
 .kanban-col-installation {
+  border-top: 4px solid #212529;
+}
+
+.kanban-col-ppf {
   border-top: 4px solid #212529;
 }
 
@@ -488,6 +505,8 @@ export default {
     margin: auto 0%;
     position: relative;
     right: 20px;
+    overflow-x: scroll;
+    scrollbar-width: none;
   }
 
   .kanban-column {
