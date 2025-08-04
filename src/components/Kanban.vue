@@ -108,11 +108,11 @@ export default {
     return {
       taches: [],
       columns: [
-        { key: "Leads", title: "Leads", bgClass: "kanban-col-leads", badgeClass: "bg-warning text-dark" },
         { key: "Design", title: "Design", bgClass: "kanban-col-design", badgeClass: "bg-primary" },
         { key: "Approbation", title: "Approbation", bgClass: "kanban-col-approbation", badgeClass: "bg-info" },
         { key: "Impression", title: "Impression", bgClass: "kanban-col-impression", badgeClass: "bg-secondary" },
         { key: "Production", title: "Production", bgClass: "kanban-col-production", badgeClass: "bg-success" },
+        { key: "Leads", title: "Leads", bgClass: "kanban-col-leads", badgeClass: "bg-warning text-dark" },
         { key: "PPF", title: "PPF", bgClass: "kanban-col-ppf", badgeClass: "bg-dark" },
         { key: "Installation", title: "Installation", bgClass: "kanban-col-installation", badgeClass: "bg-dark" },
         { key: "Facturation", title: "Facturation", bgClass: "kanban-col-facturation", badgeClass: "bg-danger" }
