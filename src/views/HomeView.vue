@@ -691,6 +691,7 @@ export default {
       employes: [],
       clients: [],
       taches: [],
+      leads : [],
       users: [],
       userId : null,
       clientId : null,
@@ -872,6 +873,7 @@ export default {
         }
 
         this.taches = toutesLesTaches.sort((a, b) => new Date(b.datedebut) - new Date(a.datedebut));
+        this.leads = toutesLesTaches.filter(task => task.statut === 'Leads');
 
       } catch (error) {
         this.error = "Erreur lors de la récupération des tâches";
@@ -1019,12 +1021,16 @@ export default {
       }
     },
     formatDate(dateString) {
+      if(!dateString){
+        return "Aujourd'hui"
+      }else{
       const date = new Date(dateString)
       return date.toLocaleDateString('fr-FR', { 
         day: '2-digit', 
         month: '2-digit', 
         year: 'numeric' 
       })
+    }
     },
     isOverdue(dateString, statut) {
       const today = new Date();

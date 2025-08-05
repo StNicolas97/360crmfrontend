@@ -9,14 +9,14 @@
         <div class="modal-body">
           <form @submit.prevent="handleSubmit" class="container">
                        <div class="form-row row">
-                            <div class="form-group col-md-6">
-                                <label for="nom">Nom</label>
-                                <input type="text" class="form-control" id="nom" placeholder="" v-model="Employe.nom" required>
-                            </div>
-                            <div class="form-group col-md-6">
+                        <div class="form-group col-md-6">
                                 <label for="nom">Prenom</label>
                                 <input type="text" class="form-control" id="prenom" placeholder="" v-model="Employe.prenom" required>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label for="nom">Nom</label>
+                                <input type="text" class="form-control" id="nom" placeholder="" v-model="Employe.nom" required>
+                            </div>                           
                         </div>
                         <div class="mb-3">
               <label for="poste" class="form-label">Username</label>

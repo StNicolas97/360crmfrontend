@@ -11,8 +11,8 @@
                     <h4 class="text-right">Mon Profil</h4>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control" v-model="user.nom"></div>
                     <div class="col-md-6"><label class="labels">Prenom</label><input type="text" class="form-control" v-model="user.prenom" ></div>
+                    <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control" v-model="user.nom"></div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12"><label class="labels">Telephone</label><input type="text" class="form-control" v-model="user.telephone" ></div>
