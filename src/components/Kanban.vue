@@ -42,18 +42,15 @@
                     class="kanban-task card mb-2"
                     :class="{ 'dragging': draggedTask && (draggedTask.id === tache.id || draggedTask.idTache === tache.idTache) }"
                     draggable="true" @dragstart="startDrag($event, tache)" @dragend="endDrag">
-                    <div class="card-body card-body-kanban p-2">
+                    <div class="card-body card-body-kanban p-2" @dblclick="sendEmit(tache.typeTask, tache.id || tache.idTache)">
                       <div class="d-flex align-items-start mb-2">
                         <div class="kanban-task-avatar me-2" :class="getPriorityClass(tache.priorite)">
                           <i class="bi bi-folder2"></i>
                         </div>
                         <div class="flex-grow-1 min-width-0">
-                          <div class="fw-bold fs-6 text-truncate title" :title="tache.titre">{{ tache.titre }}</div>
+                          <div class="fw-bold fs-6 text-truncate title d-flex justify-content-between" :title="tache.titre"><span>{{ tache.titre }}</span><i class="bi bi-eye"></i></div>
                           <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length < 17 ">
                             {{ nbJour(tache.datefin)}}
-                          </div>
-                          <div class="text-muted small text-truncate">
-                            Assigné : {{ tache.nomEmploye}}
                           </div>
                           <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length > 16 ">
                             <p class="text-danger">{{ nbJour(tache.datefin)}}</p>
@@ -63,7 +60,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex justify-content-between align-items-center mt-2 gap-1">
+                      <!-- <div class="d-flex justify-content-between align-items-center mt-2 gap-1">
                         <button class="btn btn-outline-primary btn-sm flex-shrink-0"
                           @click="sendEmit(tache.typeTask, tache.id || tache.idTache)"
                           :title="'Voir les détails de la tâche'">
@@ -76,7 +73,7 @@
                             :class="getPriorityIndicator(tache.priorite)" :title="'Priorité: ' + tache.priorite">
                           </span>
                         </div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </transition-group>
@@ -272,12 +269,13 @@ export default {
     nbJour(date){
       const datefin = date ? new Date(date).setHours(0,0,0) : new Date().setHours(0,0,0);
       let delai = Math.round((datefin - new Date().setHours(0,0,0)) / (1000 * 60 * 60 * 24));
+      console.log("delai", delai)
+      console.log((datefin) + "   " + new Date().setHours(0,0,0)) 
+      delai = Math.abs(delai) + 1;
       if(delai > 0) return `Delai : ${delai} jours`;
       else if(delai === 0) return "Delai aujourd'hui";
-      else{
-        delai = Math.abs(delai);
-        return `${delai} jours de retard`;
-        }
+      else if(delai < 0) return `${delai} jours de retard`;
+  
     },
     showError(message) {
       this.error = message;
@@ -401,7 +399,7 @@ export default {
   scrollbar-width: none;
 }
 
-.bi-folder-plus {
+.bi-folder-plus{
   font-size: 1.3rem;
   cursor: pointer;
   color: #0d6efd;
