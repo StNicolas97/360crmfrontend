@@ -10,10 +10,10 @@
                         <h4 class="text-right">Profile Client</h4><i class="bi bi-trash" @click="deleteProfile"></i>
                     </div>
                     <div class="row mt-2">
+                        <div class="col-md-6"><label class="labels">Prenom</label><input type="text"
+                            v-model="client.prenom" class="form-control"></div>
                         <div class="col-md-6"><label class="labels">Nom</label><input type="text" v-model="client.nom"
                                 class="form-control"></div>
-                        <div class="col-md-6"><label class="labels">Prenom</label><input type="text"
-                                v-model="client.prenom" class="form-control"></div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Telephone</label><input type="text"

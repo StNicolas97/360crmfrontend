@@ -48,7 +48,7 @@
                           <i class="bi bi-folder2"></i>
                         </div>
                         <div class="flex-grow-1 min-width-0">
-                          <div class="fw-bold fs-6 text-truncate title d-flex justify-content-between" :title="tache.titre"><span>{{ tache.titre }}</span><i class="bi bi-eye"></i></div>
+                          <div class="fw-bold fs-6 text-truncate title d-flex justify-content-between" :title="tache.titre"><span>{{ tache.titre }}</span><i class="bi bi-eye" @click="sendEmit(tache.typeTask, tache.id || tache.idTache)"></i></div>
                           <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length < 17 ">
                             {{ nbJour(tache.datefin)}}
                           </div>
@@ -89,7 +89,7 @@
       </div>
     </div>
   </div>
-  <TacheModal></TacheModal>
+  <TacheModal @submit="fetchTask()"></TacheModal>
 </template>
 
 <script>
@@ -169,9 +169,6 @@ export default {
       if (item.statut === statut) {
         return;
       }
-
-      const valider = window.confirm(`Voulez-vous déplacer "${item.titre}" vers "${statut}"?`);
-      if (valider) {
         const oldStatut = item.statut;
         item.statut = statut;
 
@@ -191,7 +188,6 @@ export default {
           console.error("Erreur lors de la mise à jour de la tâche:", error);
         } finally {
           this.isLoading = false;
-        }
       }
 
       this.endDrag();
@@ -267,15 +263,30 @@ export default {
       }
     },
     nbJour(date){
-      const datefin = date ? new Date(date).setHours(0,0,0) : new Date().setHours(0,0,0);
-      let delai = Math.round((datefin - new Date().setHours(0,0,0)) / (1000 * 60 * 60 * 24));
-      console.log("delai", delai)
-      console.log((datefin) + "   " + new Date().setHours(0,0,0)) 
-      delai = Math.abs(delai) + 1;
-      if(delai > 0) return `Delai : ${delai} jours`;
-      else if(delai === 0) return "Delai aujourd'hui";
-      else if(delai < 0) return `${delai} jours de retard`;
-  
+      if (!date || date === null || date === undefined || date === '') {
+        return "Date non définie";
+      }
+      
+      // Créer les dates en forçant le fuseau horaire local
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' + 
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(today.getDate()).padStart(2, '0');
+      
+      // Forcer les deux dates à être en format YYYY-MM-DD local
+      const todayLocal = new Date(todayStr + 'T00:00:00');
+      const targetLocal = new Date(date + 'T00:00:00');
+      
+      // Vérifier validité
+      if (isNaN(targetLocal.getTime())) {
+        return "Date invalide";
+      }
+      
+      const delai = Math.round((targetLocal.getTime() - todayLocal.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if(delai > 0) return `Délai : ${delai} jours`;
+      else if(delai === 0) return "Délai aujourd'hui";
+      else return `${Math.abs(delai)} jours de retard`;
     },
     showError(message) {
       this.error = message;
@@ -408,6 +419,10 @@ export default {
 
 .bi-folder-plus:hover {
   color: #0b5ed7;
+}
+
+.bi-eye {
+  cursor: initial;
 }
 
 

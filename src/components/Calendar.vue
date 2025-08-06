@@ -33,7 +33,7 @@
             <!-- <button class="btn btn-sm btn-outline-info" @click="resetFilters">
               Réinitialiser
             </button> -->
-            <!-- <button @click="refetchTask()">refetchEvents</button> -->
+            <button class="btn btn-sm btn-outline-secondary me-2" @click="refetchEvents"><i class="bi bi-arrow-clockwise"></i></button>
           </div>
           <div class="mt-2">
             <small class="text-muted">
@@ -45,7 +45,7 @@
     </div>
 
     <FullCalendar ref="calendar" :options="calendarOptions"/>
-    <TacheModal :date="this.date" @submit="refetchTask()"/>
+    <tache-modal :date="date" @submitcal="refetchEvents"/>
   </div>
 </template>
 
@@ -55,8 +55,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import TacheModal from '../components/TacheModal.vue';
 import { getService } from '../api/services/get.service'
-import { ref } from 'vue';
-
+import { eventBus } from '@/utils/eventBus';
 export default {
   name: "MonCalendrier",
   components: {
@@ -102,16 +101,12 @@ export default {
       totalEventsCount: 0
     };
   },
-  setup(){
-
-  },
-  
   async mounted() {
     this.fetchTask();
     this.fetchNotes();
     this.getCalendarApi();
+    eventBus.on('submitCal', this.refetchEvents)
   },
-  
   methods: {
     handleDateClick(info) {
       this.date = info.dateStr;
@@ -138,7 +133,7 @@ export default {
         const task = tachesTransformees[i];
         events.push({
         id: task.id,
-        title: `${task.titre} pour ${task.nomclient} ${task.prenomclient}`,
+        title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
         start: task.datedebut,
         end: task.datefin,
         allDay: !task.heuredebut,
@@ -167,20 +162,16 @@ export default {
       this.calendarApi = this.$refs.calendar.getApi();
     });
     },
-    async refetchTask() {
+    async refetchEvents() {
       if (!this.calendarApi) {
         this.getCalendarApi();
-      }
-      
+      }      
       try {
         // Supprimer tous les événements existants
         this.calendarApi.removeAllEvents();
         
-
-
-        
         // Récupérer les nouvelles données
-       const events = await this.fetchTask();
+        const events = await this.fetchTask();
         let grand = events[0]?.id || 0;
         let indexGrand = 0;
 
@@ -195,7 +186,7 @@ export default {
         console.log("Index:", indexGrand);
         
         // Ajouter les nouveaux événements
-        this.calendarApi.addEvent(events[indexGrand]);
+        this.calendarApi.addEvent(events);
         
       } catch (error) {
         console.error('Erreur lors du rechargement des tâches:', error);

@@ -25,19 +25,16 @@
                 <label for="titre" class="form-label">Couverture Choisie</label>
                 <select class="form-select" id="titreTache" v-model="ppf.titre" required>
                   <option value=""></option>
-                  <option value="Argent">Argent</option>
-                  <option value="Argentp">Argent +</option>
-                  <option value="Autres">Autres</option>
-                  <option value="Bronze">Bronze</option>
+                  <option value="Argent">Kit Argent</option>
+                  <option value="Argentp">Kit Argent +</option>
+                  <option value="Bronze">Kit Bronze</option>
                   <option value="Custom">Custom</option>
-                  <option value="Disponibilité">Disponibilité</option>
                   <option value="Entretien">Entretien Annuel</option>
                   <option value="Kit">Kit de Van</option>
                   <option value="Nano">Nano</option>
-                  <option value="Or">Or</option>
-                  <option value="Platinium">Platinium</option>
+                  <option value="Or">Kit Or</option>
+                  <option value="Platinium">Kit Platinium</option>
                   <option value="Réparation">Réparation</option>
-                  <option value="courtoisie">Véhicule de courtoisie</option>
                   <option value="teintées">Vitres teintées</option>
                 </select>
                 <span class="" id="alertTitre"></span>
@@ -61,7 +58,7 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Date de ramassage prévu</label>
                   <input type="date" value="01/01/2015" v-model="ppf.datefin" class="form-control" name="dateFin"
-                    data-provide="datepicker" required>
+                    data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
@@ -78,7 +75,7 @@
                   <select v-model="ppf.idClient" class="form-control" id="client" name="client">
                     <option value="" disabled>Sélectionnez un client</option>
                     <option v-for="client in clients" :key="client.id" :value="client.id">
-                      {{ client.nom }} {{ client.prenom }}
+                      {{ client.prenom }} {{ client.nom }}
                     </option>
                   </select>
                   <span class=" bi bi-person-add" @click="addClient"></span>
@@ -97,7 +94,7 @@
               </div>
               <div class="mb-3">
                 <label for="vehicule" class="form-label">Véhicule (modèle/année)</label>
-                <input type="text" class="form-control" id="vehicule" v-model="ppf.vehicule" required>
+                <input type="text" class="form-control" id="vehicule" v-model="ppf.vehicule" >
               </div>
               <div class="mb-3">
                 <label for="vin" class="form-label">VIN #</label>
@@ -187,7 +184,7 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="dateFinAffichage">Date de livraison</label>
                   <input type="date" v-model="affichage.datefin" class="form-control" name="dateFinAffichage"
-                    id="dateFinAffichage" data-provide="datepicker" required>
+                    id="dateFinAffichage" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
@@ -314,7 +311,7 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Date de ramassage prévu</label>
                   <input type="date" value="01/01/2015" v-model="lettrage.datefin" class="form-control" name="dateFin"
-                    data-provide="datepicker" required>
+                    data-provide="datepicker" >
                   <span class="icon icon-calendar"></span>
                   <span id="alertFin"></span>
                 </div>
@@ -468,7 +465,7 @@
                   <div class="input-with-icon col-md-6 ms-auto">
                     <label for="debut">Date de fin</label>
                     <input type="date" value="01/01/2015" v-model="note.datefin" class="form-control" name="dateFin"
-                      data-provide="datepicker" required>
+                      data-provide="datepicker">
                     <span class="icon icon-calendar"></span>
                     <span id="alertFin"></span>
                   </div>
@@ -489,9 +486,9 @@
                 @click.prevent="">Enregistrer</button>
               <button type="submit" class="btn btn-danger" v-else-if="formData.typeTravel === 'note'"
                 @click.prevent="handleNewNote">Enregistrer</button>
-
             </div>
           </form>
+            <!-- <button @click.prevent="afterSubmit">emit</button> -->
         </div>
       </div>
     </div>
@@ -504,6 +501,7 @@ import { addService } from '@/api/services/add.service'
 import { getService } from '@/api/services/get.service'
 import { authService } from '../api/services/auth.service'
 import ClientModal from "../components/ClientModal.vue"
+import { eventBus } from '@/utils/eventBus'
 export default {
   name: 'TacheModal',
   components: {
@@ -520,7 +518,7 @@ export default {
         titre: '',
         typeTask: 'PPF',
         datedebut: null,
-        heuredebut: null,
+        heuredebut: "07:30",
         datefin: null,
         heurefin: null,
         statut: '',
@@ -543,7 +541,7 @@ export default {
         titre: '',
         typeTask: 'lettrage',
         datedebut: null,
-        heuredebut: null,
+        heuredebut: "07:30",
         datefin: null,
         heurefin: null,
         statut: '',
@@ -566,7 +564,7 @@ export default {
         titre: '',
         typeTask: 'affichage',
         datedebut: null,
-        heuredebut: null,
+        heuredebut: "07:30",
         datefin: null,
         heurefin: null,
         statut: '',
@@ -609,7 +607,11 @@ export default {
   async mounted() {
     await this.fetchUsers();
     await this.fetchclients();
-    this.checkDateClick()
+    this.checkDateClick();
+    window.addEventListener('submit',() => {
+      this.refetchTask();
+      alert("refresh")
+    });
     const modal = document.getElementById('modalclient');
     if (modal) {
       modal.addEventListener('hidden.bs.modal', this.fetchclients);
@@ -627,8 +629,9 @@ export default {
     }
   },
   methods: {
-    afterSubmit() {
+    async afterSubmit() {
       this.$emit('submit');
+      await eventBus.emit('submitCal')
       const modal = document.getElementById('modaltask')
       const bootstrapModal = bootstrap.Modal.getInstance(modal)
       bootstrapModal.hide()

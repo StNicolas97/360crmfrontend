@@ -21,7 +21,7 @@
           <a href="#" @click.prevent="currentSection = 'calendrier';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
             :class="{ 'active': currentSection === 'calendrier' }"
             @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
-            <i class="bi bi-calendar" :title="'Calendrier'"></i>
+            <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
         </li>

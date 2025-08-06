@@ -26,7 +26,7 @@
           <a href="#" @click.prevent="currentSection = 'calendrier'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
             :class="{ 'active': currentSection === 'calendrier' }"
             @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
-            <i class="bi bi-calendar" :title="'Calendrier'"></i>
+            <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
             <span v-if="hovered === 'calendrier'" class="sidebar-tooltip">Calendrier</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
@@ -140,7 +140,7 @@
 
       <section v-if="currentSection === 'calendrier'" class="section" id="calendrier">
         <div class="contain-calendar">
-          <Calendar @view="editTask"/>
+          <Calendar @view="editTask" @calendarefresh="rerenderCalendar()"/>
         </div>
       </section>
 
@@ -279,7 +279,12 @@
                 <option value="">Toutes les priorités</option>
                 <option value="Urgent">Urgent</option>
                 <option value="Normal">Normal</option>
-                <option value="Bas">Bas</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                
               </select>
             </div>
             <div class="col-md-3 d-flex align-items-center justify-content-end">
@@ -495,6 +500,7 @@
       </section>
 
       <section v-if="currentSection==='leads'">
+        <h4>Leads</h4>
                 <!-- Contrôles de filtrage et recherche -->
                 <div class="controls-section mb-4">
           <div class="row g-3">
@@ -504,35 +510,14 @@
                 <input 
                   type="text" 
                   class="form-control search-input" 
-                  v-model="searchQueryTaches"
+                  v-model="searchQueryLeads"
                   placeholder="Rechercher une tâche..."
-                  @input="filterTaches"
+                  @input="filterLeads"
                 >
                 <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
                   <i class="bi bi-x"></i>
                 </button>
               </div>
-            </div>
-            <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
-                <option value="">Toutes les priorités</option>
-                <option value="Urgent">Urgent</option>
-                <option value="Normal">Normal</option>
-                <option value="Bas">Bas</option>
-              </select>
-            </div>
-            <div class="col-md-3 d-flex align-items-center justify-content-end">
-              <select class="form-select filter-select me-2" v-model="selectedStatusFilter" @change="filterTaches">
-                <option value="">Tous les statuts</option>
-                <option value="Leads">Leads</option>
-                <option value="Design">Design</option>
-                <option value="Approbation">Approbation</option>
-                <option value="Impression">Impression</option>
-                <option value="Production">Production</option>
-                <option value="Installation">Installation</option>
-                <option value="Facturation">Facturation</option>
-              </select>
-              <i class="bi bi-folder-plus action-icon" data-bs-toggle="modal" data-bs-target="#modaltask"></i>
             </div>
           </div>
         </div>
@@ -546,38 +531,18 @@
                   <th @click="sortBy('id')" class="sortable">
                     <div class="th-content">
                       ID
-                      <i class="bi bi-arrow-down-up sort-icon"></i>
                     </div>
                   </th>
                   <th @click="sortBy('titre')" class="sortable">
                     <div class="th-content">
-                      Type
-                      <i class="bi bi-arrow-down-up sort-icon"></i>
-                    </div>
-                  </th>
-                  <th @click="sortBy('datefin')" class="sortable">
-                    <div class="th-content">
-                      Date d'échéance
-                      <i class="bi bi-arrow-down-up sort-icon"></i>
-                    </div>
-                  </th>
-                  <th @click="sortBy('priorite')" class="sortable">
-                    <div class="th-content">
-                      Priorité
-                      <i class="bi bi-arrow-down-up sort-icon"></i>
-                    </div>
-                  </th>
-                  <th @click="sortBy('statut')" class="sortable">
-                    <div class="th-content">
-                      Statut
-                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                      Titre
                     </div>
                   </th>
                   <th class="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedTaches" :key="tache.idTache"
+                <tr v-for="tache in paginatedLeads" :key="tache.idTache"
                     class="table-row" 
                     @click="selectRow(tache)"
                     :class="{ 'selected': selectedTask?.id === tache.id }" 
@@ -590,26 +555,6 @@
                       <i :class="getTaskIcon(tache.typeTask)" class="me-2"></i>
                       {{ tache.titre }}
                     </div>
-                  </td>
-                  <td>
-                    <div class="date-container">
-                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
-                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
-                        <i class="bi bi-exclamation-triangle"></i>
-                      </span>
-                    </div>
-                  </td>
-                  <td>
-                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
-                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
-                      {{ tache.priorite }}
-                    </span>
-                  </td>
-                  <td>
-                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
-                      <div class="status-indicator"></div>
-                      {{ tache.statut }}
-                    </span>
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
@@ -625,7 +570,7 @@
               </tbody>
             </table>
             <!-- Message si aucune tâche -->
-            <div v-if="filteredTaches.length === 0" class="no-data">
+            <div v-if="paginatedLeads.length === 0" class="no-data">
               <i class="bi bi-inbox"></i>
               <p>Aucune tâche trouvée</p>
             </div>
@@ -727,6 +672,15 @@ export default {
       employeSortDirection: 'asc',
       employeCurrentPage: 1,
       employeItemsPerPage: 10,
+
+      //Section leads
+      filteredLeads: [],
+      searchQueryLeads: '',
+      leadsSortField: 'nom',
+      leadsSortDirection: 'asc',
+      leadsCurrentPage: 1,
+      leadsItemsPerPage: 10,
+
       user: null,
       isSidebarOpen: false,
     }
@@ -808,6 +762,23 @@ export default {
       }
       return pages;
     },
+    paginatedLeads() {
+      const start = (this.leadsCurrentPage - 1) * this.leadsItemsPerPage;
+      const end = start + this.leadsItemsPerPage;
+      return this.filteredLeads.slice(start, end);
+    },
+    leadsTotalPages() {
+      return Math.ceil(this.filteredLeads.length / this.leadsItemsPerPage);
+    },
+    leadsVisiblePages() {
+      const pages = [];
+      const start = Math.max(1, this.leadsCurrentPage - 2);
+      const end = Math.min(this.leadsTotalPages, this.leadsCurrentPage + 2);
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+      return pages;
+    },
   },
   async mounted() {
     await this.fetchTask();
@@ -819,6 +790,7 @@ export default {
     this.filterClients();
     await this.fetchUsers();
     this.filterEmployes();
+    this.filterLeads()
     this.user = JSON.parse(localStorage.getItem('user'));
   },
   beforeUnmount() {
@@ -873,7 +845,7 @@ export default {
         }
 
         this.taches = toutesLesTaches.sort((a, b) => new Date(b.datedebut) - new Date(a.datedebut));
-        this.leads = toutesLesTaches.filter(task => task.statut === 'Leads');
+        this.leads = toutesLesTaches.filter((task) => task.statut === 'Leads');
 
       } catch (error) {
         this.error = "Erreur lors de la récupération des tâches";
@@ -906,6 +878,15 @@ export default {
       this.taskId = id;
       this.endpoint = type;
 
+    },
+    rerenderCalendar(){
+      if(this.currentSection ===  'calendrier'){
+        console.log("this.currentSection : ", this.currentSection);
+        this.currentSection =  'dashboard';
+        console.log("this.currentSection : ", this.currentSection);
+        this.currentSection =  'calendrier';
+        console.log("this.currentSection : ", this.currentSection);
+      }
     },
     previous(){
       this.currentSection = this.previousSection
@@ -1022,7 +1003,7 @@ export default {
     },
     formatDate(dateString) {
       if(!dateString){
-        return "Aujourd'hui"
+        return "indefini"
       }else{
       const date = new Date(dateString)
       return date.toLocaleDateString('fr-FR', { 
@@ -1146,6 +1127,45 @@ export default {
       this.searchQueryEmployes = '';
       this.filterEmployes();
     },
+    /*zone filtre et tri leads*/
+    filterLeads() {
+      let filtered = [...this.leads];
+      if (this.searchQueryLeads) {
+        const query = this.searchQueryLeads.toLowerCase();
+        filtered = filtered.filter(lead =>
+          lead.titre.toLowerCase().includes(query)
+        );
+      }
+      this.filteredLeads = filtered;
+      this.leadsCurrentPage = 1;
+    },
+    sortLeads(field) {
+      if (this.leadsSortField === field) {
+        this.leadsSortDirection = this.leadsSortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        this.leadsSortField = field;
+        this.leadsSortDirection = 'asc';
+      }
+      this.filteredLeads.sort((a, b) => {
+        let aVal = a[field] || '';
+        let bVal = b[field] || '';
+        if (this.leadsSortDirection === 'asc') {
+          return aVal > bVal ? 1 : -1;
+        } else {
+          return aVal < bVal ? 1 : -1;
+        }
+      });
+    },
+    changeLeadsPage(page) {
+      if (page >= 1 && page <= this.employeTotalPages) {
+        this.leadsCurrentPage = page;
+      }
+    },
+    clearLeadsSearch() {
+      this.leadsQueryEmployes = '';
+      this.filterEmployes();
+    },
+    /*fin zone leads*/
     closeSideBar(){
       if(this.isMobile && this.isSidebarOpen) 
       this.isSidebarOpen = false;
@@ -1250,6 +1270,11 @@ main {
 .table th {
   padding: 1rem;
   vertical-align: middle;
+}
+
+.table-responsive{
+  overflow-y: scroll;
+  height: 70%;
 }
 
 /* Styles pour les badges */

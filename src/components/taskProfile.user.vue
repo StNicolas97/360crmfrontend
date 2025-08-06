@@ -74,23 +74,19 @@
                 <!-- PPF -->
                 <template v-if="task.typeTask === 'PPF'">
                   <li class="list-group-item">
-                    <strong>Titre :</strong>
+                    <strong>Couverture :</strong>
                     <select class="form-select" v-model="task.titre">
                       <option value=""></option>
-                      <option value="Argent">Argent</option>
-                      <option value="Argentp">Argent +</option>
-                      <option value="Autres">Autres</option>
-                      <option value="Bronze">Bronze</option>
+                      <option value="Argent">Kit Argent</option>
+                      <option value="Argentp">Kit Argent +</option>
+                      <option value="Bronze">Kit Bronze</option>
                       <option value="Custom">Custom</option>
-                      <option value="Disponibilité">Disponibilité</option>
                       <option value="Entretien">Entretien Annuel</option>
                       <option value="Kit">Kit de Van</option>
                       <option value="Nano">Nano</option>
-                      <option value="Or">Or</option>
-                      <option value="Platinium">Platinium</option>
-                      <option value="René">René</option>
+                      <option value="Or">Kit Or</option>
+                      <option value="Platinium">Kit Platinium</option>
                       <option value="Réparation">Réparation</option>
-                      <option value="courtoisie">Véhicule de courtoisie</option>
                       <option value="teintées">Vitres teintées</option>
                     </select>
                   </li>

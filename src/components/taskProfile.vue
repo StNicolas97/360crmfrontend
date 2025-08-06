@@ -57,7 +57,8 @@
                   <option value="5">5</option>
                 </select>
               </li>
-              <li class="list-group-item" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.nom }} {{ task.prenom }}</a></li>
+              <li class="list-group-item" v-if="task.typeTask==='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.nom }} {{ task.prenom }}</a></li>
+              <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
               <li class="list-group-item"><strong>Assigné :</strong> {{task.nomEmploye}}</li>
@@ -75,23 +76,19 @@
               <!-- PPF -->
               <template v-if="task.typeTask === 'PPF'">
                 <li class="list-group-item">
-                  <strong>Titre :</strong>
+                  <strong>Couverture :</strong>
                   <select class="form-select" v-model="task.titre">
                     <option value=""></option>
-                    <option value="Argent">Argent</option>
-                    <option value="Argentp">Argent +</option>
-                    <option value="Autres">Autres</option>
-                    <option value="Bronze">Bronze</option>
+                    <option value="Argent">Kit Argent</option>
+                    <option value="Argentp">Kit Argent +</option>
+                    <option value="Bronze">Kit Bronze</option>
                     <option value="Custom">Custom</option>
-                    <option value="Disponibilité">Disponibilité</option>
                     <option value="Entretien">Entretien Annuel</option>
                     <option value="Kit">Kit de Van</option>
                     <option value="Nano">Nano</option>
-                    <option value="Or">Or</option>
-                    <option value="Platinium">Platinium</option>
-                    <option value="René">René</option>
+                    <option value="Or">Kit Or</option>
+                    <option value="Platinium">Kit Platinium</option>
                     <option value="Réparation">Réparation</option>
-                    <option value="courtoisie">Véhicule de courtoisie</option>
                     <option value="teintées">Vitres teintées</option>
                   </select>
                 </li>
@@ -256,30 +253,21 @@ export default {
             const id = this.task.idTache;
             const url = this.task.typeTask;
             const data = this.task;
-            const valider = window.confirm("Confirmer les modifications de cette tâche?");
-
-            if (valider) {
-                try {
-                    const response = await updateService.updateTask(url, id, data);
-                    this.$emit('updateTask');
-                    if(!response){
-                        alert("Erreur lors de la modification !");
-                    } 
-                    else{
-                        alert("Tâche modifiée avec succès");
-                    }
-                    await this.fetchTask();
-                } catch (error) {
-                    console.error("Erreur lors de la mise à jour de la tâche :", error);
-                    alert("Une erreur est survenue lors de la mise à jour de la tâche.");
-                }
+            try {
+          const response = await updateService.updateTask(url, id, data);
+          this.$emit('updateTask');
+          if (!response) {
+              throw new Error();
+          }
+          await this.fetchTask();
+            } catch (error) {
+          console.error("Erreur lors de la mise à jour de la tâche :", error);
+          alert("Une erreur est survenue lors de la mise à jour de la tâche.");
             }
         },
         async createInvoice(){
             try{
             const data = this.task;
-            const valider =  window.confirm("Confirmer la création de la facture");
-
             if(valider){
                 const response = await addService.addInvoice(data);
                 if(!response){
