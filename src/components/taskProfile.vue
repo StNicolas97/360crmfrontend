@@ -3,7 +3,7 @@
     <!-- En-tête -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <button class="btn btn-link p-0 me-3" @click="previous">
+        <button class="btn btn-link p-0 me-3" @click.stop="previous">
           <i class="bi bi-arrow-left fs-4"></i>
         </button>
         <span class="fs-4 fw-bold text-capitalize">{{ task.typeTask }}</span>

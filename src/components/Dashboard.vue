@@ -221,14 +221,36 @@ export default {
         return icons[priority] || 'bi bi-circle-fill'
         },
         nbJour(date){
-            const datefin = date ? new Date(date).setHours(0,0,0) : new Date().setHours(0,0,0);
-            let delai = Math.round((datefin - new Date().setHours(0,0,0)) / (1000 * 60 * 60 * 24));
-            if(delai > 0) return `à livrer dans : ${delai} jours`;
-            else if(delai === 0) return "à livrer aujourd'hui";
-            else{
-                delai = -1 * delai;
-                return `${delai} jours de retard`;
-                }
+        if (!date || date === null || date === undefined || date === '') {
+            return "Date non définie";
+        }
+        
+        // Créer les dates en forçant le fuseau horaire local
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + 
+                        String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(today.getDate()).padStart(2, '0');
+        
+        // Forcer les deux dates à être en format YYYY-MM-DD local
+        const todayLocal = new Date(todayStr + 'T00:00:00');
+        const targetLocal = new Date(date + 'T00:00:00');
+        
+        // Vérifier validité
+        if (isNaN(targetLocal.getTime())) {
+            return "Date invalide";
+        }
+        
+        const delai = Math.round((targetLocal.getTime() - todayLocal.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if(delai > 0) return `Délai : ${delai} jours`;
+        else if(delai === 0) return "Délai aujourd'hui";
+        else return `${Math.abs(delai)} jours de retard`;
+        },
+        showError(message) {
+        this.error = message;
+        setTimeout(() => {
+            this.error = null;
+        }, 5000);
         },
         showEmploye(id) {
             this.$emit('showemploye', id);

@@ -11,7 +11,7 @@
         <img class="img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
       </a>
       <hr class="text-white">
-      <ul class="nav nav-pills flex-column mb-auto">
+      <ul class="nav nav-pills flex-column mb-auto" @click="clearnav()">
         <li class="nav-item">
           <a href="#" @click.prevent="currentSection = 'dashboard'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center"
             :class="{ 'active': currentSection === 'dashboard' }"
@@ -638,11 +638,11 @@ export default {
       taches: [],
       leads : [],
       users: [],
+      historyStack : [],
       userId : null,
       clientId : null,
       taskId : null,
       endpoint : '',
-      previousSection : '',
       error: null,
       username : '',
       hovered: null,
@@ -857,39 +857,45 @@ export default {
       this.username = JSON.parse(localUser).username ;
     },
     changeSectionProfil() {
+      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('myuserProfile')
       this.previousSection = this.currentSection
       this.currentSection = 'myuserProfile'
       if(this.isSidebarOpen) this.isSidebarOpen = false
     },
 
     editUser(id){
-      this.previousSection = this.currentSection;
+      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('userProfile')
       this.currentSection =  'userProfile';
       this.userId = id;
     },
     editClient(id){
-      this.previousSection = this.currentSection;
+      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('clientProfile')
       this.currentSection =  'clientProfile';
       this.clientId = id;
     },
     editTask(type,id){
-      this.previousSection = this.currentSection;
+      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('taskProfile')
       this.currentSection =  'taskProfile';
       this.taskId = id;
       this.endpoint = type;
 
     },
-    rerenderCalendar(){
-      if(this.currentSection ===  'calendrier'){
-        console.log("this.currentSection : ", this.currentSection);
-        this.currentSection =  'dashboard';
-        console.log("this.currentSection : ", this.currentSection);
-        this.currentSection =  'calendrier';
-        console.log("this.currentSection : ", this.currentSection);
+    goTo(section) {
+    this.historyStack.push(section)
+    this.currentSection = section
+    },
+    previous() {
+      if (this.historyStack.length > 1) {
+        this.historyStack.pop()
+        this.currentSection = this.historyStack[this.historyStack.length - 1]
       }
     },
-    previous(){
-      this.currentSection = this.previousSection
+    clearnav(){
+      this.historyStack.length = 0;
     },
     refreshSectionTask(){
       this.taches = null;
