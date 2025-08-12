@@ -78,6 +78,15 @@
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Leads</span>
           </a>
         </li>
+        <li>
+          <a href="#" @click.prevent="currentSection = 'myTask'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'myTask' }"
+            @mouseenter="hovered = 'myTask'" @mouseleave="hovered = null">
+            <i class="bi bi-briefcase" :title="'myTask'"></i>
+            <span v-if="hovered === 'myTask'" class="sidebar-tooltip">Mes Taches</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Mes Taches</span>
+          </a>
+        </li>
       </ul>
       <hr class="text-white">
       <div class="dropdown mb-4 d-flex justify-content-center">
@@ -594,6 +603,205 @@
         <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
       </section>
 
+      <section v-if="currentSection === 'myTask'" class="'myTask'">
+        <div class="dashboard-header mb-4">
+          <h2 class="dashboard-title">
+            <i class="bi bi-list-task me-2"></i>
+            Mes Tâches
+          </h2>
+          <div class="dashboard-stats">
+            <div class="stat-item">
+              <span class="stat-number">{{ taches.length }}</span>
+              <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ tachesUrgentes }}</span>
+              <span class="stat-label">Urgentes</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{{ tachesEnCours }}</span>
+              <span class="stat-label">En cours</span>
+            </div>
+            <div class="stat-item stat-retard">
+              <span class="stat-number">{{ nbTachesEnRetard }}</span>
+              <span class="stat-label">En retard</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contrôles de filtrage et recherche -->
+        <div class="controls-section mb-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="search-container">
+                <i class="bi bi-search search-icon"></i>
+                <input 
+                  type="text" 
+                  class="form-control search-input" 
+                  v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..."
+                  @input="filterTaches"
+                >
+                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
+                  <i class="bi bi-x"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
+                <option value="">Toutes les priorités</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Normal">Normal</option>
+                <option value="Bas">Bas</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <select class="form-select filter-select" v-model="selectedStatusFilter" @change="filterTaches">
+                <option value="">Tous les statuts</option>
+                <option value="Leads">Leads</option>
+                <option value="Design">Design</option>
+                <option value="Approbation">Approbation</option>
+                <option value="Impression">Impression</option>
+                <option value="Production">Production</option>
+                <option value="Installation">Installation</option>
+                <option value="Facturation">Facturation</option>
+                <option value="Termine">Termine</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau  -->
+        <div class="table-container">
+          <div class="table-responsive">
+            <table class="table table-modern">
+              <thead>
+                <tr>
+                  <th @click="sortBy('id')" class="sortable">
+                    <div class="th-content">
+                      ID
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('titre')" class="sortable">
+                    <div class="th-content">
+                      Type
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('datefin')" class="sortable">
+                    <div class="th-content">
+                      Date d'échéance
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('priorite')" class="sortable">
+                    <div class="th-content">
+                      Priorité
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th @click="sortBy('statut')" class="sortable">
+                    <div class="th-content">
+                      Statut
+                      <i class="bi bi-arrow-down-up sort-icon"></i>
+                    </div>
+                  </th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="tache in paginatedMyTask" :key="tache.idTache" 
+                    class="table-row" 
+                    @click="selectRow(tache)"
+                    :class="{ 'selected': selectedTask?.id === tache.id }" 
+                    @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
+                  <td>
+                    <span class="task-id">#{{ tache.idTache }}</span>
+                  </td>
+                  <td>
+                    <div class="task-title">
+                      <i :class="getTaskIcon(tache.typeTask)" class="me-2"></i>
+                      {{ tache.titre }}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="date-container">
+                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
+                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
+                        <i class="bi bi-exclamation-triangle"></i>
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
+                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
+                      {{ tache.priorite }}
+                    </span>
+                  </td>
+                  <td>
+                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
+                      <div class="status-indicator"></div>
+                      {{ tache.statut }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <div class="action-buttons">
+                      <button 
+                        @click="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))"
+                        class="btn btn-action btn-view"
+                        title="Voir les détails">
+                        <i class="bi bi-eye"></i>
+                      </button>
+                      <!-- <button 
+                        @click.stop="quickEdit(tache)"
+                        class="btn btn-action btn-edit"
+                        title="Modification rapide">
+                        <i class="bi bi-pencil"></i>
+                      </button> -->
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <!-- Message si aucune tâche -->
+            <div v-if="filteredTaches.length === 0" class="no-data">
+              <i class="bi bi-inbox"></i>
+              <p>Aucune tâche trouvée</p>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination-container" v-if="totalPages > 1">
+            <nav>
+              <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                  <a class="page-link" @click.prevent="changePage(currentPage - 1)">
+                    <i class="bi bi-chevron-left"></i>
+                  </a>
+                </li>
+                <li class="page-item" 
+                    v-for="page in visiblePages" 
+                    :key="page"
+                    :class="{ active: page === currentPage }">
+                  <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                  <a class="page-link" @click.prevent="changePage(currentPage + 1)">
+                    <i class="bi bi-chevron-right"></i>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <div class="pagination-info">
+              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+            </div>
+          </div>
+        </div>
+      </section>
+
 
 
     </main>
@@ -638,6 +846,7 @@ export default {
       taches: [],
       leads : [],
       users: [],
+      myTask : [],
       historyStack : [],
       userId : null,
       clientId : null,
@@ -681,6 +890,15 @@ export default {
       leadsCurrentPage: 1,
       leadsItemsPerPage: 10,
 
+      //section myTask
+      filteredMyTask: [],
+      searchQueryMyTask: '',
+      MyTaskSortField: 'nom',
+      MyTaskSortDirection: 'asc',
+      MyTaskCurrentPage: 1,
+      MyTaskItemsPerPage: 10,
+
+
       user: null,
       isSidebarOpen: false,
     }
@@ -708,6 +926,11 @@ export default {
       const start = (this.currentPage - 1) * this.itemsPerPage
       const end = start + this.itemsPerPage
       return this.filteredTaches.slice(start, end)
+    },
+    paginatedMyTask(){
+      const start = (this.currentPage - 1) * this.itemsPerPage
+      const end = start + this.itemsPerPage
+      return this.myTask.slice(start, end)
     },
     totalPages() {
       return Math.ceil(this.filteredTaches.length / this.itemsPerPage)
@@ -778,7 +1001,7 @@ export default {
         pages.push(i);
       }
       return pages;
-    },
+    }
   },
   async mounted() {
     await this.fetchTask();
@@ -791,6 +1014,7 @@ export default {
     await this.fetchUsers();
     this.filterEmployes();
     this.filterLeads()
+    await this.getUserTasks();
     this.user = JSON.parse(localStorage.getItem('user'));
   },
   beforeUnmount() {
@@ -855,6 +1079,20 @@ export default {
     connectedUser(){
       const localUser = localStorage.getItem('user');
       this.username = JSON.parse(localUser).username ;
+    },
+    async getUserTasks() {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"))
+        this.user = user
+        const id = user.id
+        let toutesLesTaches = []
+        const response = await getService.getEmployeAllTask(id)
+        toutesLesTaches = response.data
+        console.log("mes taches : ", toutesLesTaches)
+        this.myTask = toutesLesTaches.sort((a, b) => new Date(a.datedebut) - new Date(b.datedebut))
+      } catch (error) {
+        console.error("Erreur lors de la récupération des tâches", error)
+      }
     },
     changeSectionProfil() {
       if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)

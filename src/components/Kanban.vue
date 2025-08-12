@@ -96,7 +96,6 @@
 import { getService } from '@/api/services/get.service';
 import { updateService } from '@/api/services/update.service';
 import TacheModal from './TacheModal.vue';
-
 export default {
   components: {
     TacheModal

@@ -56,6 +56,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import TacheModal from '../components/TacheModal.vue';
 import { getService } from '../api/services/get.service'
 import { eventBus } from '@/utils/eventBus';
+
 export default {
   name: "MonCalendrier",
   components: {

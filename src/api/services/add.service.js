@@ -53,4 +53,12 @@ export const addService = {
       "une erreur est survenue lors de l'ajout "
     );
   },
+  async addMail(mail) {
+    return handleAdd(
+      "rappel",
+      mail,
+      "Mail ajoutée avec succès",
+      "une erreur est survenue lors de l'ajout "
+    );
+  },
 };

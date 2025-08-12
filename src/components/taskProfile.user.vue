@@ -41,6 +41,7 @@
                     <option value="Production">Production</option>
                     <option value="Installation">Installation</option>
                     <option value="Facturation">Facturation</option>
+                    <option value="Termine">Termine</option>
   
                   </select>
                 </li>
@@ -200,13 +201,15 @@
   import { updateService } from '@/api/services/update.service';
   import { deleteService } from '@/api/services/delete.service';
   import { addService } from '@/api/services/add.service';
+  import { ref } from 'vue';
   export default {
       name: 'TaskProfile',
       data() {
           return {
               task: {
               },
-              role: ''
+              role: '',
+              statut : ref(task.statut),
           }
       },
       props: {
@@ -221,6 +224,13 @@
       },
       async mounted() {
           await this.fetchTask();
+      },
+      watch : {
+        changeStatut(oldStatut, newStatut){
+          if( newStatut !== 'Termine')
+          alert("statut Changé")
+        }
+
       }
       , methods: {
           async fetchTask() {
@@ -315,7 +325,14 @@
                   'Basse': 'bg-info'
               }
               return priorityClasses[priorite] || 'bg-dark'
-          },
+          },   
+          async sendMail(){
+            try{
+                const response = await addService.addMail(this.task.email);
+            }catch(error){
+                console.error(error);
+            }
+          }
       },
   };
   </script>
