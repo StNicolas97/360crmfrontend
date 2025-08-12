@@ -89,13 +89,14 @@
       </div>
     </div>
   </div>
-  <TacheModal @submit="fetchTask()"></TacheModal>
+  <TacheModal @submitKan="fetchTask()"></TacheModal>
 </template>
 
 <script>
 import { getService } from '@/api/services/get.service';
 import { updateService } from '@/api/services/update.service';
 import TacheModal from './TacheModal.vue';
+import { eventBus } from '@/utils/eventBus';
 export default {
   components: {
     TacheModal
@@ -118,6 +119,12 @@ export default {
       draggedTask: null,
       dragOverColumn: null,
     };
+  },
+  mounted() {
+    eventBus.on('submitKan', ()=> {
+      console.log("emit du kanabn recu");
+      this.fetchTask();
+    });
   },
   methods: {
     getStatut(statut) {

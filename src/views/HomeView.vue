@@ -17,7 +17,6 @@
             :class="{ 'active': currentSection === 'dashboard' }"
             @mouseenter="hovered = 'dashboard'" @mouseleave="hovered = null">
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
-            <span v-if="hovered === 'dashboard'" class="sidebar-tooltip">Dashboard</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
 
           </a>
@@ -27,7 +26,6 @@
             :class="{ 'active': currentSection === 'calendrier' }"
             @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
             <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
-            <span v-if="hovered === 'calendrier'" class="sidebar-tooltip">Calendrier</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
         </li>
@@ -36,7 +34,6 @@
             :class="{ 'active': currentSection === 'table' }"
             @mouseenter="hovered = 'table'" @mouseleave="hovered = null">
             <i class="bi bi-table" :title="'Tableau'"></i>
-            <span v-if="hovered === 'table'" class="sidebar-tooltip">Tableau</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
 
           </a>
@@ -46,7 +43,6 @@
             :class="{ 'active': currentSection === 'clients' }"
             @mouseenter="hovered = 'clients'" @mouseleave="hovered = null">
             <i class="bi bi-people" :title="'Clients'"></i>
-            <span v-if="hovered === 'clients'" class="sidebar-tooltip">Clients</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Clients</span>
 
           </a>
@@ -56,7 +52,6 @@
             :class="{ 'active': currentSection === 'taches' }"
             @mouseenter="hovered = 'taches'" @mouseleave="hovered = null">
             <i class="bi bi-list-task" :title="'Tâches'"></i>
-            <span v-if="hovered === 'taches'" class="sidebar-tooltip">Tâches</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Tâches</span>
           </a>
         </li>
@@ -65,7 +60,6 @@
             :class="{ 'active': currentSection === 'employe' }"
             @mouseenter="hovered = 'employe'" @mouseleave="hovered = null">
             <i class="bi bi-person-circle" :title="'Employés'"></i>
-            <span v-if="hovered === 'employe'" class="sidebar-tooltip">Employés</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Employés</span>
           </a>
         </li>
@@ -74,7 +68,6 @@
             :class="{ 'active': currentSection === 'leads' }"
             @mouseenter="hovered = 'employe'" @mouseleave="hovered = null">
             <i class="bi bi-person-fill-exclamation" :title="'Employés'"></i>
-            <span v-if="hovered === 'leads'" class="sidebar-tooltip">Leads</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Leads</span>
           </a>
         </li>
@@ -83,7 +76,6 @@
             :class="{ 'active': currentSection === 'myTask' }"
             @mouseenter="hovered = 'myTask'" @mouseleave="hovered = null">
             <i class="bi bi-briefcase" :title="'myTask'"></i>
-            <span v-if="hovered === 'myTask'" class="sidebar-tooltip">Mes Taches</span>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Mes Taches</span>
           </a>
         </li>
@@ -1133,7 +1125,6 @@ export default {
       this.currentSection =  'taskProfile';
       this.taskId = id;
       this.endpoint = type;
-
     },
     goTo(section) {
     this.historyStack.push(section)

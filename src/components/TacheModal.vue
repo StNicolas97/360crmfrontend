@@ -488,7 +488,7 @@
                 @click.prevent="handleNewNote">Enregistrer</button>
             </div>
           </form>
-            <!-- <button @click.prevent="afterSubmit">emit</button> -->
+            <button @click.prevent="afterSubmit">emit</button>
         </div>
       </div>
     </div>
@@ -504,6 +504,7 @@ import ClientModal from "../components/ClientModal.vue"
 import { eventBus } from '@/utils/eventBus'
 export default {
   name: 'TacheModal',
+  emits: ['submitcal', 'submitKan'],
   components: {
     ClientModal
   },
@@ -608,10 +609,6 @@ export default {
     await this.fetchUsers();
     await this.fetchclients();
     this.checkDateClick();
-    window.addEventListener('submit',() => {
-      this.refetchTask();
-      alert("refresh")
-    });
     const modal = document.getElementById('modalclient');
     if (modal) {
       modal.addEventListener('hidden.bs.modal', this.fetchclients);
@@ -630,8 +627,9 @@ export default {
   },
   methods: {
     async afterSubmit() {
-      this.$emit('submit');
-      await eventBus.emit('submitCal')
+      // this.$emit('submit');
+      // await eventBus.emit('submitCal');
+      await eventBus.emit('submitKan')
       const modal = document.getElementById('modaltask')
       const bootstrapModal = bootstrap.Modal.getInstance(modal)
       bootstrapModal.hide()

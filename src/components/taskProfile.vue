@@ -16,8 +16,11 @@
           <button class="btn btn-outline-danger me-2" @click="deleteTask" title="Supprimer">
             <i class="bi bi-trash"></i>
           </button>
-          <button class="btn btn-outline-success" @click="createInvoice" title="Facture">
+          <button class="btn btn-outline-success me-2" @click="createInvoice" title="Facture">
             <i class="bi bi-receipt"></i>
+          </button>
+          <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#emailModal" @click="sendToEmail" title="Mail">
+            <i class="bi bi-envelope"></i>
           </button>
       </div>
     </div>
@@ -195,6 +198,7 @@
       </div>
     </div>
   </div>
+  <emailModal :mail="task.email" :nom="task.nom" :prenom="task.prenom" :entreprise="task.entreprise"></emailModal>
 </template>
 
 <script>
@@ -202,8 +206,12 @@ import { getService } from '@/api/services/get.service';
 import { updateService } from '@/api/services/update.service';
 import { deleteService } from '@/api/services/delete.service';
 import { addService } from '@/api/services/add.service';
+import emailModal from './emailModal.vue';
 export default {
     name: 'TaskProfile',
+    components : {
+      emailModal
+    },
     data() {
         return {
             task: {
@@ -284,6 +292,9 @@ export default {
             const localUser = localStorage.getItem('user');
             this.username = JSON.parse(localUser).username;
             this.role = JSON.parse(localUser).role;
+        },
+        sendToEmail(){
+
         },
         previous(){
             this.$emit('previous');

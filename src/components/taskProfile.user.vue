@@ -19,6 +19,9 @@
           <button class="btn btn-outline-success" @click="createInvoice" title="Facture">
             <i class="bi bi-receipt"></i>
           </button>
+          <button class="btn btn-outline-success" data-toggle="modal" data-target="#emailModal" @click="createInvoice" title="Facture">
+            <i class="bi bi-envelope"></i>
+          </button>
         </div>
       </div>
   
@@ -225,14 +228,7 @@
       async mounted() {
           await this.fetchTask();
       },
-      watch : {
-        changeStatut(oldStatut, newStatut){
-          if( newStatut !== 'Termine')
-          alert("statut Changé")
-        }
-
-      }
-      , methods: {
+       methods: {
           async fetchTask() {
               const id = this.idTask;
               const lien = this.endPoint;

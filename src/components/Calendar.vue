@@ -106,7 +106,7 @@ export default {
     this.fetchTask();
     this.fetchNotes();
     this.getCalendarApi();
-    eventBus.on('submitCal', this.refetchEvents)
+    eventBus.on('submitCal', () => {console.log('event in calendar'); this.refetchEvents})
   },
   methods: {
     handleDateClick(info) {
@@ -137,7 +137,6 @@ export default {
         title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
         start: task.datedebut,
         end: task.datefin,
-        allDay: !task.heuredebut,
         color: task.couleur,
         extendedProps: {
           typeTask: task.typeTask,
@@ -269,7 +268,7 @@ export default {
         allDay: !note.heuredebut,
         color: "#000000",
       }));
-      this.calendarOptions.events =  [...this.calendarOptions.events, ...events];
+      this.calendarOptions.events =  [...events];
       console.log("Notes récupérées:", events);
     },
     extractAvailableTaskTypes() {
