@@ -611,19 +611,19 @@
           </h2>
           <div class="dashboard-stats">
             <div class="stat-item">
-              <span class="stat-number">{{ taches.length }}</span>
+              <span class="stat-number">{{ myTask.length }}</span>
               <span class="stat-label">Total</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number">{{ tachesUrgentes }}</span>
+              <span class="stat-number">{{ myTaskUrgente }}</span>
               <span class="stat-label">Urgentes</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number">{{ tachesEnCours }}</span>
+              <span class="stat-number">{{ myTaskEnCours }}</span>
               <span class="stat-label">En cours</span>
             </div>
             <div class="stat-item stat-retard">
-              <span class="stat-number">{{ nbTachesEnRetard }}</span>
+              <span class="stat-number">{{ nbMyTaskEnRetard }}</span>
               <span class="stat-label">En retard</span>
             </div>
           </div>
@@ -912,12 +912,25 @@ export default {
     tachesUrgentes() {
       return this.taches.filter(t => t.priorite === 'Urgent').length
     },
+    myTaskUrgente(){
+      return this.myTask.filter(t => t.priorite === 'Urgent').length
+    },
     tachesEnCours() {
       return this.taches.filter(t => !['Facturation'].includes(t.statut)).length
+    },
+    myTaskEnCours() {
+      return this.myTask.filter(t => !['Facturation'].includes(t.statut)).length
     },
     nbTachesEnRetard() {
       const today = new Date();
       return this.taches.filter(t => {
+        const due = new Date(t.datefin);
+        return t.statut !== 'Facturation' && due < today;
+      }).length;
+    },
+    nbMyTaskEnRetard() {
+      const today = new Date();
+      return this.myTask.filter(t => {
         const due = new Date(t.datefin);
         return t.statut !== 'Facturation' && due < today;
       }).length;
