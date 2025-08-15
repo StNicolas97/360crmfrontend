@@ -588,7 +588,7 @@
       </section>
 
       <section v-if="currentSection === 'taskProfile'" class="section">
-        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()" @delete="refreshSectionTaskAfterDelete()" @showclient="editClient($event, id)"></TaskProfile>
+        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()" @delete="refreshSectionTaskAfterDelete()" @updateTask="fetchTask()" @showclient="editClient($event, id)"></TaskProfile>
       </section>
 
       <section v-if="currentSection === 'myuserProfile'" class="section">
@@ -1175,7 +1175,8 @@ export default {
         'Impression': 'bg-secondary',
         'Production' : 'bg-success',
         'Installation' : 'bg-dark',
-        'Facturation' : 'bg-danger'
+        'Facturation' : 'bg-danger',
+        'Termine' : 'bg-dark'
 
       }
       return taskStatusClasses[statut] || 'badge-primary'

@@ -55,7 +55,7 @@ export const addService = {
   },
   async addMail(mail) {
     return handleAdd(
-      "rappel",
+      "rappel/simpleMail",
       mail,
       "Mail ajoutée avec succès",
       "une erreur est survenue lors de l'ajout "

@@ -11,7 +11,7 @@
                 <form @submit.prevent="sendEmail">
                         <div class="form-group">
                                 <label for="recipientEmail">Destinataire</label>
-                                <input type="email" class="form-control" id="recipientEmail" v-model="email.recipient" required>
+                                <input type="text" class="form-control" id="recipientEmail" v-model="email.recipient" required>
                         </div>
                         <div class="form-group">
                                 <label for="emailSubject">Objet</label>
@@ -43,7 +43,7 @@ export default {
                 Nous souhaitons vous rappeler que votre projet est toujours en cours chez 360 AutoWrap.
                 N’hésitez pas à nous contacter pour toute précision ou pour confirmer la prochaine étape.
                 Cordialement,
-                L’équipe 360 AutoWrap`
+                L’équipe 360AutoWrap`
             }
         }
     },
@@ -70,13 +70,12 @@ export default {
     },
     methods: {
         async sendEmail() {
-            console.log("voici l'email " + this.mail)
-            // try{
-            //     const response = await this.sendEmail(email)
-            //     if(!response) throw new Error();
-            // }catch(error){
-            //     console.log(error);
-            // }
+            try{
+                const response = await addService.addMail(this.email);
+                if(!response) throw new Error();
+            }catch(error){
+                console.log(error);
+            }
         }
     }
 };
