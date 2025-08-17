@@ -488,7 +488,7 @@
                 @click.prevent="handleNewNote">Enregistrer</button>
             </div>
           </form>
-            <button @click.prevent="afterSubmit">emit</button>
+            <!-- <button @click.prevent="afterSubmit">emit</button> -->
         </div>
       </div>
     </div>
