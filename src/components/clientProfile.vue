@@ -3,21 +3,21 @@
         <div class="row">
             <div class="col-md-5 border-right ms-auto">
                 <button class="btn btn-link" @click="previous">
-                        <i class="bi bi-arrow-left fs-4"></i>
-                    </button>
+                    <i class="bi bi-arrow-left fs-4"></i>
+                </button>
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">Profile Client</h4><i class="bi bi-trash" @click="deleteProfile"></i>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Prenom</label><input type="text"
-                            v-model="client.prenom" class="form-control"></div>
+                                v-model="client.prenom" class="form-control"></div>
                         <div class="col-md-6"><label class="labels">Nom</label><input type="text" v-model="client.nom"
                                 class="form-control"></div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Telephone</label><input type="text"
-                            v-model="client.telephone" class="form-control"></div>
+                                v-model="client.telephone" class="form-control"></div>
                         <div class="col-md-6"><label class="labels">Entreprise</label><input type="text"
                                 v-model="client.entreprise" class="form-control"></div>
                     </div>
@@ -53,7 +53,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="tache in task" :key="tache.id" @dblclick="showTask(tache.typeTask, tache.idType)">
+                                <tr v-for="tache in task" :key="tache.id"
+                                    @dblclick="showTask(tache.typeTask, tache.idType)">
                                     <td>{{ tache.id }}</td>
                                     <td>{{ tache.titre }}</td>
                                     <td>
@@ -118,8 +119,8 @@ export default {
                 let tache = response.data
                 this.task = tache.map((task) => {
                     let idType = task.idAff || task.idPpf || task.idLett || null
-                    const {idAff, idPpf, idLett, ...attributs} = task;
-                    return {...attributs, idType};
+                    const { idAff, idPpf, idLett, ...attributs } = task;
+                    return { ...attributs, idType };
                 });
             } catch (error) {
                 console.error("Une erreur est survenue", error);
@@ -132,7 +133,7 @@ export default {
                 const valider = window.confirm("Confirmer les modifications de ce client?");
                 if (valider) {
                     const response = await updateService.updateClient(id, userUpdate);
-                    alert("informations modifiée avec succès")
+                    this.$emit('update');
                 }
             } catch (error) {
                 console.error("Une erreur est survenue", error);
@@ -147,12 +148,12 @@ export default {
                 alert("Vous avez supprimé avec succès !")
             }
         },
-        
-        previous(){
+
+        previous() {
             this.$emit('previous');
         },
-        showTask(type, id){
-            this.$emit('view',type, id);
+        showTask(type, id) {
+            this.$emit('view', type, id);
         },
         getStatusClass(statut) {
             const statusClasses = {
@@ -169,9 +170,9 @@ export default {
                 'Design': 'bg-primary',
                 'Approbation': 'bg-info',
                 'Impression': 'bg-secondary',
-                'Production' : 'bg-success',
-                'Installation' : 'bg-dark',
-                'Facturation' : 'Facturation'
+                'Production': 'bg-success',
+                'Installation': 'bg-dark',
+                'Facturation': 'Facturation'
             }
             return taskStatusClasses[statut] || 'bg-info'
         }
@@ -188,8 +189,8 @@ export default {
     overflow: scroll;
 }
 
-tr{
-  cursor: pointer;
+tr {
+    cursor: pointer;
 }
 
 tbody::-webkit-scrollbar {

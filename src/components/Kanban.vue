@@ -42,18 +42,23 @@
                     class="kanban-task card mb-2"
                     :class="{ 'dragging': draggedTask && (draggedTask.id === tache.id || draggedTask.idTache === tache.idTache) }"
                     draggable="true" @dragstart="startDrag($event, tache)" @dragend="endDrag">
-                    <div class="card-body card-body-kanban p-2" @dblclick="sendEmit(tache.typeTask, tache.id || tache.idTache)">
+                    <div class="card-body card-body-kanban p-2"
+                      @dblclick="sendEmit(tache.typeTask, tache.id || tache.idTache)">
                       <div class="d-flex align-items-start mb-2">
                         <div class="kanban-task-avatar me-2" :class="getPriorityClass(tache.priorite)">
                           <i class="bi bi-folder2"></i>
                         </div>
                         <div class="flex-grow-1 min-width-0">
-                          <div class="fw-bold fs-6 text-truncate title d-flex justify-content-between" :title="tache.titre"><span>{{ tache.titre }}</span><i class="bi bi-eye" @click="sendEmit(tache.typeTask, tache.id || tache.idTache)"></i></div>
-                          <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length < 17 ">
-                            {{ nbJour(tache.datefin)}}
+                          <div class="fw-bold fs-6 text-truncate title d-flex justify-content-between"
+                            :title="tache.titre"><span>{{ tache.titre }}</span><i class="bi bi-eye"
+                              @click="sendEmit(tache.typeTask, tache.id || tache.idTache)"></i></div>
+                          <div class="text-muted small text-truncate"
+                            v-if="tache.datefin, nbJour(tache.datefin).length < 17">
+                            {{ nbJour(tache.datefin) }}
                           </div>
-                          <div class="text-muted small text-truncate" v-if="tache.datefin, nbJour(tache.datefin).length > 16 ">
-                            <p class="text-danger">{{ nbJour(tache.datefin)}}</p>
+                          <div class="text-muted small text-truncate"
+                            v-if="tache.datefin, nbJour(tache.datefin).length > 16">
+                            <p class="text-danger">{{ nbJour(tache.datefin) }}</p>
                           </div>
                           <div class="text-muted small text-truncate" v-if="tache.client">
                             <i class="bi bi-person-fill me-1"></i>{{ tache.client }}
@@ -121,10 +126,12 @@ export default {
     };
   },
   mounted() {
-    eventBus.on('submitKan', ()=> {
-      console.log("emit du kanabn recu");
+    eventBus.on('submitKan', () => {
+      console.log("emit du kanban reçu");
       this.fetchTask();
     });
+
+    this.fetchTask();
   },
   methods: {
     getStatut(statut) {
@@ -175,25 +182,25 @@ export default {
       if (item.statut === statut) {
         return;
       }
-        const oldStatut = item.statut;
-        item.statut = statut;
+      const oldStatut = item.statut;
+      item.statut = statut;
 
-        try {
-          this.isLoading = true;
-          const response = await getService.getTaskId("tache", item.idTache);
-          const data = response.data;
-          const sendData = { ...data, statut: statut };
+      try {
+        this.isLoading = true;
+        const response = await getService.getTaskId("tache", item.idTache);
+        const data = response.data;
+        const sendData = { ...data, statut: statut };
 
-          await updateService.updateMainTask(item.idTache, sendData);
+        await updateService.updateMainTask(item.idTache, sendData);
 
-          this.showSuccess(`Tâche déplacée vers ${statut}`);
+        this.showSuccess(`Tâche déplacée vers ${statut}`);
 
-        } catch (error) {
-          item.statut = oldStatut;
-          this.showError("Erreur lors de la mise à jour de la tâche");
-          console.error("Erreur lors de la mise à jour de la tâche:", error);
-        } finally {
-          this.isLoading = false;
+      } catch (error) {
+        item.statut = oldStatut;
+        this.showError("Erreur lors de la mise à jour de la tâche");
+        console.error("Erreur lors de la mise à jour de la tâche:", error);
+      } finally {
+        this.isLoading = false;
       }
 
       this.endDrag();
@@ -268,30 +275,30 @@ export default {
         return dateString;
       }
     },
-    nbJour(date){
+    nbJour(date) {
       if (!date || date === null || date === undefined || date === '') {
         return "Date non définie";
       }
-      
+
       // Créer les dates en forçant le fuseau horaire local
       const today = new Date();
-      const todayStr = today.getFullYear() + '-' + 
-                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                      String(today.getDate()).padStart(2, '0');
-      
+      const todayStr = today.getFullYear() + '-' +
+        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+        String(today.getDate()).padStart(2, '0');
+
       // Forcer les deux dates à être en format YYYY-MM-DD local
       const todayLocal = new Date(todayStr + 'T00:00:00');
       const targetLocal = new Date(date + 'T00:00:00');
-      
+
       // Vérifier validité
       if (isNaN(targetLocal.getTime())) {
         return "Date invalide";
       }
-      
+
       const delai = Math.round((targetLocal.getTime() - todayLocal.getTime()) / (1000 * 60 * 60 * 24));
-      
-      if(delai > 0) return `Délai : ${delai} jours`;
-      else if(delai === 0) return "Délai aujourd'hui";
+
+      if (delai > 0) return `Délai : ${delai} jours`;
+      else if (delai === 0) return "Délai aujourd'hui";
       else return `${Math.abs(delai)} jours de retard`;
     },
     showError(message) {
@@ -304,10 +311,6 @@ export default {
     showSuccess(message) {
       //console.log('Succès:', message);
     }
-  },
-
-  mounted() {
-    this.fetchTask();
   }
 };
 </script>
@@ -416,7 +419,7 @@ export default {
   scrollbar-width: none;
 }
 
-.bi-folder-plus{
+.bi-folder-plus {
   font-size: 1.3rem;
   cursor: pointer;
   color: #0d6efd;

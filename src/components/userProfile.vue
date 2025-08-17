@@ -1,11 +1,11 @@
 <template>
     <div class="container rounded bg-white mt-5 mb-5">
-        <div class="row">        
-                <div class="col-md-7 border-right">
+        <div class="row">
+            <div class="col-md-7 border-right">
                 <div class="mt-4">
                     <button class="btn btn-link" @click="previous">
                         <i class="bi bi-arrow-left fs-4"></i>
-                    </button>    
+                    </button>
                     <div class="d-flex justify-content-between align-items-center experience">
                         <span>Tâches assignées</span>
                     </div>
@@ -21,7 +21,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="tache in taches" :key="tache.id" @dblclick="showTask(tache.typeTask, tache.idType)">
+                                <tr v-for="tache in taches" :key="tache.id"
+                                    @dblclick="showTask(tache.typeTask, tache.idType)">
                                     <td>{{ tache.id }}</td>
                                     <td>{{ tache.titre }}</td>
                                     <td>{{ tache.datefin }}</td>
@@ -47,12 +48,12 @@
                         <h4 class="text-right">Profil Employe</h4>
                         <div>
                             <i class="bi bi-trash" @click="deleteProfile"></i>
-                            <i class="bi bi-key" @click="login=true"></i>
+                            <i class="bi bi-key" @click="login = true"></i>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Prenom</label><input type="text"
-                            class="form-control" v-model="user.prenom">
+                                class="form-control" v-model="user.prenom">
                         </div>
                         <div class="col-md-6"><label class="labels">Nom</label><input type="text" class="form-control"
                                 v-model="user.nom">
@@ -60,22 +61,23 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Telephone</label><input type="text"
-                            class="form-control" v-model="user.telephone"></div>
+                                class="form-control" v-model="user.telephone"></div>
                         <div class="col-md-6"><label class="labels">Username</label><input type="text"
                                 class="form-control" v-model="user.username"></div>
                     </div>
                     <div class="row mt-3">
-                        
+
                         <div class="col-md-12"><label class="labels">Email ID</label><input type="email"
                                 class="form-control" v-model="user.email"></div>
                         <div class="col-md-12"><label class="labels">Poste</label><input type="text"
                                 class="form-control" v-model="user.poste"></div>
-                        <div class="col-md-12"><label class="labels">Couleur</label><input type="color" class="form-control"  v-model="user.couleur"></div>
-                    </div> 
-                    <div v-if="login===true" class="row mt-2">
+                        <div class="col-md-12"><label class="labels">Couleur</label><input type="color"
+                                class="form-control" v-model="user.couleur"></div>
+                    </div>
+                    <div v-if="login === true" class="row mt-2">
                         <h5>Modifier les identifiants</h5>
                         <div class="col-md-6"><label class="labels">username</label><input type="text"
-                            class="form-control" v-model="user.username"></div>
+                                class="form-control" v-model="user.username"></div>
                         <div class="col-md-6"><label class="labels">password</label><input type="text"
                                 class="form-control" v-model="user.password"></div>
                     </div>
@@ -109,7 +111,7 @@ export default {
                 couleur: ""
             },
             taches: [],
-            login : false
+            login: false
         }
     },
     props: {
@@ -144,18 +146,18 @@ export default {
                 let task = response.data
                 this.taches = task.map((task) => {
                     let idType = task.idAff || task.idPpf || task.idLett || null
-                    const {idAff, idPpf, idLett, ...attributs} = task;
-                    return {...attributs, idType};
+                    const { idAff, idPpf, idLett, ...attributs } = task;
+                    return { ...attributs, idType };
                 });
             } catch (error) {
                 console.error("Erreur lors de la récupération des tâches", error);
             }
         },
-        previous(){
+        previous() {
             this.$emit('previous');
         },
-        showTask(type, id){
-            this.$emit('view',type, id);
+        showTask(type, id) {
+            this.$emit('view', type, id);
         },
         getPriorityClass(priorite) {
             const priorityClasses = {
@@ -171,9 +173,9 @@ export default {
                 'Design': 'bg-primary',
                 'Approbation': 'bg-info',
                 'Impression': 'bg-secondary',
-                'Production' : 'bg-success',
-                'Installation' : 'bg-dark',
-                'Facturation' : 'bg-danger'
+                'Production': 'bg-success',
+                'Installation': 'bg-dark',
+                'Facturation': 'bg-danger'
             }
             return taskStatusClasses[statut] || 'badge-primary'
         },
@@ -181,15 +183,11 @@ export default {
             try {
                 const id = this.userId;
                 const userUpdate = this.user;
-                const valider = window.confirm("Confirmer les modifications de cet utilisateur?");
-                if (valider) {
-                    if(userUpdate.couleur.charAt(0) !== "#"){
-                        alert("Veuillez entrer une couleur au format Hexadecimal")
-                    }else{
+                if (userUpdate.couleur.charAt(0) !== "#") {
+                    alert("Veuillez entrer une couleur au format Hexadecimal")
+                } else {
                     const response = await updateService.updateUser(id, userUpdate);
-                    alert("information modifiée avec succès")
-                    this.$emit('submit');
-                    }
+                    this.$emit('update');
                 }
             } catch (error) {
                 console.error("Une erreur est survenue", error);
@@ -231,8 +229,8 @@ export default {
     overflow-y: scroll;
 }
 
-tr{
-  cursor: pointer;
+tr {
+    cursor: pointer;
 }
 
 .form-control:focus {

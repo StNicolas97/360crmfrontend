@@ -3,78 +3,85 @@
 
     <!-- Section Barre de navigation -->
 
-    <div
-      class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar"
-      :class="{'sidebar-mobile': isMobile, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen && isMobile}"
-    >
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center">
+    <div class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar"
+      :class="{ 'sidebar-mobile': isMobile, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen && isMobile }">
+      <a href="/"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center">
         <img class="img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
       </a>
       <hr class="text-white">
       <ul class="nav nav-pills flex-column mb-auto" @click="clearnav()">
         <li class="nav-item">
-          <a href="#" @click.prevent="currentSection = 'dashboard'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center"
-            :class="{ 'active': currentSection === 'dashboard' }"
-            @mouseenter="hovered = 'dashboard'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'dashboard'; isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center"
+            :class="{ 'active': currentSection === 'dashboard' }" @mouseenter="hovered = 'dashboard'"
+            @mouseleave="hovered = null">
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
 
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'calendrier'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'calendrier' }"
-            @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'calendrier'; isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'calendrier' }" @mouseenter="hovered = 'calendrier'"
+            @mouseleave="hovered = null">
             <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'table'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'table' }"
-            @mouseenter="hovered = 'table'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'table'; isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'table' }" @mouseenter="hovered = 'table'"
+            @mouseleave="hovered = null">
             <i class="bi bi-table" :title="'Tableau'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
 
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'clients'; fetchclients(); isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'clients' }"
-            @mouseenter="hovered = 'clients'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'clients'; fetchclients(); isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'clients' }" @mouseenter="hovered = 'clients'"
+            @mouseleave="hovered = null">
             <i class="bi bi-people" :title="'Clients'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Clients</span>
 
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'taches'; fetchTask(); isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'taches' }"
-            @mouseenter="hovered = 'taches'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'taches'; fetchTask(); isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'taches' }" @mouseenter="hovered = 'taches'"
+            @mouseleave="hovered = null">
             <i class="bi bi-list-task" :title="'Tâches'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Tâches</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'employe'; fetchUsers(); isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'employe' }"
-            @mouseenter="hovered = 'employe'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'employe'; fetchUsers(); isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'employe' }" @mouseenter="hovered = 'employe'"
+            @mouseleave="hovered = null">
             <i class="bi bi-person-circle" :title="'Employés'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Employés</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'leads'; fetchTask(); isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'leads' }"
-            @mouseenter="hovered = 'employe'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'leads'; fetchTask(); isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'leads' }" @mouseenter="hovered = 'employe'"
+            @mouseleave="hovered = null">
             <i class="bi bi-person-fill-exclamation" :title="'Employés'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Leads</span>
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'myTask'; isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'myTask' }"
-            @mouseenter="hovered = 'myTask'" @mouseleave="hovered = null">
+          <a href="#" @click.prevent="currentSection = 'myTask'; isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'myTask' }" @mouseenter="hovered = 'myTask'"
+            @mouseleave="hovered = null">
             <i class="bi bi-briefcase" :title="'myTask'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Mes Taches</span>
           </a>
@@ -82,8 +89,9 @@
       </ul>
       <hr class="text-white">
       <div class="dropdown mb-4 d-flex justify-content-center">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center" id="dropdownUser1"
-          data-bs-toggle="dropdown" aria-expanded="false">
+        <a href="#"
+          class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center"
+          id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
@@ -96,30 +104,29 @@
       </div>
     </div>
 
-        <!-- Navbar mobile/tablette -->
-        <nav class="mobile-navbar d-md-none">
-            <button
-              class="btn btn-hamburger"
-              @click="isSidebarOpen = !isSidebarOpen"
-              aria-label="Ouvrir le menu">
-              <i class="bi bi-list"></i>
-            </button>
-            <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
-              style="width: 30%;position : relative; left: 30%;"></span>
-            <div class="dropdown d-flex justify-content-center" v-if="isMobile">
-              <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="https://github.com/mdo.png" alt="" class="rounded-circle me-2 img-fluid" style="width: 70%;position : relative; left: 30%;">
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
-              </ul>
-            </div>
-        </nav>
+    <!-- Navbar mobile/tablette -->
+    <nav class="mobile-navbar d-md-none">
+      <button class="btn btn-hamburger" @click="isSidebarOpen = !isSidebarOpen" aria-label="Ouvrir le menu">
+        <i class="bi bi-list"></i>
+      </button>
+      <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
+          style="width: 30%;position : relative; left: 30%;"></span>
+      <div class="dropdown d-flex justify-content-center" v-if="isMobile">
+        <a href="#"
+          class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1"
+          id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="" class="rounded-circle me-2 img-fluid"
+            style="width: 70%;position : relative; left: 30%;">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+        </ul>
+      </div>
+    </nav>
 
     <!-- Contenu principal -->
     <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">
@@ -129,7 +136,7 @@
 
       <employe-modal @submit="fetchUsers" />
       <client-modal @submit="fetchclients" />
-      <tache-modal @submit="refreshSectionTask"/>
+      <tache-modal @submit="refreshSectionTask" />
 
       <!-- fin liste des modals -->
 
@@ -141,26 +148,32 @@
 
       <section v-if="currentSection === 'calendrier'" class="section" id="calendrier">
         <div class="contain-calendar">
-          <Calendar @view="editTask" @calendarefresh="rerenderCalendar()"/>
+          <Calendar @view="editTask" @calendarefresh="rerenderCalendar()" />
         </div>
       </section>
 
       <section v-if="currentSection === 'table'" class="section" id="table">
         <h2 class="section-title">Tableau</h2>
-        <Kanban @view="editTask"/>
+        <Kanban @view="editTask" />
       </section>
 
       <section v-if="currentSection === 'clients'" class="section" id="clients">
         <h2 class="section-title">Clients</h2>
-        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+        <div
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
           <div class="order-2 order-lg-1">
-            <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients</p>
+            <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
+              Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
+              }} clients</p>
           </div>
-          <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+          <div
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
             <div class="search-container">
               <i class="bi bi-search search-icon"></i>
-              <input type="text" class="form-control search-input" v-model="searchQueryClients" placeholder="Rechercher un client..." @input="filterClients">
-              <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i class="bi bi-x"></i></button>
+              <input type="text" class="form-control search-input" v-model="searchQueryClients"
+                placeholder="Rechercher un client..." @input="filterClients">
+              <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
+                  class="bi bi-x"></i></button>
             </div>
             <select class="form-select filter-select" v-model="selectedClientStatus" @change="filterClients">
               <option value="">Tous les statuts</option>
@@ -177,11 +190,21 @@
           <table class="table table-modern">
             <thead>
               <tr>
-                <th @click="sortClients('entreprise')" class="sortable"><div class="th-content">Entreprise <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortClients('nom')" class="sortable"><div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortClients('email')" class="sortable d-none d-lg-table-cell"><div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortClients('telephone')" class="sortable d-none d-sm-table-cell"><div class="th-content">Téléphone <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortClients('statut')" class="sortable"><div class="th-content">Statut <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
+                <th @click="sortClients('entreprise')" class="sortable">
+                  <div class="th-content">Entreprise <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortClients('nom')" class="sortable">
+                  <div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortClients('email')" class="sortable d-none d-lg-table-cell">
+                  <div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortClients('telephone')" class="sortable d-none d-sm-table-cell">
+                  <div class="th-content">Téléphone <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortClients('statut')" class="sortable">
+                  <div class="th-content">Statut <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -215,18 +238,22 @@
           <nav>
             <ul class="pagination justify-content-center">
               <li class="page-item" :class="{ disabled: clientCurrentPage === 1 }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage - 1)"><i class="bi bi-chevron-left"></i></a>
+                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage - 1)"><i
+                    class="bi bi-chevron-left"></i></a>
               </li>
-              <li class="page-item" v-for="page in clientVisiblePages" :key="page" :class="{ active: page === clientCurrentPage }">
+              <li class="page-item" v-for="page in clientVisiblePages" :key="page"
+                :class="{ active: page === clientCurrentPage }">
                 <a class="page-link" @click.prevent="changeClientPage(page)">{{ page }}</a>
               </li>
               <li class="page-item" :class="{ disabled: clientCurrentPage === clientTotalPages }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage + 1)"><i class="bi bi-chevron-right"></i></a>
+                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage + 1)"><i
+                    class="bi bi-chevron-right"></i></a>
               </li>
             </ul>
           </nav>
           <div class="pagination-info">
-            Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
+            Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage *
+              clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
           </div>
         </div>
       </section>
@@ -263,13 +290,8 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input 
-                  type="text" 
-                  class="form-control search-input" 
-                  v-model="searchQueryTaches"
-                  placeholder="Rechercher une tâche..."
-                  @input="filterTaches"
-                >
+                <input type="text" class="form-control search-input" v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..." @input="filterTaches">
                 <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
                   <i class="bi bi-x"></i>
                 </button>
@@ -285,7 +307,7 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-                
+
               </select>
             </div>
             <div class="col-md-3 d-flex align-items-center justify-content-end">
@@ -344,11 +366,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedTaches" :key="tache.idTache"
-                    class="table-row" 
-                    @click="selectRow(tache)"
-                    :class="{ 'selected': selectedTask?.id === tache.id }" 
-                    @dblclick="editTask(tache.typeTask, tache.id)">
+                <tr v-for="tache in paginatedTaches" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
+                  :class="{ 'selected': selectedTask?.id === tache.id }" @dblclick="editTask(tache.typeTask, tache.id)">
                   <td>
                     <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
@@ -380,9 +399,7 @@
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button 
-                         @click="editTask(tache.typeTask ,tache.id)"
-                        class="btn btn-action btn-view"
+                      <button @click="editTask(tache.typeTask, tache.id)" class="btn btn-action btn-view"
                         title="Voir les détails">
                         <i class="bi bi-eye"></i>
                       </button>
@@ -406,10 +423,8 @@
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li class="page-item" 
-                    v-for="page in visiblePages" 
-                    :key="page"
-                    :class="{ active: page === currentPage }">
+                <li class="page-item" v-for="page in visiblePages" :key="page"
+                  :class="{ active: page === currentPage }">
                   <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
                 </li>
                 <li class="page-item" :class="{ disabled: currentPage === totalPages }">
@@ -420,7 +435,8 @@
               </ul>
             </nav>
             <div class="pagination-info">
-              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage,
+                filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
             </div>
           </div>
         </div>
@@ -428,15 +444,21 @@
 
       <section v-if="currentSection === 'employe'" class="section" id="employe">
         <h2 class="section-title">Employés</h2>
-        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+        <div
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
           <div class="order-2 order-lg-1">
-            <p class="mb-0">Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{ Math.min(employeCurrentPage * employeItemsPerPage, filteredEmployes.length) }} sur {{ filteredEmployes.length }} employés</p>
+            <p class="mb-0">Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{
+              Math.min(employeCurrentPage * employeItemsPerPage, filteredEmployes.length) }} sur {{
+                filteredEmployes.length }} employés</p>
           </div>
-          <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+          <div
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
             <div class="search-container">
               <i class="bi bi-search search-icon"></i>
-              <input type="text" class="form-control search-input" v-model="searchQueryEmployes" placeholder="Rechercher..." @input="filterEmployes">
-              <button v-if="searchQueryEmployes" @click="clearEmployeSearch" class="btn-clear"><i class="bi bi-x"></i></button>
+              <input type="text" class="form-control search-input" v-model="searchQueryEmployes"
+                placeholder="Rechercher..." @input="filterEmployes">
+              <button v-if="searchQueryEmployes" @click="clearEmployeSearch" class="btn-clear"><i
+                  class="bi bi-x"></i></button>
             </div>
             <div class="text-center text-sm-end">
               <i class="bi bi-person-add action-icon" data-bs-toggle="modal" data-bs-target="#employeModal"></i>
@@ -447,11 +469,21 @@
           <table class="table table-modern">
             <thead>
               <tr>
-                <th @click="sortEmployes('nom')" class="sortable"><div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortEmployes('prenom')" class="sortable d-none d-sm-table-cell"><div class="th-content">Prénom <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortEmployes('email')" class="sortable d-none d-md-table-cell"><div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortEmployes('poste')" class="sortable d-none d-lg-table-cell"><div class="th-content">Poste <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
-                <th @click="sortEmployes('role')" class="sortable"><div class="th-content">Rôle <i class="bi bi-arrow-down-up sort-icon"></i></div></th>
+                <th @click="sortEmployes('nom')" class="sortable">
+                  <div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortEmployes('prenom')" class="sortable d-none d-sm-table-cell">
+                  <div class="th-content">Prénom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortEmployes('email')" class="sortable d-none d-md-table-cell">
+                  <div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortEmployes('poste')" class="sortable d-none d-lg-table-cell">
+                  <div class="th-content">Poste <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortEmployes('role')" class="sortable">
+                  <div class="th-content">Rôle <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -484,37 +516,36 @@
           <nav>
             <ul class="pagination justify-content-center">
               <li class="page-item" :class="{ disabled: employeCurrentPage === 1 }">
-                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage - 1)"><i class="bi bi-chevron-left"></i></a>
+                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage - 1)"><i
+                    class="bi bi-chevron-left"></i></a>
               </li>
-              <li class="page-item" v-for="page in employeVisiblePages" :key="page" :class="{ active: page === employeCurrentPage }">
+              <li class="page-item" v-for="page in employeVisiblePages" :key="page"
+                :class="{ active: page === employeCurrentPage }">
                 <a class="page-link" @click.prevent="changeEmployePage(page)">{{ page }}</a>
               </li>
               <li class="page-item" :class="{ disabled: employeCurrentPage === employeTotalPages }">
-                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage + 1)"><i class="bi bi-chevron-right"></i></a>
+                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage + 1)"><i
+                    class="bi bi-chevron-right"></i></a>
               </li>
             </ul>
           </nav>
           <div class="pagination-info">
-            Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{ Math.min(employeCurrentPage * employeItemsPerPage, filteredEmployes.length) }} sur {{ filteredEmployes.length }} employés
+            Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{ Math.min(employeCurrentPage *
+              employeItemsPerPage, filteredEmployes.length) }} sur {{ filteredEmployes.length }} employés
           </div>
         </div>
       </section>
 
-      <section v-if="currentSection==='leads'">
+      <section v-if="currentSection === 'leads'">
         <h4>Leads</h4>
-                <!-- Contrôles de filtrage et recherche -->
-                <div class="controls-section mb-4">
+        <!-- Contrôles de filtrage et recherche -->
+        <div class="controls-section mb-4">
           <div class="row g-3">
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input 
-                  type="text" 
-                  class="form-control search-input" 
-                  v-model="searchQueryLeads"
-                  placeholder="Rechercher une tâche..."
-                  @input="filterLeads"
-                >
+                <input type="text" class="form-control search-input" v-model="searchQueryLeads"
+                  placeholder="Rechercher une tâche..." @input="filterLeads">
                 <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
                   <i class="bi bi-x"></i>
                 </button>
@@ -543,11 +574,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedLeads" :key="tache.idTache"
-                    class="table-row" 
-                    @click="selectRow(tache)"
-                    :class="{ 'selected': selectedTask?.id === tache.id }" 
-                    @dblclick="editTask(tache.typeTask, tache.id)">
+                <tr v-for="tache in paginatedLeads" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
+                  :class="{ 'selected': selectedTask?.id === tache.id }" @dblclick="editTask(tache.typeTask, tache.id)">
                   <td>
                     <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
@@ -559,9 +587,7 @@
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button 
-                         @click="editTask(tache.typeTask ,tache.id)"
-                        class="btn btn-action btn-view"
+                      <button @click="editTask(tache.typeTask, tache.id)" class="btn btn-action btn-view"
                         title="Voir les détails">
                         <i class="bi bi-eye"></i>
                       </button>
@@ -576,26 +602,31 @@
               <p>Aucune tâche trouvée</p>
             </div>
           </div>
-          </div>
+        </div>
       </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">
-        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @submit="refreshSectionUser()" @view="editTask"></UserProfile>
+        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"
+          @update="refetchSectionUser()"></UserProfile>
       </section>
 
       <section v-if="currentSection === 'clientProfile'" class="section">
-        <ClientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"></ClientProfile>
+        <ClientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
+          @update="refetchSectionClient()">
+        </ClientProfile>
       </section>
 
       <section v-if="currentSection === 'taskProfile'" class="section">
-        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()" @delete="refreshSectionTaskAfterDelete()" @updateTask="fetchTask()" @showclient="editClient($event, id)"></TaskProfile>
+        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
+          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
+          @showclient="editClient($event, id)"></TaskProfile>
       </section>
 
       <section v-if="currentSection === 'myuserProfile'" class="section">
         <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
       </section>
 
-      <section v-if="currentSection === 'myTask'" class="'myTask'">
+      <section v-if="currentSection === 'myTask'" class="'myTask'" @update="refetchSectionMyTask()">
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
             <i class="bi bi-list-task me-2"></i>
@@ -627,13 +658,8 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input 
-                  type="text" 
-                  class="form-control search-input" 
-                  v-model="searchQueryTaches"
-                  placeholder="Rechercher une tâche..."
-                  @input="filterTaches"
-                >
+                <input type="text" class="form-control search-input" v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..." @input="filterTaches">
                 <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
                   <i class="bi bi-x"></i>
                 </button>
@@ -703,11 +729,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedMyTask" :key="tache.idTache" 
-                    class="table-row" 
-                    @click="selectRow(tache)"
-                    :class="{ 'selected': selectedTask?.id === tache.id }" 
-                    @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
+                <tr v-for="tache in paginatedMyTask" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
+                  :class="{ 'selected': selectedTask?.id === tache.id }"
+                  @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
                   <td>
                     <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
@@ -739,10 +763,8 @@
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button 
-                        @click="editTask(tache.typeTask, getTaskRealId(tache))"
-                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))"
-                        class="btn btn-action btn-view"
+                      <button @click="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))" class="btn btn-action btn-view"
                         title="Voir les détails">
                         <i class="bi bi-eye"></i>
                       </button>
@@ -757,7 +779,7 @@
                 </tr>
               </tbody>
             </table>
-            
+
             <!-- Message si aucune tâche -->
             <div v-if="filteredTaches.length === 0" class="no-data">
               <i class="bi bi-inbox"></i>
@@ -774,10 +796,8 @@
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li class="page-item" 
-                    v-for="page in visiblePages" 
-                    :key="page"
-                    :class="{ active: page === currentPage }">
+                <li class="page-item" v-for="page in visiblePages" :key="page"
+                  :class="{ active: page === currentPage }">
                   <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
                 </li>
                 <li class="page-item" :class="{ disabled: currentPage === totalPages }">
@@ -788,7 +808,8 @@
               </ul>
             </nav>
             <div class="pagination-info">
-              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage,
+                filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
             </div>
           </div>
         </div>
@@ -836,16 +857,16 @@ export default {
       employes: [],
       clients: [],
       taches: [],
-      leads : [],
+      leads: [],
       users: [],
-      myTask : [],
-      historyStack : [],
-      userId : null,
-      clientId : null,
-      taskId : null,
-      endpoint : '',
+      myTask: [],
+      historyStack: [],
+      userId: null,
+      clientId: null,
+      taskId: null,
+      endpoint: '',
       error: null,
-      username : '',
+      username: '',
       hovered: null,
       isMobile: false,
       // --- Pour la section taches (dashboard employé) ---
@@ -904,7 +925,7 @@ export default {
     tachesUrgentes() {
       return this.taches.filter(t => t.priorite === 'Urgent').length
     },
-    myTaskUrgente(){
+    myTaskUrgente() {
       return this.myTask.filter(t => t.priorite === 'Urgent').length
     },
     tachesEnCours() {
@@ -932,7 +953,7 @@ export default {
       const end = start + this.itemsPerPage
       return this.filteredTaches.slice(start, end)
     },
-    paginatedMyTask(){
+    paginatedMyTask() {
       const start = (this.currentPage - 1) * this.itemsPerPage
       const end = start + this.itemsPerPage
       return this.myTask.slice(start, end)
@@ -1040,11 +1061,11 @@ export default {
       }
     },
 
-    async fetchclients(){
-      try{
-      this.clients = [];
-      const response = await getService.getClient();
-      this.clients = response.data;
+    async fetchclients() {
+      try {
+        this.clients = [];
+        const response = await getService.getClient();
+        this.clients = response.data;
       } catch (error) {
         this.error = "Erreur lors de la récupération des utilisateurs";
         console.error(error);
@@ -1081,9 +1102,9 @@ export default {
         console.error(error);
       }
     },
-    connectedUser(){
+    connectedUser() {
       const localUser = localStorage.getItem('user');
-      this.username = JSON.parse(localUser).username ;
+      this.username = JSON.parse(localUser).username;
     },
     async getUserTasks() {
       try {
@@ -1100,35 +1121,35 @@ export default {
       }
     },
     changeSectionProfil() {
-      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('myuserProfile')
       this.previousSection = this.currentSection
       this.currentSection = 'myuserProfile'
-      if(this.isSidebarOpen) this.isSidebarOpen = false
+      if (this.isSidebarOpen) this.isSidebarOpen = false
     },
 
-    editUser(id){
-      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+    editUser(id) {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('userProfile')
-      this.currentSection =  'userProfile';
+      this.currentSection = 'userProfile';
       this.userId = id;
     },
-    editClient(id){
-      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+    editClient(id) {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('clientProfile')
-      this.currentSection =  'clientProfile';
+      this.currentSection = 'clientProfile';
       this.clientId = id;
     },
-    editTask(type,id){
-      if(this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+    editTask(type, id) {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('taskProfile')
-      this.currentSection =  'taskProfile';
+      this.currentSection = 'taskProfile';
       this.taskId = id;
       this.endpoint = type;
     },
     goTo(section) {
-    this.historyStack.push(section)
-    this.currentSection = section
+      this.historyStack.push(section)
+      this.currentSection = section
     },
     previous() {
       if (this.historyStack.length > 1) {
@@ -1136,22 +1157,47 @@ export default {
         this.currentSection = this.historyStack[this.historyStack.length - 1]
       }
     },
-    clearnav(){
+    clearnav() {
       this.historyStack.length = 0;
     },
-    refreshSectionTask(){
-      this.taches = null;
-      this.fetchTask();
+    async refreshSectionTask() {
+      this.taches = [];
+      this.filteredTaches = [];
+      await this.fetchTask();
+      this.filterTaches();
     },
-    refreshSectionTaskAfterDelete(){
+    async refetchSectionClient() {
+      this.clients = [];
+      this.filteredClients = [];
+      await this.fetchclients();
+      this.filterClients();
+    },
+    async refetchSectionUser() {
+      this.users = [];
+      this.filteredEmployes = [];
+      await this.fetchUsers();
+      this.filterEmployes();
+    },
+    async refreshSectionLeads() {
+      this.leads = [];
+      this.filteredLeads = [];
+      await this.fetchLeads();
+      this.filterLeads();
+    },
+    async refetchSectionMyTask() {
+      this.myTask = [];
+      this.filteredMyTask = [];
+      await this.getUserTasks();
+    },
+    refreshSectionTaskAfterDelete() {
       this.currentSection = 'taches';
       this.fetchTask();
     },
-    refreshSectionUser(){
+    refreshSectionUser() {
       this.currentSection = 'employe'
       this.fetchUsers();
     },
-    refreshSectionClient(){
+    refreshSectionClient() {
       this.currentSection = 'clients'
       this.fetchclients();
     },
@@ -1173,19 +1219,19 @@ export default {
         'Design': 'bg-primary',
         'Approbation': 'bg-info',
         'Impression': 'bg-secondary',
-        'Production' : 'bg-success',
-        'Installation' : 'bg-dark',
-        'Facturation' : 'bg-danger',
-        'Termine' : 'bg-dark'
+        'Production': 'bg-success',
+        'Installation': 'bg-dark',
+        'Facturation': 'bg-danger',
+        'Termine': 'bg-dark'
 
       }
       return taskStatusClasses[statut] || 'badge-primary'
     },
     getClientStatusClass(statut) {
       const clientStatusClasses = {
-      'Actif': 'bg-success',
-      'Inactif': 'bg-danger',
-      'Prospect': 'bg-info',
+        'Actif': 'bg-success',
+        'Inactif': 'bg-danger',
+        'Prospect': 'bg-info',
       }
       return clientStatusClasses[statut] || 'badge-primary'
     },
@@ -1194,7 +1240,7 @@ export default {
       // Filtrage par recherche
       if (this.searchQueryTaches) {
         const query = this.searchQueryTaches.toLowerCase()
-        filtered = filtered.filter(tache => 
+        filtered = filtered.filter(tache =>
           tache.titre.toLowerCase().includes(query) ||
           tache.id?.toString().includes(query) ||
           tache.statut.toLowerCase().includes(query)
@@ -1218,16 +1264,16 @@ export default {
         this.sortField = field
         this.sortDirection = 'asc'
       }
-      
+
       this.filteredTaches = [...this.filteredTaches].sort((a, b) => {
         let aVal = a[field]
         let bVal = b[field]
-        
+
         if (field === 'datefin' || field === 'datedebut') {
           aVal = new Date(aVal)
           bVal = new Date(bVal)
         }
-        
+
         if (this.sortDirection === 'asc') {
           return aVal > bVal ? 1 : -1
         } else {
@@ -1251,16 +1297,16 @@ export default {
       }
     },
     formatDate(dateString) {
-      if(!dateString){
+      if (!dateString) {
         return "indefini"
-      }else{
-      const date = new Date(dateString)
-      return date.toLocaleDateString('fr-FR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
-      })
-    }
+      } else {
+        const date = new Date(dateString)
+        return date.toLocaleDateString('fr-FR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+      }
     },
     isOverdue(dateString, statut) {
       const today = new Date();
@@ -1415,19 +1461,19 @@ export default {
       this.filterEmployes();
     },
     /*fin zone leads*/
-    closeSideBar(){
-      if(this.isMobile && this.isSidebarOpen) 
-      this.isSidebarOpen = false;
+    closeSideBar() {
+      if (this.isMobile && this.isSidebarOpen)
+        this.isSidebarOpen = false;
     }
   },
-  
+
 }
 </script>
 
 <style scoped>
 main {
   background-color: white;
-  color : #000
+  color: #000
 }
 
 .page {
@@ -1521,7 +1567,7 @@ main {
   vertical-align: middle;
 }
 
-.table-responsive{
+.table-responsive {
   overflow-y: scroll;
   height: 70%;
 }
@@ -1591,7 +1637,7 @@ main {
   white-space: nowrap;
   z-index: 100;
   font-size: 0.95em;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar .nav-link i {
@@ -1616,39 +1662,47 @@ main {
   color: white;
   margin-bottom: 2rem;
 }
+
 .dashboard-title {
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
+
 .dashboard-stats {
   display: flex;
   gap: 2rem;
 }
+
 .stat-item {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .stat-number {
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1;
 }
+
 .stat-label {
   font-size: 0.9rem;
   opacity: 0.8;
   margin-top: 0.5rem;
 }
+
 .controls-section {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
 .search-container {
   position: relative;
 }
+
 .search-icon {
   position: absolute;
   left: 12px;
@@ -1657,6 +1711,7 @@ main {
   color: #6c757d;
   z-index: 2;
 }
+
 .search-input {
   padding-left: 40px;
   padding-right: 40px;
@@ -1664,10 +1719,12 @@ main {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
 .search-input:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
+
 .btn-clear {
   position: absolute;
   right: 8px;
@@ -1680,29 +1737,35 @@ main {
   padding: 4px;
   border-radius: 4px;
 }
+
 .btn-clear:hover {
   background-color: #f8f9fa;
 }
+
 .filter-select {
   border: 2px solid #e9ecef;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
 .filter-select:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
+
 .table-container {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
+
 .table-modern {
   margin: 0;
   border-collapse: separate;
   border-spacing: 0;
 }
+
 .table-modern thead th {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border: none;
@@ -1713,71 +1776,95 @@ main {
   padding: 1rem;
   position: relative;
 }
+
 .table-modern thead th.sortable {
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
 }
+
 .table-modern thead th.sortable:hover {
   background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
 }
+
 .th-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .sort-icon {
   opacity: 0.5;
   font-size: 0.8rem;
 }
+
 .table-modern tbody tr {
   border-bottom: 1px solid #f1f3f4;
   transition: all 0.3s ease;
 }
+
 .table-modern tbody tr:hover {
   background-color: #f8f9ff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .table-modern tbody tr.selected {
   background-color: #e3f2fd;
   border-left: 4px solid #667eea;
 }
+
 .table-modern tbody tr.table-row {
   cursor: pointer;
 }
+
 .table-modern td {
   padding: 1rem;
   vertical-align: middle;
   border: none;
 }
+
 .task-id {
   font-weight: 600;
   color: #667eea;
   font-family: 'Courier New', monospace;
 }
+
 .task-title {
   display: flex;
   align-items: center;
   font-weight: 500;
 }
+
 .date-container {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
+
 .date-text {
   font-size: 0.9rem;
 }
+
 .overdue-badge {
   color: #dc3545;
   animation: pulse 2s infinite;
 }
+
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
+
 .priority-badge {
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -1788,18 +1875,22 @@ main {
   display: inline-flex;
   align-items: center;
 }
+
 .priority-urgent {
   background: linear-gradient(135deg, #ff6b6b, #ee5a52);
   color: white;
 }
+
 .priority-normal {
   background: linear-gradient(135deg, #4ecdc4, #44a08d);
   color: white;
 }
+
 .priority-low {
   background: linear-gradient(135deg, #45b7d1, #96c93d);
   color: white;
 }
+
 .status-badge {
   padding: 0.5rem 1rem;
   border-radius: 20px;
@@ -1810,49 +1901,60 @@ main {
   gap: 0.5rem;
   position: relative;
 }
+
 .status-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background-color: currentColor;
 }
+
 .status-leads {
   background: linear-gradient(135deg, #ffc107, #ffb300);
   color: #333;
 }
+
 .status-design {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
 }
+
 .status-approval {
   background: linear-gradient(135deg, #17a2b8, #138496);
   color: white;
 }
+
 .status-print {
   background: linear-gradient(135deg, #6c757d, #545b62);
   color: white;
 }
+
 .status-production {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: white;
 }
+
 .status-installation {
   background: linear-gradient(135deg, #343a40, #23272b);
   color: white;
 }
+
 .status-billing {
   background: linear-gradient(135deg, #6f42c1, #5a32a3);
   color: white;
 }
+
 .status-default {
   background: linear-gradient(135deg, #6c757d, #545b62);
   color: white;
 }
+
 .action-buttons {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
 }
+
 .btn-action {
   width: 36px;
   height: 36px;
@@ -1864,38 +1966,46 @@ main {
   transition: all 0.3s ease;
   font-size: 0.9rem;
 }
+
 .btn-view {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
 }
+
 .btn-view:hover {
   background: linear-gradient(135deg, #5a6fd8, #6a419a);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
+
 .btn-edit {
   background: linear-gradient(135deg, #28a745, #20c997);
   color: white;
 }
+
 .btn-edit:hover {
   background: linear-gradient(135deg, #218838, #1abc9c);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
 }
+
 .no-data {
   text-align: center;
   padding: 3rem;
   color: #6c757d;
 }
+
 .no-data i {
   font-size: 3rem;
   margin-bottom: 1rem;
   opacity: 0.5;
 }
+
 .no-data p {
   font-size: 1.1rem;
   margin: 0;
 }
+
 .pagination-container {
   padding: 1.5rem;
   border-top: 1px solid #e9ecef;
@@ -1905,6 +2015,7 @@ main {
   flex-wrap: wrap;
   gap: 1rem;
 }
+
 .pagination .page-link {
   border: 2px solid #e9ecef;
   color: #667eea;
@@ -1913,26 +2024,31 @@ main {
   border-radius: 8px;
   transition: all 0.3s ease;
 }
+
 .pagination .page-link:hover {
   background-color: #667eea;
   color: white;
   border-color: #667eea;
   transform: translateY(-1px);
 }
+
 .pagination .page-item.active .page-link {
   background: linear-gradient(135deg, #667eea, #764ba2);
   border-color: #667eea;
   color: white;
 }
+
 .pagination .page-item.disabled .page-link {
   color: #6c757d;
   background-color: #f8f9fa;
   border-color: #e9ecef;
 }
+
 .pagination-info {
   color: #6c757d;
   font-size: 0.9rem;
 }
+
 /* === Fin styles section taches === */
 
 .stat-retard {
@@ -1942,9 +2058,11 @@ main {
   /* padding: 0.5rem 1rem; */
   /* margin-left: 0.5rem; */
 }
+
 .stat-retard .stat-number {
   color: white;
 }
+
 .stat-retard .stat-label {
   color: #fff8;
 }
@@ -1960,15 +2078,15 @@ main {
   .dashboard-stats {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
-  
+
   .section-title {
     font-size: 1.3rem;
   }
 
-  .sidebar{
+  .sidebar {
     display: flex;
     flex-direction: column;
-    flex-wrap : nowrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     align-content: center;
@@ -1980,11 +2098,11 @@ main {
   .page {
     padding-top: 10px;
   }
-  
+
   .sidebar {
     display: flex;
     flex-direction: column;
-    flex-wrap : nowrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     align-content: center;
@@ -1992,46 +2110,46 @@ main {
     min-width: 80px;
     padding: 0.5rem !important;
   }
-  
+
   .sidebar-mobile {
     width: 70px;
     min-width: 70px;
   }
 
-  .rounded-circle{
+  .rounded-circle {
     width: 90%;
   }
-  
+
   .main-content {
     padding: 1rem !important;
   }
-  
+
   .sidebar .nav-link i {
     font-size: 1.4rem;
   }
-  
+
   .sidebar-tooltip {
     left: 50px;
     font-size: 0.85em;
   }
-  
+
   .section-title {
     font-size: 1.2rem;
   }
-  
+
   .search-input {
     min-width: 150px;
   }
-  
+
   .action-icon {
     font-size: 1.1rem;
   }
-  
+
   .table td,
   .table th {
     padding: 0.5rem;
   }
-  
+
   .badge {
     font-size: 0.7rem;
     padding: 0.25em 0.5em;
@@ -2043,55 +2161,55 @@ main {
     width: 60px;
     min-width: 60px;
   }
-  
+
   .sidebar-mobile {
     width: 50px;
     min-width: 50px;
   }
-  
+
   .main-content {
     padding: 0.5rem !important;
   }
-  
+
   .sidebar .nav-link i {
     font-size: 1.2rem;
   }
-  
+
   .sidebar-tooltip {
     left: 40px;
     font-size: 0.8em;
   }
-  
+
   .section-title {
     font-size: 1.1rem;
   }
-  
+
   .search-input {
     min-width: 120px;
   }
-  
+
   .table td,
   .table th {
     padding: 0.25rem;
     font-size: 0.9rem;
   }
-  
+
   .badge {
     font-size: 0.65rem;
     padding: 0.2em 0.4em;
   }
-  
+
   .action-icon {
     font-size: 1rem;
   }
-  
+
   .dropdown-menu {
     font-size: 0.9rem;
   }
 }
 
 @media (orientation : landscape) {
-  .nav-pills{
+  .nav-pills {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -2102,7 +2220,7 @@ main {
     scrollbar-width: none;
   }
 
-  .nav-item{
+  .nav-item {
     flex-basis: 20%;
     flex-shrink: 2;
     flex-grow: 1;
@@ -2121,7 +2239,7 @@ main {
   display: flex;
   align-items: center;
   padding: 0 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .btn-hamburger {
@@ -2134,6 +2252,7 @@ main {
   border-radius: 6px;
   transition: background 0.2s;
 }
+
 .btn-hamburger:active,
 .btn-hamburger:focus {
   background: #222;
@@ -2153,7 +2272,7 @@ main {
 }
 
 .sidebar {
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), box-shadow 0.3s;
   z-index: 1500;
 }
 
@@ -2165,13 +2284,15 @@ main {
     height: 100vh;
     min-width: 180px;
     max-width: 80vw;
-    box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.18);
     background: #222;
     transform: translateX(-110%);
   }
+
   .sidebar.sidebar-open {
     transform: translateX(0);
   }
+
   .sidebar.sidebar-closed {
     transform: translateX(-110%);
   }
@@ -2179,8 +2300,8 @@ main {
 
 @media (max-width: 767.98px) {
   .main-content {
-    padding-top: 60px !important; /* décale le contenu sous la navbar */
+    padding-top: 60px !important;
+    /* décale le contenu sous la navbar */
   }
 }
-
 </style>

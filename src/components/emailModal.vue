@@ -73,6 +73,9 @@ export default {
             try{
                 const response = await addService.addMail(this.email);
                 if(!response) throw new Error();
+                const modal = document.getElementById('emailModal');
+                const bootstrapModal = bootstrap.Modal.getInstance(modal)
+                bootstrapModal.hide()
             }catch(error){
                 console.log(error);
             }
