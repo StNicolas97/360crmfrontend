@@ -605,27 +605,6 @@
         </div>
       </section>
 
-      <section v-if="currentSection === 'userProfile'" class="section">
-        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"
-          @update="refetchSectionUser()"></UserProfile>
-      </section>
-
-      <section v-if="currentSection === 'clientProfile'" class="section">
-        <ClientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
-          @update="refetchSectionClient()">
-        </ClientProfile>
-      </section>
-
-      <section v-if="currentSection === 'taskProfile'" class="section">
-        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
-          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
-          @showclient="editClient($event, id)"></TaskProfile>
-      </section>
-
-      <section v-if="currentSection === 'myuserProfile'" class="section">
-        <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
-      </section>
-
       <section v-if="currentSection === 'myTask'" class="'myTask'" @update="refetchSectionMyTask()">
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
@@ -813,6 +792,31 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- <section v-if="currentSection === 'pertes'" class="section">
+
+      </section> -->
+
+      <section v-if="currentSection === 'userProfile'" class="section">
+        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"
+          @update="refetchSectionUser()"></UserProfile>
+      </section>
+
+      <section v-if="currentSection === 'clientProfile'" class="section">
+        <ClientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
+          @update="refetchSectionClient()">
+        </ClientProfile>
+      </section>
+
+      <section v-if="currentSection === 'taskProfile'" class="section">
+        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
+          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
+          @showclient="editClient($event, id)"></TaskProfile>
+      </section>
+
+      <section v-if="currentSection === 'myuserProfile'" class="section">
+        <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
       </section>
 
 
