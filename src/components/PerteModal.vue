@@ -36,7 +36,7 @@
                     type="text"
                     id="laminage"
                     class="form-control"
-                    v-model="perte.typeLaminage"
+                    v-model="perte.typeLaminier"
                   />
                 </div>
   
@@ -51,12 +51,13 @@
                   />
                 </div>
 
-                <!-- Dimensions -->
+                <!-- cout -->
               <div class="form-group">
                   <label for="cout">Coût</label>
                   <input
                     type="number"
                     id="cout"
+                    step="any"
                     class="form-control"
                     v-model="perte.cout"
                   />
@@ -102,7 +103,7 @@
       return {
         perte: {
           typeVinyle: "",
-          typeLaminage: "",
+          typeLaminier: "",
           dimensions: "",
           raison: "",
           idAssigne: null,
