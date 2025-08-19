@@ -86,6 +86,15 @@
             <span v-if="isSidebarOpen === true" class="text-center mx-2">Mes Taches</span>
           </a>
         </li>
+        <li>
+          <a href="#" @click.prevent="currentSection = 'pertes'; isSidebarOpen = false"
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ 'active': currentSection === 'pertes' }" @mouseenter="hovered = 'pertes'"
+            @mouseleave="hovered = null">
+            <i class="bi bi-archive" :title="'pertes'"></i>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2">Pertes</span>
+          </a>
+        </li>
       </ul>
       <hr class="text-white">
       <div class="dropdown mb-4 d-flex justify-content-center">
@@ -794,9 +803,105 @@
         </div>
       </section>
 
-      <!-- <section v-if="currentSection === 'pertes'" class="section">
-
-      </section> -->
+      <section v-if="currentSection === 'pertes'" class="section">
+        <h2 class="section-title">Pertes</h2>
+        <div
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+          <div class="order-2 order-lg-1">
+            <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
+              Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
+              }} clients</p>
+          </div>
+          <div
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+            <div class="search-container">
+              <i class="bi bi-search search-icon"></i>
+              <input type="text" class="form-control search-input" v-model="searchQueryClients"
+                placeholder="Rechercher un client..." @input="filterClients">
+              <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
+                  class="bi bi-x"></i></button>
+            </div>
+            <select class="form-select filter-select" v-model="selectedClientStatus" @change="filterClients">
+              <option value="">Tous les statuts</option>
+              <option value="Actif">Actif</option>
+              <option value="Inactif">Inactif</option>
+              <option value="Prospect">Prospect</option>
+            </select>
+            <div class="text-center text-sm-end">
+              <i class="bi bi-person-add action-icon" data-bs-toggle="modal" data-bs-target="#modalclient"></i>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-modern">
+            <thead>
+              <tr>
+                <th @click="sortPertes('typeVinyle')" class="sortable">
+                  <div class="th-content">Type de Vinyle <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortPertes('typeLaminier')" class="sortable">
+                  <div class="th-content">Type de Laminier <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortPertes('dimensions')" class="sortable d-none d-md-table-cell">
+                  <div class="th-content">Dimensions <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortPertes('raison')" class="sortable d-none d-lg-table-cell">
+                  <div class="th-content">Raison <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th @click="sortPertes('cout')" class="sortable">
+                  <div class="th-content">Coût <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="perte in pertes" :key="perte.id">
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ perte.typeVinyle }}</span>
+                    <small class="text-muted d-md-none">{{ perte.typeLaminier }}</small>
+                  </div>
+                </td>
+                <td class="d-none d-md-table-cell">{{ perte.typeLaminier }}</td>
+                <td class="d-none d-md-table-cell">{{ perte.dimensions }}</td>
+                <td class="d-none d-lg-table-cell">{{ perte.raison }}</td>
+                <td>
+                  <span class="badge bg-danger">{{ formatCurrency(perte.cout) }}</span>
+                </td>
+                <td>
+                  <i class="bi bi-pencil-square action-icon" @click="editPerte(perte.id)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div v-if="filteredClients.length === 0" class="no-data">
+            <i class="bi bi-inbox"></i>
+            <p>Aucun client trouvé</p>
+          </div>
+        </div>
+        <div class="pagination-container" v-if="clientTotalPages > 1">
+          <nav>
+            <ul class="pagination justify-content-center">
+              <li class="page-item" :class="{ disabled: clientCurrentPage === 1 }">
+                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage - 1)"><i
+                    class="bi bi-chevron-left"></i></a>
+              </li>
+              <li class="page-item" v-for="page in clientVisiblePages" :key="page"
+                :class="{ active: page === clientCurrentPage }">
+                <a class="page-link" @click.prevent="changeClientPage(page)">{{ page }}</a>
+              </li>
+              <li class="page-item" :class="{ disabled: clientCurrentPage === clientTotalPages }">
+                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage + 1)"><i
+                    class="bi bi-chevron-right"></i></a>
+              </li>
+            </ul>
+          </nav>
+          <div class="pagination-info">
+            Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage *
+              clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
+          </div>
+        </div>       
+      </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">
         <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"
@@ -864,6 +969,7 @@ export default {
       leads: [],
       users: [],
       myTask: [],
+      pertes : [],
       historyStack: [],
       userId: null,
       clientId: null,
@@ -1045,6 +1151,7 @@ export default {
     this.filterEmployes();
     this.filterLeads()
     await this.getUserTasks();
+    await this.fetchPerte();
     this.user = JSON.parse(localStorage.getItem('user'));
   },
   beforeUnmount() {
@@ -1124,6 +1231,18 @@ export default {
         console.error("Erreur lors de la récupération des tâches", error)
       }
     },
+    async fetchPerte() {
+      try {
+        this.pertes = [];
+        const response = await getService.getPerte();
+        this.pertes = response.data;
+        console.log("voici les pertes "+ response.data);
+      } catch (error) {
+        this.error = "Erreur lors de la récupération des utilisateurs";
+        console.error(error);
+      }
+    },
+
     changeSectionProfil() {
       if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('myuserProfile')

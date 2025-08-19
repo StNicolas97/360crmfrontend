@@ -43,7 +43,7 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Début</label>
                   <input type="date" value="01/01/2015" v-model="ppf.datedebut" class="form-control" id="dateDebut"
-                    name="dateDebut" data-provide="datepicker" required>
+                    name="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
@@ -169,7 +169,7 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="dateDebutAffichage">Date commandé</label>
                   <input type="date" v-model="affichage.datedebut" class="form-control" name="dateDebutAffichage"
-                    id="dateDebut" data-provide="datepicker" required>
+                    id="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
@@ -295,8 +295,8 @@
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Début</label>
                   <br>
-                  <input type="date" value="01/01/2015" v-model="lettrage.datedebut" class="form-control"
-                    name="dateDebut" id="dateDebut" data-provide="datepicker" required>
+                  <input type="date" v-model="lettrage.datedebut" class="form-control"
+                    name="dateDebut" id="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
                   <span id="alertDebut"></span>
                 </div>
@@ -458,7 +458,7 @@
                     <label for="debut">Début</label>
                     <br>
                     <input type="date" value="01/01/2015" v-model="note.datedebut" class="form-control" name="dateDebut"
-                      id="dateDebut" data-provide="datepicker" required>
+                      id="dateDebut" data-provide="datepicker">
                     <span class="icon icon-calendar"></span>
                     <span id="alertDebut"></span>
                   </div>
@@ -657,15 +657,15 @@ export default {
         alert.innerText = "";
       }
 
-      if (!obj.datedebut) {
-        const alert = document.getElementById("alertDebut");
-        alert.innerText = "Veuillez entrer une date";
-        alert.style.color = 'red';
-        isValid = false;
-      } else {
-        const alert = document.getElementById("alertDebut");
-        alert.innerText = "";
-      }
+      // if (!obj.datedebut) {
+      //   const alert = document.getElementById("alertDebut");
+      //   alert.innerText = "Veuillez entrer une date";
+      //   alert.style.color = 'red';
+      //   isValid = false;
+      // } else {
+      //   const alert = document.getElementById("alertDebut");
+      //   alert.innerText = "";
+      // }
 
       /*if (!obj.datefin) {
         const alert = document.getElementById("alertFin");
@@ -677,22 +677,22 @@ export default {
         alert.innerText = "";
       }*/
 
-      if (obj.datedebut > obj.datefin) {
-        alert("la date de début doit être inférieure à la date de fin")
-        isValid = false;
-      }
+      // if (obj.datedebut && obj.datedebut > obj.datefin) {
+      //   alert("la date de début doit être inférieure à la date de fin")
+      //   isValid = false;
+      // }
 
-      //Section traitement Date 
-        const today = new Date();
-        const dateDebut = new Date(obj.datedebut);
-        const dateFin = obj.datefin ? new Date(obj.datefin) : obj.datefin;
+      // //Section traitement Date 
+      //   const today = new Date();
+      //   const dateDebut = new Date(obj.datedebut);
+      //   const dateFin = obj.datefin ? new Date(obj.datefin) : obj.datefin;
 
-        // Vérifier si les dates sont valides
-        if (isNaN(dateDebut.getTime())) {
-          alert("La date de début n'est pas valide");
-          isValid = false;
-          return;
-        }
+      //   // Vérifier si les dates sont valides
+      //   if (isNaN(dateDebut.getTime())) {
+      //     alert("La date de début n'est pas valide");
+      //     isValid = false;
+      //     return;
+      //   }
 
         // Vérifier que la date de début n'est pas antérieure à aujourd'hui
         // if (this.compareDatesOnly(dateDebut, today) < 0) {
@@ -701,23 +701,23 @@ export default {
         // }
 
         // Vérifier que la date de fin n'est pas antérieure à aujourd'hui
-        if(dateFin){
-          console.log(dateFin, "je ne suis pas null!");
-              if (isNaN(dateFin.getTime())) {
-              alert("La date de fin n'est pas valide");
-              isValid = false;
-              return;
-            }
-              if (this.compareDatesOnly(dateFin, today) < 0) {
-              alert("La date de fin ne peut pas être antérieure à aujourd'hui");
-              isValid = false;
-            }
-           // Vérifier que la date de fin n'est pas antérieure à la date de début
-            if (this.compareDatesOnly(dateFin, dateDebut) < 0) {
-              alert("La date de fin ne peut pas être antérieure à la date de début");
-              isValid = false;
-            }
-        }
+        // if(dateFin){
+        //   console.log(dateFin, "je ne suis pas null!");
+        //       if (isNaN(dateFin.getTime())) {
+        //       alert("La date de fin n'est pas valide");
+        //       isValid = false;
+        //       return;
+        //     }
+        //       if (this.compareDatesOnly(dateFin, today) < 0) {
+        //       alert("La date de fin ne peut pas être antérieure à aujourd'hui");
+        //       isValid = false;
+        //     }
+        //    // Vérifier que la date de fin n'est pas antérieure à la date de début
+        //     if (this.compareDatesOnly(dateFin, dateDebut) < 0) {
+        //       alert("La date de fin ne peut pas être antérieure à la date de début");
+        //       isValid = false;
+        //     }
+        // }
 
       if (!obj.idClient) {
         const alert = document.getElementById("alertClient");

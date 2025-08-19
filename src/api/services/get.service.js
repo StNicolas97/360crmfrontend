@@ -101,6 +101,12 @@ export const getService = {
       "Erreur lors de la récupération de la tâche"
     ),
 
+  getPerte: () =>
+    handleRequest(
+      `/perte`,
+      "Informations de la tâche récupérées",
+      "Erreur lors de la récupération de la tâche"
+    ),
   getUrgentTasks: () =>
     handleRequest(
       "tache/urgent",
