@@ -35,4 +35,12 @@ export const deleteService = {
       "une erreur est survenue lors de la suppression"
     );
   },
+  async deletePerte(id) {
+    return handleDelete(
+      "perte",
+      id,
+      "Tâche suprrimée avec succès",
+      "une erreur est survenue lors de la suppression"
+    );
+  },
 };

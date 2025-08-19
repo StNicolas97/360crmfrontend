@@ -61,4 +61,12 @@ export const addService = {
       "une erreur est survenue lors de l'ajout "
     );
   },
+  async addPerte(perte) {
+    return handleAdd(
+      "perte",
+      perte,
+      "Perte ajoutée avec succès",
+      "une erreur est survenue lors de l'ajout "
+    );
+  },
 };

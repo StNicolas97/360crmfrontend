@@ -21,7 +21,7 @@
                                 <label for="emailBody">Message</label>
                                 <textarea class="form-control" id="emailBody" v-model="email.body" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                        <button type="submit" class="btn btn-danger">Envoyer</button>
                 </form>
             </div>
         </div>

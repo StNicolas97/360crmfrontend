@@ -87,7 +87,7 @@
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'pertes'; isSidebarOpen = false"
+          <a href="#" @click.prevent="currentSection = 'pertes'; fetchPerte(); isSidebarOpen = false"
             class="nav-link d-flex justify-content-center align-items-center text-white"
             :class="{ 'active': currentSection === 'pertes' }" @mouseenter="hovered = 'pertes'"
             @mouseleave="hovered = null">
@@ -146,6 +146,7 @@
       <employe-modal @submit="fetchUsers" />
       <client-modal @submit="fetchclients" />
       <tache-modal @submit="refreshSectionTask" />
+      <PerteModal @submitPerte="refreshSectionPerte"></PerteModal>
 
       <!-- fin liste des modals -->
 
@@ -803,32 +804,28 @@
         </div>
       </section>
 
+      <!-- Section pertes -->
       <section v-if="currentSection === 'pertes'" class="section">
         <h2 class="section-title">Pertes</h2>
         <div
           class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
-          <div class="order-2 order-lg-1">
+          <!-- <div class="order-2 order-lg-1">
             <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
               Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
               }} clients</p>
-          </div>
+          </div> -->
           <div
             class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
             <div class="search-container">
-              <i class="bi bi-search search-icon"></i>
+              <!-- <i class="bi bi-search search-icon"></i>
               <input type="text" class="form-control search-input" v-model="searchQueryClients"
-                placeholder="Rechercher un client..." @input="filterClients">
+                placeholder="Rechercher une perte..." @input="filterClients">
               <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
-                  class="bi bi-x"></i></button>
+                  class="bi bi-x"></i></button> -->
+              <span class="btn btn-danger">Total Pertes : {{ totalPertes }} $</span>
             </div>
-            <select class="form-select filter-select" v-model="selectedClientStatus" @change="filterClients">
-              <option value="">Tous les statuts</option>
-              <option value="Actif">Actif</option>
-              <option value="Inactif">Inactif</option>
-              <option value="Prospect">Prospect</option>
-            </select>
             <div class="text-center text-sm-end">
-              <i class="bi bi-person-add action-icon" data-bs-toggle="modal" data-bs-target="#modalclient"></i>
+              <i class="bi bi-archive action-icon" data-bs-toggle="modal" data-bs-target="#perteModal"></i>
             </div>
           </div>
         </div>
@@ -851,6 +848,9 @@
                 <th @click="sortPertes('cout')" class="sortable">
                   <div class="th-content">Coût <i class="bi bi-arrow-down-up sort-icon"></i></div>
                 </th>
+                <th class="sortable">
+                  <div class="th-content">Par <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -866,10 +866,11 @@
                 <td class="d-none d-md-table-cell">{{ perte.dimensions }}</td>
                 <td class="d-none d-lg-table-cell">{{ perte.raison }}</td>
                 <td>
-                  <span class="badge bg-danger">{{ formatCurrency(perte.cout) }}</span>
+                  <span class="badge bg-danger">{{ perte.cout }} $</span>
                 </td>
+                <td class="d-none d-lg-table-cell">{{ perte.prenom }} {{ perte.nom }}</td>
                 <td>
-                  <i class="bi bi-pencil-square action-icon" @click="editPerte(perte.id)"></i>
+                  <i class="bi bi-trash" @click="deletePerte(perte.id)"></i>
                 </td>
               </tr>
             </tbody>
@@ -900,7 +901,7 @@
             Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage *
               clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
           </div>
-        </div>       
+        </div>
       </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">
@@ -935,6 +936,7 @@
 import EmployeModal from '../components/EmployeModal.vue'
 import ClientModal from '../components/ClientModal.vue'
 import TacheModal from '../components/TacheModal.vue'
+import PerteModal from '@/components/PerteModal.vue'
 import Calendar from '../components/Calendar.vue'
 import Kanban from '../components/Kanban.vue'
 import Dashboard from '../components/Dashboard.vue'
@@ -944,6 +946,7 @@ import TaskProfile from '@/components/taskProfile.vue'
 import myuserProfile from '@/components/myuserProfile.vue'
 import { authService } from '../api/services/auth.service'
 import { getService } from '../api/services/get.service'
+import { deleteService } from '@/api/services/delete.service'
 
 export default {
   name: 'HomeView',
@@ -951,6 +954,7 @@ export default {
     EmployeModal,
     ClientModal,
     TacheModal,
+    PerteModal,
     Calendar,
     Kanban,
     Dashboard,
@@ -969,7 +973,7 @@ export default {
       leads: [],
       users: [],
       myTask: [],
-      pertes : [],
+      pertes: [],
       historyStack: [],
       userId: null,
       clientId: null,
@@ -1137,6 +1141,13 @@ export default {
         pages.push(i);
       }
       return pages;
+    },
+    totalPertes() {
+      let total = 0;
+      for (let perte of this.pertes) {
+        if(perte && !isNaN(perte.cout)) total += perte.cout;
+      }
+      return total
     }
   },
   async mounted() {
@@ -1233,10 +1244,10 @@ export default {
     },
     async fetchPerte() {
       try {
-        this.pertes = [];
+        this.perte = [];
         const response = await getService.getPerte();
         this.pertes = response.data;
-        console.log("voici les pertes "+ response.data);
+        console.log("voici les pertes " + response.data);
       } catch (error) {
         this.error = "Erreur lors de la récupération des utilisateurs";
         console.error(error);
@@ -1312,9 +1323,25 @@ export default {
       this.filteredMyTask = [];
       await this.getUserTasks();
     },
+    async deletePerte(id) {
+      try {
+        const confirm = window.confirm("voulez vous supprimer cette perte ?")
+        if (confirm) {
+          const response = await deleteService.deletePerte(id);
+          this.refreshSectionPerte();
+          if (!response) throw new Error()
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     refreshSectionTaskAfterDelete() {
       this.currentSection = 'taches';
       this.fetchTask();
+    },
+    refreshSectionPerte() {
+      this.currentSection = 'pertes';
+      this.fetchPerte();
     },
     refreshSectionUser() {
       this.currentSection = 'employe'
