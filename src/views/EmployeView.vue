@@ -495,9 +495,11 @@ export default {
     totalPertes() {
       let total = 0;
       for (let perte of this.pertes) {
-        if(perte && !isNaN(perte.cout)) total += perte.cout;
+        if (perte && !isNaN(perte.cout)) {
+          total += parseFloat(perte.cout); 
+        }
       }
-      return total
+      return parseFloat(total.toFixed(2));
     }
   },
   async mounted() {
