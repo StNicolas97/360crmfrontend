@@ -34,10 +34,12 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><strong>Date commandé :</strong> {{ task.dateCommande}}</li>
               <li class="list-group-item"><strong>Date d'Installation</strong>
-                <div class="row mt-1">
-                <div class="list-group-item col-md-5 mx-auto"><strong>Début :</strong> <input type="date" class="form-control" v-model="task.datedebut"></div>
-                <div class="list-group-item col-md-5 mx-auto"><strong>Fin :</strong> <input type="date" class="form-control" v-model="task.datefin"></div>
-              </div>
+                <li class="list-group-item">
+                <ul class="row list-group-flush  mt-1">
+                  <li class="list-group-item col-md-5 mx-auto"><strong>Début :</strong> <input type="date" class="form-control" v-model="task.datedebut"></li>
+                  <li class="list-group-item col-md-5 mx-auto"><strong>Fin :</strong> <input type="date" class="form-control" v-model="task.datefin"></li>
+                </ul>
+              </li>
               </li>
                 <li class="list-group-item">
                 <strong>Status :</strong>
