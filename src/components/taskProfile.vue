@@ -327,6 +327,7 @@ export default {
 <style>
 body, .container {
     background: #f7f8fa !important;
+    color: black;
 }
 
 .container {
