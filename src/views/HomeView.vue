@@ -1278,11 +1278,16 @@ export default {
       this.clientId = id;
     },
     editTask(type, id) {
+      try{
+      if(!type || !id) throw new Error();
       if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('taskProfile')
       this.currentSection = 'taskProfile';
       this.taskId = id;
       this.endpoint = type;
+      }catch(error){
+        console.error(error);
+      }
     },
     goTo(section) {
       this.historyStack.push(section)

@@ -8,7 +8,7 @@
         <img class="fs-4 img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
       </a>
       <hr class="text-white">
-      <ul class="nav nav-pills flex-column mb-auto">
+      <ul class="nav nav-pills flex-column mb-auto" @click="clearnav()">
         <li class="nav-item">
           <a href="#" @click.prevent="currentSection = 'dashboard';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center"
             :class="{ 'active': currentSection === 'dashboard' }"
@@ -396,8 +396,16 @@
         <Kanban @view="editTask"/>
       </section>
       
-      <section v-if="currentSection === 'taskProfileUser'" class="section">
-        <taskProfileUser :id-task="taskId" :end-point="endpoint" @previous="previous()"></taskProfileUser>
+      <section v-if="currentSection === 'taskProfile'" class="section">
+        <taskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
+          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
+          @showclient="editClient($event, id)"></taskProfile>
+      </section>
+
+      <section v-if="currentSection === 'clientProfile'" class="section">
+        <clientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
+          @update="refetchSectionClient()">
+        </clientProfile>
       </section>
 
       <section v-if="currentSection === 'myuserProfile'" class="section">
@@ -415,7 +423,8 @@ import Calendar from '../components/Calendar.vue'
 import Kanban from '../components/Kanban.vue'
 import Dashboard from '../components/Dashboard.vue'
 import PerteModal from '@/components/PerteModal.vue'
-import taskProfileUser from '@/components/taskProfile.user.vue' 
+import taskProfile from '@/components/taskProfile.vue'
+import clientProfile from '@/components/clientProfile.vue'
 import { getService } from '../api/services/get.service' 
 import { deleteService } from '@/api/services/delete.service'
 import myuserProfile from '@/components/myuserProfile.vue' 
@@ -427,7 +436,8 @@ export default {
     Kanban,
     Dashboard,
     PerteModal,
-    taskProfileUser,
+    taskProfile,
+    clientProfile,
     myuserProfile
   },
   data() {
@@ -438,6 +448,7 @@ export default {
       taches: [],
       filteredTaches: [],
       perte : [],
+      historyStack: [],
       taskId: null,
       endpoint: '',
       error: null,
@@ -671,30 +682,52 @@ export default {
       }
     },
     
-    editTask(type, id) {
+     editTask(type, id) {
       try{
-      console.log("voici l'id " + id+ " voici le endpoint " + type);
-      if(!type  || !id) throw new Error();
-      this.previousSection = this.currentSection
-      this.currentSection = 'taskProfileUser'
-      this.taskId = id
-      this.endpoint = type
-      }
-      catch(error){
+      if(!type || !id) throw new Error();
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('taskProfile')
+      this.currentSection = 'taskProfile';
+      this.taskId = id;
+      this.endpoint = type;
+      }catch(error){
         console.error(error);
       }
     },
+    editClient(id) {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('clientProfile')
+      this.currentSection = 'clientProfile';
+      this.clientId = id;
+    },
+    editUser(id) {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('userProfile')
+      this.currentSection = 'userProfile';
+      this.userId = id;
+    },
     
     changeSectionProfil() {
+      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
+      this.historyStack.push('myuserProfile')
       this.previousSection = this.currentSection
       this.currentSection = 'myuserProfile'
-      if(this.isSidebarOpen) this.isSidebarOpen = false
+      if (this.isSidebarOpen) this.isSidebarOpen = false
     },
     
     previous() {
-      this.currentSection = this.previousSection
+      if (this.historyStack.length > 1) {
+        this.historyStack.pop()
+        this.currentSection = this.historyStack[this.historyStack.length - 1]
+      }
     },
-    
+    goTo(section) {
+      this.historyStack.push(section)
+      this.currentSection = section
+    },
+    clearnav() {
+      this.historyStack.length = 0;
+    },
     refreshSectionTask() {
       this.currentSection = 'taches'
       this.taches = []
