@@ -276,13 +276,11 @@ export default {
         async createInvoice(){
             try{
             const data = this.task;
-            if(valider){
                 const response = await addService.addInvoice(data);
                 if(!response){
                     alert("Erreur lors de la creation de la facture !");
                 }else{
                     alert("Facture crée avec succès");
-                }
             }
         }catch(error){
             console.error(error.message)

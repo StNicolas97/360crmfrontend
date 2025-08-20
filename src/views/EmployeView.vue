@@ -417,6 +417,7 @@ import Dashboard from '../components/Dashboard.vue'
 import PerteModal from '@/components/PerteModal.vue'
 import taskProfileUser from '@/components/taskProfile.user.vue' 
 import { getService } from '../api/services/get.service' 
+import { deleteService } from '@/api/services/delete.service'
 import myuserProfile from '@/components/myuserProfile.vue' 
 
 export default {
@@ -600,7 +601,18 @@ export default {
     selectRow(tache) {
       this.selectedTask = tache
     },
-    
+    async deletePerte(id) {
+      try {
+        const confirm = window.confirm("voulez vous supprimer cette perte ?")
+        if (confirm) {
+          const response = await deleteService.deletePerte(id);
+          this.refreshSectionPerte();
+          if (!response) throw new Error()
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page
@@ -660,10 +672,17 @@ export default {
     },
     
     editTask(type, id) {
+      try{
+      console.log("voici l'id " + id+ " voici le endpoint " + type);
+      if(!type  || !id) throw new Error();
       this.previousSection = this.currentSection
       this.currentSection = 'taskProfileUser'
       this.taskId = id
       this.endpoint = type
+      }
+      catch(error){
+        console.error(error);
+      }
     },
     
     changeSectionProfil() {
