@@ -39,6 +39,12 @@
                 </select>
                 <span class="" id="alertTitre"></span>
               </div>
+              <div class="mb-3">
+                <label for="debut">Date commandé</label>
+                  <input type="date" v-model="ppf.dateCommande" class="form-control" id="dateCommande"
+                    name="dateDebut" data-provide="datepicker">
+                  <span class="icon icon-calendar"></span>
+              </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Début</label>
@@ -165,9 +171,15 @@
                   v-model="affichage.titre" required>
                 <span id="alertTitre"></span>
               </div>
+              <div class="mb-3">
+                <label for="debut">Date commandé</label>
+                  <input type="date" v-model="affichage.dateCommande" class="form-control" id="dateCommande"
+                    name="dateDebut" data-provide="datepicker">
+                  <span class="icon icon-calendar"></span>
+              </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
-                  <label for="dateDebutAffichage">Date commandé</label>
+                  <label for="dateDebutAffichage">Date debut</label>
                   <input type="date" v-model="affichage.datedebut" class="form-control" name="dateDebutAffichage"
                     id="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
@@ -290,6 +302,12 @@
                 <label for="titre" class="form-label">Titre</label>
                 <input type="text" name="titre" class="form-control" id="titre" v-model="lettrage.titre" required>
                 <span id="alertTitre"></span>
+              </div>
+              <div class="mb-3">
+                <label for="debut">Date commandé</label>
+                  <input type="date" v-model="lettrage.dateCommande" class="form-control" id="dateCommande"
+                    name="dateDebut" data-provide="datepicker">
+                  <span class="icon icon-calendar"></span>
               </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
@@ -518,6 +536,7 @@ export default {
       ppf: {
         titre: '',
         typeTask: 'PPF',
+        dateCommande : null,
         datedebut: null,
         heuredebut: "07:30",
         datefin: null,
@@ -541,6 +560,7 @@ export default {
       lettrage: {
         titre: '',
         typeTask: 'lettrage',
+        dateCommande : null,
         datedebut: null,
         heuredebut: "07:30",
         datefin: null,
@@ -564,6 +584,7 @@ export default {
       affichage: {
         titre: '',
         typeTask: 'affichage',
+        dateCommande : null,
         datedebut: null,
         heuredebut: "07:30",
         datefin: null,

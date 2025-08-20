@@ -32,7 +32,7 @@
           <div class="card-body">
             <h5 class="card-title mb-3">Informations générales</h5>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Date commandé :</strong> {{ datecreation}}</li>
+              <li class="list-group-item"><strong>Date commandé :</strong> {{ task.dateCommande}}</li>
               <li class="list-group-item"><strong>Date d'Installation</strong>
                 <div class="row mt-1">
                 <div class="list-group-item col-md-5 mx-auto"><strong>Début :</strong> <input type="date" class="form-control" v-model="task.datedebut"></div>
@@ -69,7 +69,7 @@
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
-              <li class="list-group-item"><strong>Assigné :</strong> {{task.nomEmploye}}</li>
+              <li class="list-group-item"><strong>Assigné :</strong> {{ task.prenomEmploye }} {{task.nomEmploye}}</li>
             </ul>
           </div>
         </div>
