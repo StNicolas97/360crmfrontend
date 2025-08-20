@@ -32,9 +32,14 @@
           <div class="card-body">
             <h5 class="card-title mb-3">Informations générales</h5>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Date de début :</strong> <input type="date" class="form-control" v-model="task.datedebut"></li>
-              <li class="list-group-item"><strong>Date de fin :</strong> <input type="date" class="form-control" v-model="task.datefin"></li>
-              <li class="list-group-item">
+              <li class="list-group-item"><strong>Date commandé :</strong> {{ datecreation}}</li>
+              <li class="list-group-item"><strong>Date d'Installation</strong>
+                <div class="row mt-1">
+                <div class="list-group-item col-md-5 mx-auto"><strong>Début :</strong> <input type="date" class="form-control" v-model="task.datedebut"></div>
+                <div class="list-group-item col-md-5 mx-auto"><strong>Fin :</strong> <input type="date" class="form-control" v-model="task.datefin"></div>
+              </div>
+              </li>
+                <li class="list-group-item">
                 <strong>Status :</strong>
                 <select class="form-select" v-model="task.statut">
                   <option value="Leads">Leads</option>
@@ -218,6 +223,12 @@ export default {
             },
             role: ''
         }
+    },
+    computed : {
+      datecreation(){
+        const createdAt = new Date(this.task.createdAt)
+        return createdAt.toISOString().split('T')[0];
+      }
     },
     props: {
         idTask: {
