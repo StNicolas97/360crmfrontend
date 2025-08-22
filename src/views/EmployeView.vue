@@ -200,7 +200,7 @@
                     :class="{ 'selected': selectedTask?.id === tache.id }" 
                     @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
                   <td>
-                    <span class="task-id">#{{ tache.idTache }}</span>
+                    <span class="task-id">#{{ tache.id }}</span>
                   </td>
                   <td>
                     <div class="task-title">
@@ -728,10 +728,15 @@ export default {
     clearnav() {
       this.historyStack.length = 0;
     },
-    refreshSectionTask() {
-      this.currentSection = 'taches'
-      this.taches = []
-      this.fetchTask()
+    async refreshSectionTask() {
+      this.taches = [];
+      this.filteredTaches = [];
+      await this.getUserTasks();
+      this.filterTaches();
+    },
+    refreshSectionTaskAfterDelete() {
+      this.currentSection = 'dashboard';
+      this.fetchTask();
     },
     
     refreshSectionUser() {
@@ -747,11 +752,8 @@ export default {
     },
     
     logout() {
-      const confirm = window.confirm("Voulez-vous vraiment vous deconnecter ?")
-      if(confirm){
       localStorage.removeItem('user')
       this.$router.push('/login')
-      }
     },
 
     getPriorityClass(priorite) {

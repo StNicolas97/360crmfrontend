@@ -45,7 +45,7 @@
                     name="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
               </div>
-              <div class="row mb-3">
+              <div class="row mb-3"><span class="mb-2">Date d'Installation</span>
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Début</label>
                   <input type="date" value="01/01/2015" v-model="ppf.datedebut" class="form-control" id="dateDebut"
@@ -62,7 +62,7 @@
               </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
-                  <label for="debut">Date de ramassage prévu</label>
+                  <label for="debut">Fin</label>
                   <input type="date" value="01/01/2015" v-model="ppf.datefin" class="form-control" name="dateFin"
                     data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
@@ -174,12 +174,12 @@
               <div class="mb-3">
                 <label for="debut">Date commandé</label>
                   <input type="date" v-model="affichage.dateCommande" class="form-control" id="dateCommande"
-                    name="dateDebut" data-provide="datepicker">
+                    name="datecommande" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
               </div>
-              <div class="row mb-3">
+              <div class="row mb-3"><span class="mb-2">Date d'Installation</span>
                 <div class="input-with-icon col-md-6 ms-auto">
-                  <label for="dateDebutAffichage">Date debut</label>
+                  <label for="dateDebutAffichage">Debut</label>
                   <input type="date" v-model="affichage.datedebut" class="form-control" name="dateDebutAffichage"
                     id="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
@@ -194,7 +194,7 @@
               </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
-                  <label for="dateFinAffichage">Date de livraison</label>
+                  <label for="dateFinAffichage">Fin</label>
                   <input type="date" v-model="affichage.datefin" class="form-control" name="dateFinAffichage"
                     id="dateFinAffichage" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
@@ -309,7 +309,7 @@
                     name="dateDebut" data-provide="datepicker">
                   <span class="icon icon-calendar"></span>
               </div>
-              <div class="row mb-3">
+              <div class="row mb-3"><span class="mb-2">Date d'Installation</span>
                 <div class="input-with-icon col-md-6 ms-auto">
                   <label for="debut">Début</label>
                   <br>
@@ -327,7 +327,7 @@
               </div>
               <div class="row mb-3">
                 <div class="input-with-icon col-md-6 ms-auto">
-                  <label for="debut">Date de ramassage prévu</label>
+                  <label for="debut">Fin</label>
                   <input type="date" value="01/01/2015" v-model="lettrage.datefin" class="form-control" name="dateFin"
                     data-provide="datepicker" >
                   <span class="icon icon-calendar"></span>
