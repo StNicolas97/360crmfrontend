@@ -101,7 +101,7 @@
         <a href="#"
           class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center"
           id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle">
+          <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" width="32" height="32" class="rounded-circle">
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
           <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
@@ -124,8 +124,8 @@
         <a href="#"
           class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1"
           id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="https://github.com/mdo.png" alt="" class="rounded-circle me-2 img-fluid"
-            style="width: 70%;position : relative; left: 30%;">
+          <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" class="rounded-circle me-2 img-fluid"
+            style="width: 30%;position : relative; left: 30%;">
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
           <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
@@ -722,7 +722,7 @@
                   :class="{ 'selected': selectedTask?.id === tache.id }"
                   @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
                   <td>
-                    <span class="task-id">#{{ tache.idTache }}</span>
+                    <span class="task-id">#{{ tache.id }}</span>
                   </td>
                   <td>
                     <div class="task-title">
