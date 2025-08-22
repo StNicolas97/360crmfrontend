@@ -131,19 +131,24 @@ export default {
 
 
       for (let i = 0; i < tachesTransformees.length; i++) {
-        const task = tachesTransformees[i];
-        events.push({
-        id: task.id,
-        title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
-        start: task.datedebut,
-        end: task.datefin,
-        color: task.couleur,
-        extendedProps: {
-          typeTask: task.typeTask,
-          idTache : task.idTask
-        }
-        });
-      }
+  const task = tachesTransformees[i];
+
+  let endDate = new Date(task.datefin);
+
+  endDate.setDate(endDate.getDate() + 1);
+
+  events.push({
+    id: task.id,
+    title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
+    start: task.datedebut,
+    end: endDate.toISOString().split("T")[0],
+    color: task.couleur,
+    extendedProps: {
+      typeTask: task.typeTask,
+      idTache: task.idTask
+    }
+  });
+}
         console.log("la table filtré : ",  events)
 
         this.allEvents = events;
