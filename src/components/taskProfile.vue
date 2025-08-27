@@ -32,7 +32,7 @@
           <div class="card-body">
             <h5 class="card-title mb-3">Informations générales</h5>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Date commandé :</strong> {{ task.dateCommande}}</li>
+              <li class="list-group-item"><strong>Date commandé :</strong></li>
               <li class="list-group-item"><strong>Date d'Installation</strong>
                 <li class="list-group-item">
                 <ul class="row list-group-flush  mt-1">
@@ -45,6 +45,7 @@
                 <strong>Status :</strong>
                 <select class="form-select" v-model="task.statut">
                   <option value="Leads">Leads</option>
+                  <option value="PPF">PPF</option>
                   <option value="Design">Design</option>
                   <option value="Approbation">Approbation</option>
                   <option value="Impression">Impression</option>
@@ -71,7 +72,7 @@
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
-              <li class="list-group-item"><strong>Assigné :</strong> {{ task.prenomEmploye }} {{task.nomEmploye}}</li>
+              <li class="list-group-item"><strong>Assigné :</strong> {{ task.prenomEmploye }}</li>
             </ul>
           </div>
         </div>
@@ -227,9 +228,8 @@ export default {
         }
     },
     computed : {
-      datecreation(){
-        const createdAt = new Date(this.task.createdAt)
-        return createdAt.toISOString().split('T')[0];
+      createdAt() {
+        return new Date(this.task.createdAt).toISOString().split("T")[0];
       }
     },
     props: {

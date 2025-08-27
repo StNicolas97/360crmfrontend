@@ -110,10 +110,10 @@
                 <label for="text" class="form-label">Couleur</label>
                 <input type="text" class="form-control" id="couleur" v-model="ppf.couleur">
               </div>
-              <div class="mb-3">
+              <!-- <div class="mb-3">
                 <label for="vin" class="form-label">Adresse</label>
                 <input type="text" class="form-control" id="Adresse" v-model="ppf.adresse">
-              </div>
+              </div> -->
               <div class="mb-3">
                 <label for="typeProduits" class="form-label">Type de produits</label>
                 <select class="form-select" id="typeProduits" v-model="ppf.produit">
@@ -506,7 +506,7 @@
                 @click.prevent="handleNewNote">Enregistrer</button>
             </div>
           </form>
-            <!-- <button @click.prevent="afterSubmit">emit</button> -->
+            <button @click.prevent="afterSubmit">emit</button>
         </div>
       </div>
     </div>
@@ -542,7 +542,7 @@ export default {
         datefin: null,
         heurefin: null,
         statut: '',
-        priorité: '',
+        priorite: '',
         idClient: null,
         idAssigne: null,
         vehicule: '',
@@ -566,7 +566,7 @@ export default {
         datefin: null,
         heurefin: null,
         statut: '',
-        priorité: '',
+        priorite: '',
         idClient: null,
         idAssigne: null,
         modele: '',
@@ -590,7 +590,7 @@ export default {
         datefin: null,
         heurefin: null,
         statut: '',
-        priorité: '',
+        priorite: '',
         idClient: null,
         idAssigne: null,
         quantite: null,
@@ -648,8 +648,8 @@ export default {
   },
   methods: {
     async afterSubmit() {
-      // this.$emit('submit');
-      // await eventBus.emit('submitCal');
+      this.$emit('submit');
+      await eventBus.emit('submitCal');
       await eventBus.emit('submitKan')
       const modal = document.getElementById('modaltask')
       const bootstrapModal = bootstrap.Modal.getInstance(modal)
@@ -670,12 +670,16 @@ export default {
       let isValid = true;
       if (!obj.titre) {
         const alert = document.getElementById("alertTitre");
+        if(alert){
         alert.innerText = "Veuillez entrer un titre";
         alert.style.color = 'red';
         isValid = false;
+      }
       } else {
         const alert = document.getElementById("alertTitre");
+        if(alert){
         alert.innerText = "";
+        }
       }
 
       // if (!obj.datedebut) {
@@ -742,30 +746,40 @@ export default {
 
       if (!obj.idClient) {
         const alert = document.getElementById("alertClient");
+        if(alert){
         alert.innerText = "Veuillez selectionner un client"
         alert.style.color = 'red';
         isValid = false;
+      }
       } else {
         const alert = document.getElementById("alertClient");
+        if(alert){
         alert.innerText = "";
+        }
       }
 
       if (!obj.idAssigne) {
         const alert = document.getElementById("alertAssign");
+        if(alert){
         alert.innerText = "Veuillez selectionner un employé";
         alert.style.color = 'red';
         isValid = false;
+      }
       } else {
         const alert = document.getElementById("alertAssign");
+        if(alert){
         alert.innerText = "";
+        }
       }
 
       if (obj.prix) {
         if (isNaN(obj.prix)) {
           const alert = document.getElementById("alertPrix");
+          if(alert){
           alert.innerText = "Veuillez entrer une valeur correcte";
           alert.style.color = 'red';
           isValid = false;
+        }
         }
       }
       return isValid;

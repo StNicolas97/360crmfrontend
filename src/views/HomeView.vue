@@ -1344,7 +1344,7 @@ export default {
       }
     },
     refreshSectionTaskAfterDelete() {
-      this.currentSection = 'taches';
+      this.previous();
       this.fetchTask();
     },
     refreshSectionPerte() {

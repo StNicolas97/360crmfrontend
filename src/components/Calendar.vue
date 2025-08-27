@@ -116,51 +116,77 @@ export default {
     },
     async fetchTask() {
       try {
-      let taches = [];
-      const response = await getService.getDataCalendar();
-      taches = response.data;
-      const events = [];
-      
-      const tachesTransformees = taches.map(task => {
-        let idTask = null
-        if(task.idAff)  idTask = task.idAff
-        else if(task.idLett)  idTask = task.idLett
-        else if(task.idPpf)  idTask = task.idPpf
-        return task = {idTask, ...task}
-      });
+        let allEvents = [];
 
+        // --- Récupération des tâches ---
+        const responseTasks = await getService.getDataCalendar();
+        let taches = responseTasks.data;
 
-      for (let i = 0; i < tachesTransformees.length; i++) {
-  const task = tachesTransformees[i];
+        const tachesTransformees = taches.map(task => {
+          let idTask = null;
+          if (task.idAff) idTask = task.idAff;
+          else if (task.idLett) idTask = task.idLett;
+          else if (task.idPpf) idTask = task.idPpf;
+          return { idTask, ...task };
+        });
 
-  let endDate = new Date(task.datefin);
+        for (let i = 0; i < tachesTransformees.length; i++) {
+          const task = tachesTransformees[i];
 
-  endDate.setDate(endDate.getDate() + 1);
+          let endDate = new Date(task.datefin);
+          endDate.setDate(endDate.getDate() + 1);
 
-  events.push({
-    id: task.id,
-    title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
-    start: task.datedebut,
-    end: endDate.toISOString().split("T")[0],
-    color: task.couleur,
-    extendedProps: {
-      typeTask: task.typeTask,
-      idTache: task.idTask
-    }
-  });
-}
-        console.log("la table filtré : ",  events)
+          allEvents.push({
+            id: task.idTask,
+            title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
+            start: task.datedebut,
+            end: endDate.toISOString().split("T")[0],
+            color: task.couleur,
+            extendedProps: {
+              typeTask: task.typeTask,
+              idTache: task.idTask
+            }
+          });
+        }
 
-        this.allEvents = events;
-        this.totalEventsCount = events.length;
-        this.calendarOptions.events = events;
+        // --- Récupération des notes ---
+        const responseNotes = await getService.getNote();
+        let notes = responseNotes.data;
+
+        for (let i = 0; i < notes.length; i++) {
+          const note = notes[i];
+
+          let endDate = new Date(note.datefin);
+          endDate.setDate(endDate.getDate() + 1);
+
+          allEvents.push({
+            id: `note-${note.id}`, // éviter conflit avec id de tâche
+            title: note.commentaire,
+            start: note.datedebut,
+            end: endDate.toISOString().split("T")[0],
+            color: "#000", // noir pour les notes
+            extendedProps: {
+              typeTask: "Note"
+            }
+          });
+        }
+
+        // --- Mise à jour du calendrier ---
+        console.log("Événements fusionnés : ", allEvents);
+
+        this.allEvents = allEvents;
+        this.totalEventsCount = allEvents.length;
+        this.calendarOptions.events = allEvents;
+
         this.extractAvailableTaskTypes();
         this.initializeFilters();
-        return events;
+
+        return allEvents;
       } catch (error) {
-        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
+        console.error("Erreur lors de la récupération des événements dans le calendrier:", error);
       }
     },
+
 
     getCalendarApi(){
       this.$nextTick(() => {
@@ -214,10 +240,28 @@ export default {
     async fetchNotes() {
       try {
         const response = await getService.getNote();
-        if(response.data.length > 0){
-          this.notes = [...this.notes,...response.data];
+        let notes = response.data ;
+        const events = [];
+
+        for(let i = 0 ; i < notes.length; i++){
+        const task = notes[i];
+
+        let endDate = new Date(task.datefin);
+        endDate.setDate(endDate.getDate() + 1);
+
+        events.push({
+          id: task.id,
+          title: task.commentaire,
+          start: task.datedebut,
+          end: endDate.toISOString().split("T")[0],
+          color: "#000",
+          });
         }
-        this.createEventsFromNotes();
+        console.log("la table filtré : ",  events)
+
+        this.allEvents.push(events);
+        this.calendarOptions.events.push(events);
+        return events;
       } catch (error) {
         console.error("Erreur lors de la récupération des notes dans le calendrier:", error);
       }
