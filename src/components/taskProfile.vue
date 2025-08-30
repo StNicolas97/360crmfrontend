@@ -32,7 +32,7 @@
           <div class="card-body">
             <h5 class="card-title mb-3">Informations générales</h5>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Date commandé :</strong></li>
+              <li class="list-group-item"><strong>Date commandé : {{ task.createdAt }}</strong></li>
               <li class="list-group-item"><strong>Date d'Installation</strong>
                 <li class="list-group-item">
                 <ul class="row list-group-flush  mt-1">
@@ -228,9 +228,9 @@ export default {
         }
     },
     computed : {
-      createdAt() {
-        return new Date(this.task.createdAt).toISOString().split("T")[0];
-      }
+      // createdAt() {
+      //   return new Date(this.task.createdAt).toISOString().split("T")[0];
+      // }
     },
     props: {
         idTask: {
@@ -252,6 +252,9 @@ export default {
             try {
                 const response = await getService.getTaskId(lien, id);
                 this.task = response.data;
+                let createdAt = new Date(this.task.createdAt).toISOString().split("T")[0];
+                this.task = {...this.task, createdAt};
+                
             } catch (error) {
                 console.error("Erreur lors de la récupération de la tâche :", error);
             }

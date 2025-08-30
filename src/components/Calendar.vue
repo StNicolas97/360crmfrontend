@@ -45,7 +45,7 @@
     </div>
 
     <FullCalendar ref="calendar" :options="calendarOptions"/>
-    <tache-modal :date="date" @submitcal="refetchEvents"/>
+    <tache-modal :date="this.date" @submitcal="refetchEvents"/>
   </div>
 </template>
 
@@ -106,7 +106,7 @@ export default {
     this.fetchTask();
     this.fetchNotes();
     this.getCalendarApi();
-    eventBus.on('submitCal', () => {console.log('event in calendar'); this.refetchEvents})
+    eventBus.on('submitCal', () => {console.log('event in calendar'); this.refetchEvents()})
   },
   methods: {
     handleDateClick(info) {
@@ -132,13 +132,17 @@ export default {
 
         for (let i = 0; i < tachesTransformees.length; i++) {
           const task = tachesTransformees[i];
+          let client = '';
+
+          if(task.taskType === 'PPF') client = `${task.prenomclient} ${task.nomclient}`;
+          else client = task.entreprise ;
 
           let endDate = new Date(task.datefin);
           endDate.setDate(endDate.getDate() + 1);
 
           allEvents.push({
             id: task.idTask,
-            title: `${task.titre} pour ${task.prenomclient} ${task.nomclient}`,
+            title: `${task.titre} pour ${client}`,
             start: task.datedebut,
             end: endDate.toISOString().split("T")[0],
             color: task.couleur,

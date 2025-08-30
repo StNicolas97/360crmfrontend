@@ -98,6 +98,36 @@
                   <span id="alertAssign"></span>
                 </div>
               </div>
+              <div class="row mb-3">
+                <div class="input-with-icon col-md-6 ms-auto">
+                  <label for="client">Priorité</label>
+                  <select class="form-select" v-model="ppf.priorite">
+                    <option value="Urgent">Urgent</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Basse">Basse</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  
+                </div>
+                <div class="input-with-icon col-md-6">
+                  <label for="employe">Statut</label>
+                  <select class="form-select" v-model="ppf.statut">
+                    <option value="Leads">Leads</option>
+                    <option value="PPF">PPF</option>
+                    <option value="Design">Design</option>
+                    <option value="Approbation">Approbation</option>
+                    <option value="Impression">Impression</option>
+                    <option value="Production">Production</option>
+                    <option value="Installation">Installation</option>
+                    <option value="Facturation">Facturation</option>
+                    <option value="Termine">Termine</option>
+                  </select>
+                </div>
+              </div>
               <div class="mb-3">
                 <label for="vehicule" class="form-label">Véhicule (modèle/année)</label>
                 <input type="text" class="form-control" id="vehicule" v-model="ppf.vehicule" >
@@ -228,6 +258,36 @@
                     </option>
                   </select>
                   <span id="alertAssign"></span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="input-with-icon col-md-6 ms-auto">
+                  <label for="client">Priorité</label>
+                  <select class="form-select" v-model="affichage.priorite">
+                    <option value="Urgent">Urgent</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Basse">Basse</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  
+                </div>
+                <div class="input-with-icon col-md-6">
+                  <label for="employe">Statut</label>
+                  <select class="form-select" v-model="affichage.statut">
+                    <option value="Leads">Leads</option>
+                    <option value="PPF">PPF</option>
+                    <option value="Design">Design</option>
+                    <option value="Approbation">Approbation</option>
+                    <option value="Impression">Impression</option>
+                    <option value="Production">Production</option>
+                    <option value="Installation">Installation</option>
+                    <option value="Facturation">Facturation</option>
+                    <option value="Termine">Termine</option>
+                  </select>
                 </div>
               </div>
               <div class="mb-3">
@@ -361,6 +421,36 @@
                     </option>
                   </select>
                   <span id="alertAssign"></span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="input-with-icon col-md-6 ms-auto">
+                  <label for="client">Priorité</label>
+                  <select class="form-select" v-model="lettrage.priorite">
+                    <option value="Urgent">Urgent</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Basse">Basse</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                  
+                </div>
+                <div class="input-with-icon col-md-6">
+                  <label for="employe">Statut</label>
+                  <select class="form-select" v-model="lettrage.statut">
+                    <option value="Leads">Leads</option>
+                    <option value="PPF">PPF</option>
+                    <option value="Design">Design</option>
+                    <option value="Approbation">Approbation</option>
+                    <option value="Impression">Impression</option>
+                    <option value="Production">Production</option>
+                    <option value="Installation">Installation</option>
+                    <option value="Facturation">Facturation</option>
+                    <option value="Termine">Termine</option>
+                  </select>
                 </div>
               </div>
               <fieldset class="form-group ">
@@ -506,7 +596,7 @@
                 @click.prevent="handleNewNote">Enregistrer</button>
             </div>
           </form>
-            <button @click.prevent="afterSubmit">emit</button>
+            <!-- <button @click.prevent="afterSubmit">emit</button> -->
         </div>
       </div>
     </div>
@@ -536,7 +626,7 @@ export default {
       ppf: {
         titre: '',
         typeTask: 'PPF',
-        dateCommande : null,
+        dateCommande : this.date,
         datedebut: null,
         heuredebut: "07:30",
         datefin: null,
@@ -626,6 +716,11 @@ export default {
       }
     }
   },
+  props: {
+    date: {
+      type: Date
+    }
+  },
   async mounted() {
     await this.fetchUsers();
     await this.fetchclients();
@@ -641,16 +736,11 @@ export default {
       modal.removeEventListener('hidden.bs.modal', this.fetchclients);
     }
   },
-  props: {
-    date: {
-      type: Date
-    }
-  },
   methods: {
     async afterSubmit() {
       this.$emit('submit');
       await eventBus.emit('submitCal');
-      await eventBus.emit('submitKan')
+      await eventBus.emit('submitKan');
       const modal = document.getElementById('modaltask')
       const bootstrapModal = bootstrap.Modal.getInstance(modal)
       bootstrapModal.hide()
