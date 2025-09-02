@@ -134,8 +134,9 @@ export default {
           const task = tachesTransformees[i];
           let client = '';
 
-          if(task.taskType === 'PPF') client = `${task.prenomclient} ${task.nomclient}`;
+          if(task.typeTask === 'PPF') client = `${task.prenomclient} ${task.nomclient}`;
           else client = task.entreprise ;
+          console.log("type de task", task.typeTask);
 
           let endDate = new Date(task.datefin);
           endDate.setDate(endDate.getDate() + 1);
