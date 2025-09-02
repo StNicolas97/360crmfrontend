@@ -83,9 +83,11 @@ export default {
       try {
       const employe = this.Employe;
       const response = await addService.addUSer(employe);
-      if(response) alert("Employé crée avec succès !")
-      else alert("Erreur lors de la création de l'employé")
+      if(response) {
+        alert("Employé crée avec succès !")
         this.$emit('submit');   
+      }
+      else alert("Erreur lors de la création de l'employé")
         const modal = document.getElementById('employeModal');
         const bootstrapModal = bootstrap.Modal.getInstance(modal);
         bootstrapModal.hide();

@@ -143,8 +143,8 @@
 
       <!-- liste des modals -->
 
-      <employe-modal @submit="fetchUsers" />
-      <client-modal @submit="fetchclients" />
+      <employe-modal @submit="refetchSectionUser" />
+      <client-modal @submit="refetchSectionClient" />
       <tache-modal @submit="refreshSectionTask" />
       <PerteModal @submitPerte="refreshSectionPerte"></PerteModal>
 
@@ -1245,18 +1245,17 @@ export default {
         console.error("Erreur lors de la récupération des tâches", error)
       }
     },
-    async fetchPerte() {
-      try {
-        this.perte = [];
-        const response = await getService.getPerte();
-        this.pertes = response.data;
-        console.log("voici les pertes " + response.data);
-      } catch (error) {
-        this.error = "Erreur lors de la récupération des utilisateurs";
-        console.error(error);
-      }
-    },
-
+      async fetchPerte() {
+        try {
+          this.perte = [];
+          const response = await getService.getPerte();
+          this.pertes = response.data;
+          console.log("voici les pertes " + response.data);
+        } catch (error) {
+          this.error = "Erreur lors de la récupération des utilisateurs";
+          console.error(error);
+        }
+      },
     changeSectionProfil() {
       if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
       this.historyStack.push('myuserProfile')
@@ -1352,12 +1351,12 @@ export default {
       this.fetchPerte();
     },
     refreshSectionUser() {
-      this.currentSection = 'employe'
-      this.fetchUsers();
+      this.previous();
+      this.refetchSectionUser();
     },
     refreshSectionClient() {
-      this.currentSection = 'clients'
-      this.fetchclients();
+      this.previous();
+      this.refetchSectionClient();
     },
     logout() {
       localStorage.removeItem('user')

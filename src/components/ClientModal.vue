@@ -118,7 +118,10 @@ export default {
         async handleSubmit() {
             const client = this.Client;
             const response = await addService.addClient(client);
-            if(response) alert("client crée avec succès !")
+            if(response) {
+                alert("client crée avec succès !");
+                this.$emit("submit")
+            }
             else alert("Erreur lors de la création du client")
             const modal = document.getElementById('modalclient')
             const bootstrapModal = bootstrap.Modal.getInstance(modal)
