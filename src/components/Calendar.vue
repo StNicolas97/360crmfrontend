@@ -1,61 +1,78 @@
 <template>
   <div class="calendar-container">
     <h1>Calendrier</h1>
-    
+
     <!-- Section des filtres -->
     <div class="filters-section mb-4">
       <div class="row">
         <div class="col-md-6">
           <h5>Filtrer par type de tâche</h5>
           <div class="filter-group">
-            <label class="form-check-label me-3" v-for="taskType in availableTaskTypes" :key="taskType">
-              <input 
-                type="checkbox" 
+            <label
+              class="form-check-label me-3"
+              v-for="taskType in availableTaskTypes"
+              :key="taskType"
+            >
+              <input
+                type="checkbox"
                 class="form-check-input me-1"
                 :value="taskType"
                 v-model="activeFilters.taskTypes"
                 @change="applyFilters"
-              >
+              />
               {{ getTaskTypeLabel(taskType) }}
             </label>
           </div>
         </div>
-        
+
         <div class="col-md-6">
           <h5>Actions</h5>
           <div class="filter-actions">
-            <button class="btn btn-sm btn-outline-primary me-2" @click="selectAllTaskTypes">
+            <button
+              class="btn btn-sm btn-outline-primary me-2"
+              @click="selectAllTaskTypes"
+            >
               Tout sélectionner
             </button>
-            <button class="btn btn-sm btn-outline-secondary me-2" @click="deselectAllTaskTypes">
+            <button
+              class="btn btn-sm btn-outline-secondary me-2"
+              @click="deselectAllTaskTypes"
+            >
               Tout désélectionner
             </button>
             <!-- <button class="btn btn-sm btn-outline-info" @click="resetFilters">
               Réinitialiser
             </button> -->
-            <button class="btn btn-sm btn-outline-secondary me-2" @click="refetchEvents"><i class="bi bi-arrow-clockwise"></i></button>
+            <button
+              class="btn btn-sm btn-outline-secondary me-2"
+              @click="refetchEvents"
+            >
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
           </div>
           <div class="mt-2">
             <small class="text-muted">
-              {{ visibleEventsCount }} tâche(s) affichée(s) sur {{ totalEventsCount }}
+              {{ visibleEventsCount }} tâche(s) affichée(s) sur
+              {{ totalEventsCount }}
             </small>
           </div>
         </div>
       </div>
     </div>
 
-    <FullCalendar ref="calendar" :options="calendarOptions"/>
-    <tache-modal :date="this.date" @submitcal="refetchEvents"/>
+    <FullCalendar ref="calendar" :options="calendarOptions" />
+    <tache-modal :date="this.date" @submitcal="refetchEvents" />
   </div>
 </template>
 
 <script>
-import FullCalendar from '@fullcalendar/vue3';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import TacheModal from '../components/TacheModal.vue';
-import { getService } from '../api/services/get.service'
-import { eventBus } from '@/utils/eventBus';
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import TacheModal from "../components/TacheModal.vue";
+import { getService } from "../api/services/get.service";
+import { deleteService } from "../api/services/delete.service";
+import { eventBus } from "@/utils/eventBus";
 
 export default {
   name: "MonCalendrier",
@@ -67,51 +84,54 @@ export default {
     return {
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin],
-        initialView: 'dayGridMonth',
+        initialView: "dayGridMonth",
         editable: true,
         selectable: true,
         eventMinHeight: 1,
-        locale: 'fr',
+        locale: "fr",
         buttonText: {
-          today: 'Aujourd\'hui'
-        },        
+          today: "Aujourd'hui",
+        },
         weekends: true,
         events: this.fetchTask,
         dateClick: this.handleDateClick,
         eventClick: this.handleEventClick,
         dayMaxEvents: false,
         slotEventOverlap: true,
-        eventColor: '',
+        eventColor: "",
         // Fonction de filtrage pour les événements
-        eventClassNames: this.getEventClassNames
+        eventClassNames: this.getEventClassNames,
       },
-      calendarApi : null,
+      calendarApi: null,
       taches: [],
-      notes : [],
+      notes: [],
       date: null,
-      allEvents: [], // Stockage de tous les événements
-      
+      allEvents: [],
+
       // Système de filtrage
       activeFilters: {
-        taskTypes: [] 
+        taskTypes: [],
       },
       availableTaskTypes: [],
-      
+
       // Statistiques
       visibleEventsCount: 0,
-      totalEventsCount: 0
+      totalEventsCount: 0,
     };
   },
   async mounted() {
     this.fetchTask();
     this.fetchNotes();
     this.getCalendarApi();
-    eventBus.on('submitCal', () => {console.log('event in calendar'); this.refetchEvents()})
+    eventBus.on("submitCal", () => {
+      console.log("event in calendar");
+      this.refetchEvents();
+    });
   },
   methods: {
     handleDateClick(info) {
       this.date = info.dateStr;
-      const modal = new bootstrap.Modal(document.getElementById('modaltask'));
+      const modal = new bootstrap.Modal(document.getElementById("modaltask"));
       modal.show();
     },
     async fetchTask() {
@@ -122,7 +142,7 @@ export default {
         const responseTasks = await getService.getDataCalendar();
         let taches = responseTasks.data;
 
-        const tachesTransformees = taches.map(task => {
+        const tachesTransformees = taches.map((task) => {
           let idTask = null;
           if (task.idAff) idTask = task.idAff;
           else if (task.idLett) idTask = task.idLett;
@@ -132,10 +152,11 @@ export default {
 
         for (let i = 0; i < tachesTransformees.length; i++) {
           const task = tachesTransformees[i];
-          let client = '';
+          let client = "";
 
-          if(task.typeTask === 'PPF') client = `${task.prenomclient} ${task.nomclient}`;
-          else client = task.entreprise ;
+          if (task.typeTask === "PPF")
+            client = `${task.prenomclient} ${task.nomclient}`;
+          else client = task.entreprise;
           console.log("type de task", task.typeTask);
 
           let endDate = new Date(task.datefin);
@@ -149,8 +170,8 @@ export default {
             color: task.couleur,
             extendedProps: {
               typeTask: task.typeTask,
-              idTache: task.idTask
-            }
+              idTache: task.idTask,
+            },
           });
         }
 
@@ -171,8 +192,8 @@ export default {
             end: endDate.toISOString().split("T")[0],
             color: "#000", // noir pour les notes
             extendedProps: {
-              typeTask: "Note"
-            }
+              typeTask: "Note",
+            },
           });
         }
 
@@ -188,24 +209,26 @@ export default {
 
         return allEvents;
       } catch (error) {
-        console.error("Erreur lors de la récupération des événements dans le calendrier:", error);
+        console.error(
+          "Erreur lors de la récupération des événements dans le calendrier:",
+          error
+        );
       }
     },
 
-
-    getCalendarApi(){
+    getCalendarApi() {
       this.$nextTick(() => {
-      this.calendarApi = this.$refs.calendar.getApi();
-    });
+        this.calendarApi = this.$refs.calendar.getApi();
+      });
     },
     async refetchEvents() {
       if (!this.calendarApi) {
         this.getCalendarApi();
-      }      
+      }
       try {
         // Supprimer tous les événements existants
         this.calendarApi.removeAllEvents();
-        
+
         // Récupérer les nouvelles données
         const events = await this.fetchTask();
         let grand = events[0]?.id || 0;
@@ -220,12 +243,11 @@ export default {
 
         console.log("Plus grand ID:", grand);
         console.log("Index:", indexGrand);
-        
+
         // Ajouter les nouveaux événements
         this.calendarApi.addEvent(events);
-        
       } catch (error) {
-        console.error('Erreur lors du rechargement des tâches:', error);
+        console.error("Erreur lors du rechargement des tâches:", error);
       }
     },
 
@@ -245,30 +267,33 @@ export default {
     async fetchNotes() {
       try {
         const response = await getService.getNote();
-        let notes = response.data ;
+        let notes = response.data;
         const events = [];
 
-        for(let i = 0 ; i < notes.length; i++){
-        const task = notes[i];
+        for (let i = 0; i < notes.length; i++) {
+          const task = notes[i];
 
-        let endDate = new Date(task.datefin);
-        endDate.setDate(endDate.getDate() + 1);
+          let endDate = new Date(task.datefin);
+          endDate.setDate(endDate.getDate() + 1);
 
-        events.push({
-          id: task.id,
-          title: task.commentaire,
-          start: task.datedebut,
-          end: endDate.toISOString().split("T")[0],
-          color: "#000",
+          events.push({
+            id: task.id,
+            title: task.commentaire,
+            start: task.datedebut,
+            end: endDate.toISOString().split("T")[0],
+            color: "#000",
           });
         }
-        console.log("la table filtré : ",  events)
+        console.log("la table filtré : ", events);
 
         this.allEvents.push(events);
         this.calendarOptions.events.push(events);
         return events;
       } catch (error) {
-        console.error("Erreur lors de la récupération des notes dans le calendrier:", error);
+        console.error(
+          "Erreur lors de la récupération des notes dans le calendrier:",
+          error
+        );
       }
     },
     /*async fecthTaskUser(){
@@ -314,7 +339,7 @@ export default {
     },*/
 
     createEventsFromNotes() {
-      const events = this.notes.map(note => ({
+      const events = this.notes.map((note) => ({
         id: note.id,
         title: note.commentaire,
         start: note.datedebut,
@@ -322,12 +347,12 @@ export default {
         allDay: !note.heuredebut,
         color: "#000000",
       }));
-      this.calendarOptions.events =  [...events];
+      this.calendarOptions.events = [...events];
       console.log("Notes récupérées:", events);
     },
     extractAvailableTaskTypes() {
       const taskTypes = new Set();
-      this.allEvents.forEach(event => {
+      this.allEvents.forEach((event) => {
         if (event.extendedProps.typeTask) {
           taskTypes.add(event.extendedProps.typeTask);
         }
@@ -342,11 +367,11 @@ export default {
 
     getEventClassNames(info) {
       const taskType = info.event.extendedProps.typeTask;
-      
+
       if (this.activeFilters.taskTypes.includes(taskType)) {
-        return []; 
+        return [];
       } else {
-        return ['hidden-event']; 
+        return ["hidden-event"];
       }
     },
 
@@ -358,7 +383,7 @@ export default {
     },
 
     updateEventCount() {
-      this.visibleEventsCount = this.allEvents.filter(event => 
+      this.visibleEventsCount = this.allEvents.filter((event) =>
         this.activeFilters.taskTypes.includes(event.extendedProps.typeTask)
       ).length;
     },
@@ -380,10 +405,10 @@ export default {
 
     getTaskTypeLabel(taskType) {
       const labels = {
-        'PPF': 'PPF',
-        'lettrage': 'Lettrage',
-        'affichage' : 'Affichage',
-        'soustraitance': 'Sous-traitance'
+        PPF: "PPF",
+        lettrage: "Lettrage",
+        affichage: "Affichage",
+        soustraitance: "Sous-traitance",
       };
       return labels[taskType] || taskType;
     },
@@ -402,8 +427,21 @@ export default {
       }*/
     },
 
-    handleEventClick(info) {
-      this.$emit('view', info.event.extendedProps.typeTask, info.event.extendedProps.idTache);
+    async handleEventClick(info) {
+      if (info.event.id.includes("note")) {
+        const idReal = parseFloat(info.event.id.substring(5));
+        const valider = confirm(`supprimer ${idReal} ?`);
+        if (valider) {
+          const response = await deleteService.deleteNote(idReal);
+          this.refetchEvents();
+        }
+      } else {
+        this.$emit(
+          "view",
+          info.event.extendedProps.typeTask,
+          info.event.extendedProps.idTache
+        );
+      }
     },
   },
 };
@@ -430,7 +468,6 @@ export default {
   gap: 0.5rem;
 }
 
-
 /* Classe pour cacher les événements filtrés */
 :deep(.hidden-event) {
   display: none !important;
@@ -447,11 +484,11 @@ export default {
   .filter-group {
     flex-direction: column;
   }
-  
+
   .filter-actions {
     flex-direction: column;
   }
-  
+
   .filter-actions button {
     width: 100%;
   }
@@ -479,7 +516,7 @@ export default {
 }
 :deep(.fc-daygrid-event-harness) {
   min-height: 18px !important;
-} 
+}
 </style>
 
 <style>

@@ -43,4 +43,12 @@ export const deleteService = {
       "une erreur est survenue lors de la suppression"
     );
   },
+  async deleteNote(id) {
+    return handleDelete(
+      "notes",
+      id,
+      "Note suprrimée avec succès",
+      "une erreur est survenue lors de la suppression"
+    );
+  },
 };
