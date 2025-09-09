@@ -47,9 +47,18 @@
         <div class="card border-custom" style="max-height: 290px">
           <h4 class="card-header-custom">Clients</h4>
           <div class="card-body scroll-body overflow-auto">
-            <ul class="list-unstyled mb-0">
+            <ul class="list-unstyled mb-0" style="font-size: 0.8rem">
               <li
                 v-for="cli in extractionCli"
+                :key="nom"
+                @click="showClient(cli.id)"
+              >
+                <i class="bi bi-person-circle me-2"></i> {{ cli.nom }} :
+                <b>{{ cli.total }}</b> tâche(s)
+              </li>
+
+              <li
+                v-for="cli in extractionEntre"
                 :key="nom"
                 @click="showClient(cli.id)"
               >
@@ -312,6 +321,7 @@ export default {
       }, 5000);
     },
     showEmploye(id) {
+      alert(id);
       this.$emit("showemploye", id);
     },
     showTache(url, id) {
@@ -340,8 +350,19 @@ export default {
     workloadByClient() {
       const map = {};
       this.clientsActive.forEach((t) => {
-        if (t.statut !== "Facturation") {
+        if (t.statut !== "Termine" && t.typeTask === "PPF") {
           const nom = t.nom || t.id || "Non assigné";
+          map[nom] = (map[nom] || 0) + 1;
+        }
+      });
+      return map;
+    },
+
+    workloadByEntreprise() {
+      const map = {};
+      this.clientsActive.forEach((t) => {
+        if (t.statut !== "Termine" && t.typeTask !== "PPF") {
+          const nom = t.entreprise || t.id || "Non assigné";
           map[nom] = (map[nom] || 0) + 1;
         }
       });
@@ -379,6 +400,22 @@ export default {
       return tasks;
     },
 
+    extractionEntre() {
+      const maps = this.topEntreprise;
+      const tasks = maps.map(([entreprise, count]) => {
+        const tachesEmploye = this.clientsActive.filter(
+          (task) => task.entreprise === entreprise
+        );
+        const id = tachesEmploye.map((task) => task.id);
+        return {
+          nom: entreprise,
+          total: count,
+          id: id[0],
+        };
+      });
+      return tasks;
+    },
+
     // Top 3 employés les plus chargés
     topEmployes() {
       const arr = Object.entries(this.workloadByEmploye);
@@ -387,6 +424,12 @@ export default {
     },
     topClient() {
       const arr = Object.entries(this.workloadByClient);
+      arr.sort((a, b) => b[1] - a[1]);
+      return arr;
+    },
+
+    topEntreprise() {
+      const arr = Object.entries(this.workloadByEntreprise);
       arr.sort((a, b) => b[1] - a[1]);
       return arr;
     },
