@@ -287,8 +287,6 @@ export default {
       };
       const url = info.event.extendedProps.typeTask;
 
-      alert(info.event.title + " end is now " + endDate);
-
       try {
         const response = await updateService.updateTask(url, id, data);
         this.$emit("updateTask");
