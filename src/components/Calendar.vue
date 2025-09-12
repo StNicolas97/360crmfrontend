@@ -72,6 +72,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import TacheModal from "../components/TacheModal.vue";
 import { getService } from "../api/services/get.service";
 import { deleteService } from "../api/services/delete.service";
+import { updateService } from "@/api/services/update.service";
 import { eventBus } from "@/utils/eventBus";
 
 export default {
@@ -101,6 +102,8 @@ export default {
         eventColor: "",
         // Fonction de filtrage pour les événements
         eventClassNames: this.getEventClassNames,
+        eventDrop: this.updateMyEvent,
+        eventResize: this.resizeMyEvent,
       },
       calendarApi: null,
       taches: [],
@@ -163,7 +166,7 @@ export default {
           endDate.setDate(endDate.getDate() + 1);
 
           allEvents.push({
-            id: task.idTask,
+            id: task.id,
             title: `${task.titre} pour ${client}`,
             start: task.datedebut,
             end: endDate.toISOString().split("T")[0],
@@ -251,19 +254,53 @@ export default {
       }
     },
 
-    /*async fetchTask() {
-      try {
-        this.taches = [];
-        const response = await getService.getDataCalendar();
+    async updateMyEvent(info) {
+      const id = info.event.id;
+      let endDate = new Date(info.event.end);
+      endDate.setDate(endDate.getDate() - 1);
+      endDate = endDate.toISOString().split("T")[0];
+      const data = {
+        datedebut: info.event.start.toISOString().split("T")[0],
+        datefin: endDate,
+      };
+      const url = info.event.extendedProps.typeTask;
 
-       if(response.data.length > 0){
-        this.taches = [...this.taches, ...response.data];
-      }      
-        this.createEventsFromTasks();
+      try {
+        const response = await updateService.updateTask(url, id, data);
+        this.$emit("updateTask");
+        if (!response) {
+          throw new Error();
+        }
+        await this.fetchTask();
       } catch (error) {
-        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
+        console.error("Erreur lors de la mise à jour de la tâche :", error);
+        alert("Une erreur est survenue lors de la mise à jour de la tâche.");
       }
-    },*/
+    },
+    async resizeMyEvent(info) {
+      const id = info.event.id;
+      let endDate = new Date(info.event.end);
+      endDate.setDate(endDate.getDate() - 1);
+      endDate = endDate.toISOString().split("T")[0];
+      const data = {
+        datefin: endDate,
+      };
+      const url = info.event.extendedProps.typeTask;
+
+      alert(info.event.title + " end is now " + endDate);
+
+      try {
+        const response = await updateService.updateTask(url, id, data);
+        this.$emit("updateTask");
+        if (!response) {
+          throw new Error();
+        }
+        await this.fetchTask();
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour de la tâche :", error);
+        alert("Une erreur est survenue lors de la mise à jour de la tâche.");
+      }
+    },
     async fetchNotes() {
       try {
         const response = await getService.getNote();
@@ -296,47 +333,6 @@ export default {
         );
       }
     },
-    /*async fecthTaskUser(){
-      try {
-        let taches = [];
-        const user = JSON.parse(localStorage.getItem("user"));
-        const id = user.id;
-        const response = await getService.getEmployeAllTask(id);
-        taches = response.data;
-        this.taches = taches;
-        
-        this.createEventsFromTasks();
-      } catch (error) {
-        console.error("Erreur lors de la récupération des ppf dans le calendrier:", error);
-      }
-    },
-
-    createEventsFromTasks() {
-      const tachesTransformees = this.taches.map(task => {
-        const id = task.idPpf || task.idLett || task.idAff || task.idSoustraitance || null;
-        const { idPpf, idLett, idAff, idSoustraitance, ...autresProps } = task;
-        return { ...autresProps, id };
-      });
-
-      const events = tachesTransformees.map(task => ({
-        id: task.id,
-        title: task.titre,
-        start: task.datedebut,
-        end: task.datefin,
-        allDay: !task.heuredebut,
-        color: task.couleur,
-        extendedProps: {
-          typeTask: task.typeTask,
-        }
-      }));
-
-      this.allEvents = events;
-      this.totalEventsCount = events.length;
-      this.calendarOptions.events = events;
-      
-      this.extractAvailableTaskTypes();
-      this.initializeFilters();
-    },*/
 
     createEventsFromNotes() {
       const events = this.notes.map((note) => ({
