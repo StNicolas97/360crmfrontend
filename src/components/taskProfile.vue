@@ -30,6 +30,7 @@
       <div class="col-12 col-md-6">
         <div class="card shadow-sm h-100">
           <div class="card-body">
+            <input type="text" class="form-control text-center mb-3" style="font-size: 1.5rem;font-weight: bolder;" v-model="task.titre"></input>
             <h5 class="card-title mb-3">Informations générales</h5>
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><strong>Date commandé : {{ task.createdAt }}</strong></li>
@@ -72,7 +73,23 @@
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
-              <li class="list-group-item"><strong>Assigné :</strong> {{ task.prenomEmploye }}</li>
+              <li class="list-group-item"><strong>Assigné :</strong>
+                <select
+                  v-model="task.idAssigne"
+                  class="form-control"
+                  id="employe"
+                  name="employe"
+                  >
+                  <option value="" disabled>Sélectionnez un employé</option>
+                  <option
+                    v-for="employe in employes"
+                    :key="employe.id"
+                    :value="employe.id"
+                  >
+                    {{ employe.prenom }} {{ employe.nom }}
+                  </option>
+                </select>
+              </li>
             </ul>
           </div>
         </div>
@@ -214,6 +231,7 @@ import { getService } from '@/api/services/get.service';
 import { updateService } from '@/api/services/update.service';
 import { deleteService } from '@/api/services/delete.service';
 import { addService } from '@/api/services/add.service';
+import { authService } from '@/api/services/auth.service';
 import emailModal from './emailModal.vue';
 export default {
     name: 'TaskProfile',
@@ -224,6 +242,7 @@ export default {
         return {
             task: {
             },
+            employes : [],
             role: ''
         }
     },
@@ -244,6 +263,7 @@ export default {
     },
     async mounted() {
         await this.fetchTask();
+        await this.fetchUsers();
     }
     , methods: {
         async fetchTask() {
@@ -306,6 +326,15 @@ export default {
             const localUser = localStorage.getItem('user');
             this.username = JSON.parse(localUser).username;
             this.role = JSON.parse(localUser).role;
+        },
+        async fetchUsers() {
+          try {
+            const response = await authService.getProfile();
+            this.employes = response.data;
+          } catch (error) {
+            this.error = "Erreur lors de la récupération des utilisateurs";
+            console.error(error);
+          }
         },
         sendToEmail(){
 

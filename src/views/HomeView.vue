@@ -1,162 +1,321 @@
 <template>
   <div class="d-flex page bg-dark">
-
     <!-- Section Barre de navigation -->
 
-    <div class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar"
-      :class="{ 'sidebar-mobile': isMobile, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen && isMobile }">
-      <a href="/"
-        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center">
-        <img class="img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
+    <div
+      class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar"
+      :class="{
+        'sidebar-mobile': isMobile,
+        'sidebar-open': isSidebarOpen,
+        'sidebar-closed': !isSidebarOpen && isMobile,
+      }"
+    >
+      <a
+        href="/"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center"
+      >
+        <img
+          class="img-fluid"
+          src="../assets/Logo 360 AutoWrap_Blanc.png"
+          :style="logoStyle"
+        />
       </a>
-      <hr class="text-white">
+      <hr class="text-white" />
       <ul class="nav nav-pills flex-column mb-auto" @click="clearnav()">
         <li class="nav-item">
-          <a href="#" @click.prevent="currentSection = 'dashboard'; isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'dashboard';
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center"
-            :class="{ 'active': currentSection === 'dashboard' }" @mouseenter="hovered = 'dashboard'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'dashboard' }"
+            @mouseenter="hovered = 'dashboard'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
-
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Dashboard</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'calendrier'; isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'calendrier';
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'calendrier' }" @mouseenter="hovered = 'calendrier'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'calendrier' }"
+            @mouseenter="hovered = 'calendrier'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Calendrier</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'table'; isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'table';
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'table' }" @mouseenter="hovered = 'table'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'table' }"
+            @mouseenter="hovered = 'table'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-table" :title="'Tableau'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
-
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Tableau</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'clients'; fetchclients(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'clients';
+              fetchclients();
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'clients' }" @mouseenter="hovered = 'clients'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'clients' }"
+            @mouseenter="hovered = 'clients'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-people" :title="'Clients'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Clients</span>
-
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Clients</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'taches'; fetchTask(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'taches';
+              fetchTask();
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'taches' }" @mouseenter="hovered = 'taches'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'taches' }"
+            @mouseenter="hovered = 'taches'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-list-task" :title="'Tâches'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Tâches</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Tâches</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'employe'; fetchUsers(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'employe';
+              fetchUsers();
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'employe' }" @mouseenter="hovered = 'employe'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'employe' }"
+            @mouseenter="hovered = 'employe'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-person-circle" :title="'Employés'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Employés</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Employés</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'leads'; fetchTask(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'leads';
+              fetchTask();
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'leads' }" @mouseenter="hovered = 'employe'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'leads' }"
+            @mouseenter="hovered = 'employe'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-person-fill-exclamation" :title="'Employés'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Leads</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Leads</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'myTask'; isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'myTask';
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'myTask' }" @mouseenter="hovered = 'myTask'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'myTask' }"
+            @mouseenter="hovered = 'myTask'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-briefcase" :title="'myTask'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Mes Taches</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Mes Taches</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'pertes'; fetchPerte(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'pertes';
+              fetchPerte();
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'pertes' }" @mouseenter="hovered = 'pertes'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'pertes' }"
+            @mouseenter="hovered = 'pertes'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-archive" :title="'pertes'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Pertes</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Pertes</span
+            >
           </a>
         </li>
       </ul>
-      <hr class="text-white">
+      <hr class="text-white" />
       <div class="dropdown mb-4 d-flex justify-content-center">
-        <a href="#"
+        <a
+          href="#"
           class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center"
-          id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" width="32" height="32" class="rounded-circle">
+          id="dropdownUser1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="../assets/avatar/profile-icon-design-free-vector.jpg"
+            alt=""
+            width="32"
+            height="32"
+            class="rounded-circle"
+          />
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+        <ul
+          class="dropdown-menu dropdown-menu-dark text-small shadow"
+          aria-labelledby="dropdownUser1"
+        >
           <li>
-            <hr class="dropdown-divider">
+            <a
+              class="dropdown-item"
+              href="#"
+              @click.prevent="changeSectionProfil"
+              >Profil</a
+            >
           </li>
-          <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+          </li>
         </ul>
       </div>
     </div>
 
     <!-- Navbar mobile/tablette -->
     <nav class="mobile-navbar d-md-none">
-      <button class="btn btn-hamburger" @click="isSidebarOpen = !isSidebarOpen" aria-label="Ouvrir le menu">
+      <button
+        class="btn btn-hamburger"
+        @click="isSidebarOpen = !isSidebarOpen"
+        aria-label="Ouvrir le menu"
+      >
         <i class="bi bi-list"></i>
       </button>
-      <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
-          style="width: 30%;position : relative; left: 30%;"></span>
+      <span class="navbar-title"
+        ><img
+          src="../assets/Logo 360 AutoWrap_Blanc.png"
+          alt=""
+          class="img-fluid"
+          style="width: 30%; position: relative; left: 30%"
+      /></span>
       <div class="dropdown d-flex justify-content-center" v-if="isMobile">
-        <a href="#"
+        <a
+          href="#"
           class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1"
-          id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" class="rounded-circle me-2 img-fluid"
-            style="width: 30%;position : relative; left: 30%;">
+          id="dropdownUser1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="../assets/avatar/profile-icon-design-free-vector.jpg"
+            alt=""
+            class="rounded-circle me-2 img-fluid"
+            style="width: 30%; position: relative; left: 30%"
+          />
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+        <ul
+          class="dropdown-menu dropdown-menu-dark text-small shadow"
+          aria-labelledby="dropdownUser1"
+        >
           <li>
-            <hr class="dropdown-divider">
+            <a
+              class="dropdown-item"
+              href="#"
+              @click.prevent="changeSectionProfil"
+              >Profil</a
+            >
           </li>
-          <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+          </li>
         </ul>
       </div>
     </nav>
 
     <!-- Contenu principal -->
     <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">
-
-
       <!-- liste des modals -->
 
       <employe-modal @submit="refetchSectionUser" />
       <client-modal @submit="refetchSectionClient" />
-      <tache-modal @submit="refreshSectionTask" />
+      <tache-modal
+        @submit="
+          refreshSectionTask;
+          refetchSectionMyTask;
+        "
+      />
       <PerteModal @submitPerte="refreshSectionPerte"></PerteModal>
 
       <!-- fin liste des modals -->
 
-
-      <section v-if="currentSection === 'dashboard'" class="section" id="dashboard">
+      <section
+        v-if="currentSection === 'dashboard'"
+        class="section"
+        id="dashboard"
+      >
         <h2 class="section-title">Dashboard</h2>
-        <Dashboard @showemploye="editUser($event, id)" @showtache="editTask" @showclient="editClient($event, id)" />
+        <Dashboard
+          @showemploye="editUser($event, id)"
+          @showtache="editTask"
+          @showclient="editClient($event, id)"
+        />
       </section>
 
-      <section v-if="currentSection === 'calendrier'" class="section" id="calendrier">
+      <section
+        v-if="currentSection === 'calendrier'"
+        class="section"
+        id="calendrier"
+      >
         <div class="contain-calendar">
           <Calendar @view="editTask" @calendarefresh="rerenderCalendar()" />
         </div>
@@ -170,29 +329,56 @@
       <section v-if="currentSection === 'clients'" class="section" id="clients">
         <h2 class="section-title">Clients</h2>
         <div
-          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3"
+        >
           <div class="order-2 order-lg-1">
-            <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
-              Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
-              }} clients</p>
+            <p class="mb-0">
+              Affichage {{ (clientCurrentPage - 1) * clientItemsPerPage + 1 }} à
+              {{
+                Math.min(
+                  clientCurrentPage * clientItemsPerPage,
+                  filteredClients.length
+                )
+              }}
+              sur {{ filteredClients.length }} clients
+            </p>
           </div>
           <div
-            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2"
+          >
             <div class="search-container">
               <i class="bi bi-search search-icon"></i>
-              <input type="text" class="form-control search-input" v-model="searchQueryClients"
-                placeholder="Rechercher un client..." @input="filterClients">
-              <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
-                  class="bi bi-x"></i></button>
+              <input
+                type="text"
+                class="form-control search-input"
+                v-model="searchQueryClients"
+                placeholder="Rechercher un client..."
+                @input="filterClients"
+              />
+              <button
+                v-if="searchQueryClients"
+                @click="clearClientSearch"
+                class="btn-clear"
+              >
+                <i class="bi bi-x"></i>
+              </button>
             </div>
-            <select class="form-select filter-select" v-model="selectedClientStatus" @change="filterClients">
+            <select
+              class="form-select filter-select"
+              v-model="selectedClientStatus"
+              @change="filterClients"
+            >
               <option value="">Tous les statuts</option>
               <option value="Actif">Actif</option>
               <option value="Inactif">Inactif</option>
               <option value="Prospect">Prospect</option>
             </select>
             <div class="text-center text-sm-end">
-              <i class="bi bi-person-add action-icon" data-bs-toggle="modal" data-bs-target="#modalclient"></i>
+              <i
+                class="bi bi-person-add action-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#modalclient"
+              ></i>
             </div>
           </div>
         </div>
@@ -201,40 +387,82 @@
             <thead>
               <tr>
                 <th @click="sortClients('entreprise')" class="sortable">
-                  <div class="th-content">Entreprise <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Entreprise <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortClients('nom')" class="sortable">
-                  <div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortClients('nom')"
+                  class="sortable d-none d-sm-table-cell"
+                >
+                  <div class="th-content">
+                    Nom <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortClients('email')" class="sortable d-none d-lg-table-cell">
-                  <div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortClients('prenom')"
+                  class="sortable d-none d-sm-table-cell"
+                >
+                  <div class="th-content">
+                    Prenom <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortClients('telephone')" class="sortable d-none d-sm-table-cell">
-                  <div class="th-content">Téléphone <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortClients('email')"
+                  class="sortable d-none d-lg-table-cell"
+                >
+                  <div class="th-content">
+                    Email <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
+                </th>
+                <th
+                  @click="sortClients('telephone')"
+                  class="sortable d-none d-sm-table-cell"
+                >
+                  <div class="th-content">
+                    Téléphone <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortClients('statut')" class="sortable">
-                  <div class="th-content">Statut <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Statut <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="client in paginatedClients" :key="client.id" @dblclick="editClient(client.id)">
+              <tr
+                v-for="client in paginatedClients"
+                :key="client.id"
+                @dblclick="editClient(client.id)"
+              >
                 <td class="d-none d-md-table-cell">{{ client.entreprise }}</td>
                 <td>
                   <div class="d-flex flex-column">
                     <span>{{ client.nom }}</span>
-                    <small class="text-muted d-md-none">{{ client.entreprise }}</small>
-                    <small class="text-muted d-lg-none">{{ client.email }}</small>
+                    <small class="text-muted d-md-none">{{
+                      client.entreprise
+                    }}</small>
+                    <small class="text-muted d-lg-none">{{
+                      client.email
+                    }}</small>
                   </div>
                 </td>
+                <td class="d-none d-sm-table-cell">{{ client.prenom }}</td>
                 <td class="d-none d-lg-table-cell">{{ client.email }}</td>
                 <td class="d-none d-sm-table-cell">{{ client.telephone }}</td>
                 <td>
-                  <span :class="'badge ' + getClientStatusClass(client.statut)">{{ client.statut }}</span>
+                  <span
+                    :class="'badge ' + getClientStatusClass(client.statut)"
+                    >{{ client.statut }}</span
+                  >
                 </td>
                 <td>
-                  <i class="bi bi-pencil-square action-icon" @click="editClient(client.id)"></i>
+                  <i
+                    class="bi bi-pencil-square action-icon"
+                    @click="editClient(client.id)"
+                  ></i>
                 </td>
               </tr>
             </tbody>
@@ -247,23 +475,47 @@
         <div class="pagination-container" v-if="clientTotalPages > 1">
           <nav>
             <ul class="pagination justify-content-center">
-              <li class="page-item" :class="{ disabled: clientCurrentPage === 1 }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage - 1)"><i
-                    class="bi bi-chevron-left"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: clientCurrentPage === 1 }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeClientPage(clientCurrentPage - 1)"
+                  ><i class="bi bi-chevron-left"></i
+                ></a>
               </li>
-              <li class="page-item" v-for="page in clientVisiblePages" :key="page"
-                :class="{ active: page === clientCurrentPage }">
-                <a class="page-link" @click.prevent="changeClientPage(page)">{{ page }}</a>
+              <li
+                class="page-item"
+                v-for="page in clientVisiblePages"
+                :key="page"
+                :class="{ active: page === clientCurrentPage }"
+              >
+                <a class="page-link" @click.prevent="changeClientPage(page)">{{
+                  page
+                }}</a>
               </li>
-              <li class="page-item" :class="{ disabled: clientCurrentPage === clientTotalPages }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage + 1)"><i
-                    class="bi bi-chevron-right"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: clientCurrentPage === clientTotalPages }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeClientPage(clientCurrentPage + 1)"
+                  ><i class="bi bi-chevron-right"></i
+                ></a>
               </li>
             </ul>
           </nav>
           <div class="pagination-info">
-            Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage *
-              clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
+            Affichage {{ (clientCurrentPage - 1) * clientItemsPerPage + 1 }} à
+            {{
+              Math.min(
+                clientCurrentPage * clientItemsPerPage,
+                filteredClients.length
+              )
+            }}
+            sur {{ filteredClients.length }} clients
           </div>
         </div>
       </section>
@@ -300,15 +552,28 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" class="form-control search-input" v-model="searchQueryTaches"
-                  placeholder="Rechercher une tâche..." @input="filterTaches">
-                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..."
+                  @input="filterTaches"
+                />
+                <button
+                  v-if="searchQueryTaches"
+                  @click="clearSearch"
+                  class="btn-clear"
+                >
                   <i class="bi bi-x"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select"
+                v-model="selectedPriorityFilter"
+                @change="filterTaches"
+              >
                 <option value="">Toutes les priorités</option>
                 <option value="Urgent">Urgent</option>
                 <option value="Normal">Normal</option>
@@ -317,11 +582,14 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-
               </select>
             </div>
             <div class="col-md-3 d-flex align-items-center justify-content-end">
-              <select class="form-select filter-select me-2" v-model="selectedStatusFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select me-2"
+                v-model="selectedStatusFilter"
+                @change="filterTaches"
+              >
                 <option value="">Tous les statuts</option>
                 <option value="Leads">Leads</option>
                 <option value="Design">Design</option>
@@ -331,7 +599,11 @@
                 <option value="Installation">Installation</option>
                 <option value="Facturation">Facturation</option>
               </select>
-              <i class="bi bi-folder-plus action-icon" data-bs-toggle="modal" data-bs-target="#modaltask"></i>
+              <i
+                class="bi bi-folder-plus action-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#modaltask"
+              ></i>
             </div>
           </div>
         </div>
@@ -376,8 +648,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedTaches" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
-                  :class="{ 'selected': selectedTask?.id === tache.id }" @dblclick="editTask(tache.typeTask, tache.id)">
+                <tr
+                  v-for="tache in paginatedTaches"
+                  :key="tache.idTache"
+                  class="table-row"
+                  @click="selectRow(tache)"
+                  :class="{ selected: selectedTask?.id === tache.id }"
+                  @dblclick="editTask(tache.typeTask, tache.id)"
+                >
                   <td>
                     <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
@@ -389,28 +667,48 @@
                   </td>
                   <td>
                     <div class="date-container">
-                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
-                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
+                      <span class="date-text">{{
+                        formatDate(tache.datefin)
+                      }}</span>
+                      <span
+                        v-if="isOverdue(tache.datefin, tache.statut)"
+                        class="overdue-badge"
+                      >
                         <i class="bi bi-exclamation-triangle"></i>
                       </span>
                     </div>
                   </td>
                   <td>
-                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
-                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
+                    <span
+                      :class="
+                        'badge priority-badge ' +
+                        getPriorityClass(tache.priorite)
+                      "
+                    >
+                      <i
+                        :class="getPriorityIcon(tache.priorite)"
+                        class="me-1"
+                      ></i>
                       {{ tache.priorite }}
                     </span>
                   </td>
                   <td>
-                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
+                    <span
+                      :class="
+                        'badge status-badge ' + getTaskStatusClass(tache.statut)
+                      "
+                    >
                       <div class="status-indicator"></div>
                       {{ tache.statut }}
                     </span>
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button @click="editTask(tache.typeTask, tache.id)" class="btn btn-action btn-view"
-                        title="Voir les détails">
+                      <button
+                        @click="editTask(tache.typeTask, tache.id)"
+                        class="btn btn-action btn-view"
+                        title="Voir les détails"
+                      >
                         <i class="bi bi-eye"></i>
                       </button>
                     </div>
@@ -429,24 +727,40 @@
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <a class="page-link" @click.prevent="changePage(currentPage - 1)">
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage - 1)"
+                  >
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li class="page-item" v-for="page in visiblePages" :key="page"
-                  :class="{ active: page === currentPage }">
-                  <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
+                <li
+                  class="page-item"
+                  v-for="page in visiblePages"
+                  :key="page"
+                  :class="{ active: page === currentPage }"
+                >
+                  <a class="page-link" @click.prevent="changePage(page)">{{
+                    page
+                  }}</a>
                 </li>
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <a class="page-link" @click.prevent="changePage(currentPage + 1)">
+                <li
+                  class="page-item"
+                  :class="{ disabled: currentPage === totalPages }"
+                >
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage + 1)"
+                  >
                     <i class="bi bi-chevron-right"></i>
                   </a>
                 </li>
               </ul>
             </nav>
             <div class="pagination-info">
-              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage,
-                filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+              Affichage {{ (currentPage - 1) * itemsPerPage + 1 }} à
+              {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }}
+              sur {{ filteredTaches.length }} tâches
             </div>
           </div>
         </div>
@@ -455,23 +769,47 @@
       <section v-if="currentSection === 'employe'" class="section" id="employe">
         <h2 class="section-title">Employés</h2>
         <div
-          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3"
+        >
           <div class="order-2 order-lg-1">
-            <p class="mb-0">Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{
-              Math.min(employeCurrentPage * employeItemsPerPage, filteredEmployes.length) }} sur {{
-                filteredEmployes.length }} employés</p>
+            <p class="mb-0">
+              Affichage
+              {{ (employeCurrentPage - 1) * employeItemsPerPage + 1 }} à
+              {{
+                Math.min(
+                  employeCurrentPage * employeItemsPerPage,
+                  filteredEmployes.length
+                )
+              }}
+              sur {{ filteredEmployes.length }} employés
+            </p>
           </div>
           <div
-            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2"
+          >
             <div class="search-container">
               <i class="bi bi-search search-icon"></i>
-              <input type="text" class="form-control search-input" v-model="searchQueryEmployes"
-                placeholder="Rechercher..." @input="filterEmployes">
-              <button v-if="searchQueryEmployes" @click="clearEmployeSearch" class="btn-clear"><i
-                  class="bi bi-x"></i></button>
+              <input
+                type="text"
+                class="form-control search-input"
+                v-model="searchQueryEmployes"
+                placeholder="Rechercher..."
+                @input="filterEmployes"
+              />
+              <button
+                v-if="searchQueryEmployes"
+                @click="clearEmployeSearch"
+                class="btn-clear"
+              >
+                <i class="bi bi-x"></i>
+              </button>
             </div>
             <div class="text-center text-sm-end">
-              <i class="bi bi-person-add action-icon" data-bs-toggle="modal" data-bs-target="#employeModal"></i>
+              <i
+                class="bi bi-person-add action-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#employeModal"
+              ></i>
             </div>
           </div>
         </div>
@@ -480,29 +818,54 @@
             <thead>
               <tr>
                 <th @click="sortEmployes('nom')" class="sortable">
-                  <div class="th-content">Nom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Nom <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortEmployes('prenom')" class="sortable d-none d-sm-table-cell">
-                  <div class="th-content">Prénom <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortEmployes('prenom')"
+                  class="sortable d-none d-sm-table-cell"
+                >
+                  <div class="th-content">
+                    Prénom <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortEmployes('email')" class="sortable d-none d-md-table-cell">
-                  <div class="th-content">Email <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortEmployes('email')"
+                  class="sortable d-none d-md-table-cell"
+                >
+                  <div class="th-content">
+                    Email <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortEmployes('poste')" class="sortable d-none d-lg-table-cell">
-                  <div class="th-content">Poste <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortEmployes('poste')"
+                  class="sortable d-none d-lg-table-cell"
+                >
+                  <div class="th-content">
+                    Poste <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortEmployes('role')" class="sortable">
-                  <div class="th-content">Rôle <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Rôle <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in paginatedEmployes" :key="user.id" @dblclick="editUser(user.id)">
+              <tr
+                v-for="user in paginatedEmployes"
+                :key="user.id"
+                @dblclick="editUser(user.id)"
+              >
                 <td>
                   <div class="d-flex flex-column">
                     <span>{{ user.nom }}</span>
-                    <small class="text-muted d-sm-none">{{ user.prenom }}</small>
+                    <small class="text-muted d-sm-none">{{
+                      user.prenom
+                    }}</small>
                     <small class="text-muted d-md-none">{{ user.email }}</small>
                     <small class="text-muted d-lg-none">{{ user.poste }}</small>
                   </div>
@@ -512,7 +875,10 @@
                 <td class="d-none d-lg-table-cell">{{ user.poste }}</td>
                 <td>{{ user.role }}</td>
                 <td>
-                  <i class="bi bi-pencil-square action-icon" @click="editUser(user.id)"></i>
+                  <i
+                    class="bi bi-pencil-square action-icon"
+                    @click="editUser(user.id)"
+                  ></i>
                 </td>
               </tr>
             </tbody>
@@ -525,23 +891,47 @@
         <div class="pagination-container" v-if="employeTotalPages > 1">
           <nav>
             <ul class="pagination justify-content-center">
-              <li class="page-item" :class="{ disabled: employeCurrentPage === 1 }">
-                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage - 1)"><i
-                    class="bi bi-chevron-left"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: employeCurrentPage === 1 }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeEmployePage(employeCurrentPage - 1)"
+                  ><i class="bi bi-chevron-left"></i
+                ></a>
               </li>
-              <li class="page-item" v-for="page in employeVisiblePages" :key="page"
-                :class="{ active: page === employeCurrentPage }">
-                <a class="page-link" @click.prevent="changeEmployePage(page)">{{ page }}</a>
+              <li
+                class="page-item"
+                v-for="page in employeVisiblePages"
+                :key="page"
+                :class="{ active: page === employeCurrentPage }"
+              >
+                <a class="page-link" @click.prevent="changeEmployePage(page)">{{
+                  page
+                }}</a>
               </li>
-              <li class="page-item" :class="{ disabled: employeCurrentPage === employeTotalPages }">
-                <a class="page-link" @click.prevent="changeEmployePage(employeCurrentPage + 1)"><i
-                    class="bi bi-chevron-right"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: employeCurrentPage === employeTotalPages }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeEmployePage(employeCurrentPage + 1)"
+                  ><i class="bi bi-chevron-right"></i
+                ></a>
               </li>
             </ul>
           </nav>
           <div class="pagination-info">
-            Affichage {{ ((employeCurrentPage - 1) * employeItemsPerPage) + 1 }} à {{ Math.min(employeCurrentPage *
-              employeItemsPerPage, filteredEmployes.length) }} sur {{ filteredEmployes.length }} employés
+            Affichage {{ (employeCurrentPage - 1) * employeItemsPerPage + 1 }} à
+            {{
+              Math.min(
+                employeCurrentPage * employeItemsPerPage,
+                filteredEmployes.length
+              )
+            }}
+            sur {{ filteredEmployes.length }} employés
           </div>
         </div>
       </section>
@@ -554,9 +944,18 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" class="form-control search-input" v-model="searchQueryLeads"
-                  placeholder="Rechercher une tâche..." @input="filterLeads">
-                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  v-model="searchQueryLeads"
+                  placeholder="Rechercher une tâche..."
+                  @input="filterLeads"
+                />
+                <button
+                  v-if="searchQueryTaches"
+                  @click="clearSearch"
+                  class="btn-clear"
+                >
                   <i class="bi bi-x"></i>
                 </button>
               </div>
@@ -571,21 +970,23 @@
               <thead>
                 <tr>
                   <th @click="sortBy('id')" class="sortable">
-                    <div class="th-content">
-                      ID
-                    </div>
+                    <div class="th-content">ID</div>
                   </th>
                   <th @click="sortBy('titre')" class="sortable">
-                    <div class="th-content">
-                      Titre
-                    </div>
+                    <div class="th-content">Titre</div>
                   </th>
                   <th class="text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedLeads" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
-                  :class="{ 'selected': selectedTask?.id === tache.id }" @dblclick="editTask(tache.typeTask, tache.id)">
+                <tr
+                  v-for="tache in paginatedLeads"
+                  :key="tache.idTache"
+                  class="table-row"
+                  @click="selectRow(tache)"
+                  :class="{ selected: selectedTask?.id === tache.id }"
+                  @dblclick="editTask(tache.typeTask, tache.id)"
+                >
                   <td>
                     <span class="task-id">#{{ tache.idTache }}</span>
                   </td>
@@ -597,8 +998,11 @@
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button @click="editTask(tache.typeTask, tache.id)" class="btn btn-action btn-view"
-                        title="Voir les détails">
+                      <button
+                        @click="editTask(tache.typeTask, tache.id)"
+                        class="btn btn-action btn-view"
+                        title="Voir les détails"
+                      >
                         <i class="bi bi-eye"></i>
                       </button>
                     </div>
@@ -615,7 +1019,11 @@
         </div>
       </section>
 
-      <section v-if="currentSection === 'myTask'" class="'myTask'" @update="refetchSectionMyTask()">
+      <section
+        v-if="currentSection === 'myTask'"
+        class="'myTask'"
+        @update="refetchSectionMyTask()"
+      >
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
             <i class="bi bi-list-task me-2"></i>
@@ -647,15 +1055,28 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input type="text" class="form-control search-input" v-model="searchQueryTaches"
-                  placeholder="Rechercher une tâche..." @input="filterTaches">
-                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
+                <input
+                  type="text"
+                  class="form-control search-input"
+                  v-model="searchQueryTaches"
+                  placeholder="Rechercher une tâche..."
+                  @input="filterTaches"
+                />
+                <button
+                  v-if="searchQueryTaches"
+                  @click="clearSearch"
+                  class="btn-clear"
+                >
                   <i class="bi bi-x"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select"
+                v-model="selectedPriorityFilter"
+                @change="filterTaches"
+              >
                 <option value="">Toutes les priorités</option>
                 <option value="Urgent">Urgent</option>
                 <option value="Normal">Normal</option>
@@ -663,7 +1084,11 @@
               </select>
             </div>
             <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedStatusFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select"
+                v-model="selectedStatusFilter"
+                @change="filterTaches"
+              >
                 <option value="">Tous les statuts</option>
                 <option value="Leads">Leads</option>
                 <option value="Design">Design</option>
@@ -718,9 +1143,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedMyTask" :key="tache.idTache" class="table-row" @click="selectRow(tache)"
-                  :class="{ 'selected': selectedTask?.id === tache.id }"
-                  @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
+                <tr
+                  v-for="tache in paginatedMyTask"
+                  :key="tache.idTache"
+                  class="table-row"
+                  @click="selectRow(tache)"
+                  :class="{ selected: selectedTask?.id === tache.id }"
+                  @dblclick="editTask(tache.typeTask, getTaskRealId(tache))"
+                >
                   <td>
                     <span class="task-id">#{{ tache.id }}</span>
                   </td>
@@ -732,29 +1162,51 @@
                   </td>
                   <td>
                     <div class="date-container">
-                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
-                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
+                      <span class="date-text">{{
+                        formatDate(tache.datefin)
+                      }}</span>
+                      <span
+                        v-if="isOverdue(tache.datefin, tache.statut)"
+                        class="overdue-badge"
+                      >
                         <i class="bi bi-exclamation-triangle"></i>
                       </span>
                     </div>
                   </td>
                   <td>
-                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
-                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
+                    <span
+                      :class="
+                        'badge priority-badge ' +
+                        getPriorityClass(tache.priorite)
+                      "
+                    >
+                      <i
+                        :class="getPriorityIcon(tache.priorite)"
+                        class="me-1"
+                      ></i>
                       {{ tache.priorite }}
                     </span>
                   </td>
                   <td>
-                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
+                    <span
+                      :class="
+                        'badge status-badge ' + getTaskStatusClass(tache.statut)
+                      "
+                    >
                       <div class="status-indicator"></div>
                       {{ tache.statut }}
                     </span>
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button @click="editTask(tache.typeTask, getTaskRealId(tache))"
-                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))" class="btn btn-action btn-view"
-                        title="Voir les détails">
+                      <button
+                        @click="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @touchstart="
+                          editTask(tache.typeTask, getTaskRealId(tache))
+                        "
+                        class="btn btn-action btn-view"
+                        title="Voir les détails"
+                      >
                         <i class="bi bi-eye"></i>
                       </button>
                       <!-- <button 
@@ -781,24 +1233,40 @@
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <a class="page-link" @click.prevent="changePage(currentPage - 1)">
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage - 1)"
+                  >
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li class="page-item" v-for="page in visiblePages" :key="page"
-                  :class="{ active: page === currentPage }">
-                  <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
+                <li
+                  class="page-item"
+                  v-for="page in visiblePages"
+                  :key="page"
+                  :class="{ active: page === currentPage }"
+                >
+                  <a class="page-link" @click.prevent="changePage(page)">{{
+                    page
+                  }}</a>
                 </li>
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <a class="page-link" @click.prevent="changePage(currentPage + 1)">
+                <li
+                  class="page-item"
+                  :class="{ disabled: currentPage === totalPages }"
+                >
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage + 1)"
+                  >
                     <i class="bi bi-chevron-right"></i>
                   </a>
                 </li>
               </ul>
             </nav>
             <div class="pagination-info">
-              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage,
-                filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+              Affichage {{ (currentPage - 1) * itemsPerPage + 1 }} à
+              {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }}
+              sur {{ filteredTaches.length }} tâches
             </div>
           </div>
         </div>
@@ -808,24 +1276,32 @@
       <section v-if="currentSection === 'pertes'" class="section">
         <h2 class="section-title">Pertes</h2>
         <div
-          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3"
+        >
           <!-- <div class="order-2 order-lg-1">
             <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
               Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
               }} clients</p>
           </div> -->
           <div
-            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2"
+          >
             <div class="search-container">
               <!-- <i class="bi bi-search search-icon"></i>
               <input type="text" class="form-control search-input" v-model="searchQueryClients"
                 placeholder="Rechercher une perte..." @input="filterClients">
               <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
                   class="bi bi-x"></i></button> -->
-              <span class="btn btn-danger">Total Pertes : {{ totalPertes }} $</span>
+              <span class="btn btn-danger"
+                >Total Pertes : {{ totalPertes }} $</span
+              >
             </div>
             <div class="text-center text-sm-end">
-              <i class="bi bi-archive action-icon" data-bs-toggle="modal" data-bs-target="#perteModal"></i>
+              <i
+                class="bi bi-archive action-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#perteModal"
+              ></i>
             </div>
           </div>
         </div>
@@ -834,22 +1310,41 @@
             <thead>
               <tr>
                 <th @click="sortPertes('typeVinyle')" class="sortable">
-                  <div class="th-content">Type de Vinyle <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Type de Vinyle <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortPertes('typeLaminier')" class="sortable">
-                  <div class="th-content">Type de Laminier <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Type de Laminier
+                    <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortPertes('dimensions')" class="sortable d-none d-md-table-cell">
-                  <div class="th-content">Dimensions <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortPertes('dimensions')"
+                  class="sortable d-none d-md-table-cell"
+                >
+                  <div class="th-content">
+                    Dimensions <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortPertes('raison')" class="sortable d-none d-lg-table-cell">
-                  <div class="th-content">Raison <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortPertes('raison')"
+                  class="sortable d-none d-lg-table-cell"
+                >
+                  <div class="th-content">
+                    Raison <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortPertes('cout')" class="sortable">
-                  <div class="th-content">Coût <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Coût <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th class="sortable">
-                  <div class="th-content">Par <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Par <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th>Actions</th>
               </tr>
@@ -859,7 +1354,9 @@
                 <td>
                   <div class="d-flex flex-column">
                     <span>{{ perte.typeVinyle }}</span>
-                    <small class="text-muted d-md-none">{{ perte.typeLaminier }}</small>
+                    <small class="text-muted d-md-none">{{
+                      perte.typeLaminier
+                    }}</small>
                   </div>
                 </td>
                 <td class="d-none d-md-table-cell">{{ perte.typeLaminier }}</td>
@@ -868,7 +1365,9 @@
                 <td>
                   <span class="badge bg-danger">{{ perte.cout }} $</span>
                 </td>
-                <td class="d-none d-lg-table-cell">{{ perte.prenom }} {{ perte.nom }}</td>
+                <td class="d-none d-lg-table-cell">
+                  {{ perte.prenom }} {{ perte.nom }}
+                </td>
                 <td>
                   <i class="bi bi-trash" @click="deletePerte(perte.id)"></i>
                 </td>
@@ -883,73 +1382,109 @@
         <div class="pagination-container" v-if="clientTotalPages > 1">
           <nav>
             <ul class="pagination justify-content-center">
-              <li class="page-item" :class="{ disabled: clientCurrentPage === 1 }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage - 1)"><i
-                    class="bi bi-chevron-left"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: clientCurrentPage === 1 }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeClientPage(clientCurrentPage - 1)"
+                  ><i class="bi bi-chevron-left"></i
+                ></a>
               </li>
-              <li class="page-item" v-for="page in clientVisiblePages" :key="page"
-                :class="{ active: page === clientCurrentPage }">
-                <a class="page-link" @click.prevent="changeClientPage(page)">{{ page }}</a>
+              <li
+                class="page-item"
+                v-for="page in clientVisiblePages"
+                :key="page"
+                :class="{ active: page === clientCurrentPage }"
+              >
+                <a class="page-link" @click.prevent="changeClientPage(page)">{{
+                  page
+                }}</a>
               </li>
-              <li class="page-item" :class="{ disabled: clientCurrentPage === clientTotalPages }">
-                <a class="page-link" @click.prevent="changeClientPage(clientCurrentPage + 1)"><i
-                    class="bi bi-chevron-right"></i></a>
+              <li
+                class="page-item"
+                :class="{ disabled: clientCurrentPage === clientTotalPages }"
+              >
+                <a
+                  class="page-link"
+                  @click.prevent="changeClientPage(clientCurrentPage + 1)"
+                  ><i class="bi bi-chevron-right"></i
+                ></a>
               </li>
             </ul>
           </nav>
           <div class="pagination-info">
-            Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{ Math.min(clientCurrentPage *
-              clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length }} clients
+            Affichage {{ (clientCurrentPage - 1) * clientItemsPerPage + 1 }} à
+            {{
+              Math.min(
+                clientCurrentPage * clientItemsPerPage,
+                filteredClients.length
+              )
+            }}
+            sur {{ filteredClients.length }} clients
           </div>
         </div>
       </section>
 
       <section v-if="currentSection === 'userProfile'" class="section">
-        <UserProfile :user-id="userId" @previous="previous()" @delete="refreshSectionUser()" @view="editTask"
-          @update="refetchSectionUser()"></UserProfile>
+        <UserProfile
+          :user-id="userId"
+          @previous="previous()"
+          @delete="refreshSectionUser()"
+          @view="editTask"
+          @update="refetchSectionUser()"
+        ></UserProfile>
       </section>
 
       <section v-if="currentSection === 'clientProfile'" class="section">
-        <ClientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
-          @update="refetchSectionClient()">
+        <ClientProfile
+          :client-id="clientId"
+          @previous="previous()"
+          @delete="refreshSectionClient()"
+          @view="editTask"
+          @update="refetchSectionClient()"
+        >
         </ClientProfile>
       </section>
 
       <section v-if="currentSection === 'taskProfile'" class="section">
-        <TaskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
-          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
-          @showclient="editClient($event, id)"></TaskProfile>
+        <TaskProfile
+          :id-task="taskId"
+          :end-point="endpoint"
+          @previous="previous()"
+          @delete="refreshSectionTaskAfterDelete()"
+          @updateTask="refreshSectionTask()"
+          @showclient="editClient($event, id)"
+        ></TaskProfile>
       </section>
 
       <section v-if="currentSection === 'myuserProfile'" class="section">
         <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
       </section>
-
-
-
     </main>
     <!--fin  Contenu principal -->
   </div>
 </template>
 
 <script>
-import EmployeModal from '../components/EmployeModal.vue'
-import ClientModal from '../components/ClientModal.vue'
-import TacheModal from '../components/TacheModal.vue'
-import PerteModal from '@/components/PerteModal.vue'
-import Calendar from '../components/Calendar.vue'
-import Kanban from '../components/Kanban.vue'
-import Dashboard from '../components/Dashboard.vue'
-import UserProfile from '@/components/userProfile.vue'
-import ClientProfile from '@/components/clientProfile.vue'
-import TaskProfile from '@/components/taskProfile.vue'
-import myuserProfile from '@/components/myuserProfile.vue'
-import { authService } from '../api/services/auth.service'
-import { getService } from '../api/services/get.service'
-import { deleteService } from '@/api/services/delete.service'
+import EmployeModal from "../components/EmployeModal.vue";
+import ClientModal from "../components/ClientModal.vue";
+import TacheModal from "../components/TacheModal.vue";
+import PerteModal from "@/components/PerteModal.vue";
+import Calendar from "../components/Calendar.vue";
+import Kanban from "../components/Kanban.vue";
+import Dashboard from "../components/Dashboard.vue";
+import UserProfile from "@/components/userProfile.vue";
+import ClientProfile from "@/components/clientProfile.vue";
+import TaskProfile from "@/components/taskProfile.vue";
+import myuserProfile from "@/components/myuserProfile.vue";
+import { authService } from "../api/services/auth.service";
+import { getService } from "../api/services/get.service";
+import { deleteService } from "@/api/services/delete.service";
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     EmployeModal,
     ClientModal,
@@ -961,12 +1496,12 @@ export default {
     UserProfile,
     ClientProfile,
     TaskProfile,
-    myuserProfile
+    myuserProfile,
   },
   data() {
     return {
-      currentSection: 'dashboard',
-      searchTask: '',
+      currentSection: "dashboard",
+      searchTask: "",
       employes: [],
       clients: [],
       taches: [],
@@ -978,116 +1513,117 @@ export default {
       userId: null,
       clientId: null,
       taskId: null,
-      endpoint: '',
+      endpoint: "",
       error: null,
-      username: '',
+      username: "",
       hovered: null,
       isMobile: false,
       // --- Pour la section taches (dashboard employé) ---
-      searchQueryTaches: '',
-      selectedPriorityFilter: '',
-      selectedStatusFilter: '',
+      searchQueryTaches: "",
+      selectedPriorityFilter: "",
+      selectedStatusFilter: "",
       selectedTask: null,
-      sortField: 'datedebut',
-      sortDirection: 'asc',
+      sortField: "datedebut",
+      sortDirection: "asc",
       currentPage: 1,
       itemsPerPage: 10,
       filteredTaches: [],
       // --- Pour la section clients ---
       filteredClients: [],
-      searchQueryClients: '',
-      selectedClientStatus: '',
-      clientSortField: 'nom',
-      clientSortDirection: 'asc',
+      searchQueryClients: "",
+      selectedClientStatus: "",
+      clientSortField: "nom",
+      clientSortDirection: "asc",
       clientCurrentPage: 1,
       clientItemsPerPage: 10,
       // --- Pour la section employés ---
       filteredEmployes: [],
-      searchQueryEmployes: '',
-      employeSortField: 'nom',
-      employeSortDirection: 'asc',
+      searchQueryEmployes: "",
+      employeSortField: "nom",
+      employeSortDirection: "asc",
       employeCurrentPage: 1,
       employeItemsPerPage: 10,
 
       //Section leads
       filteredLeads: [],
-      searchQueryLeads: '',
-      leadsSortField: 'nom',
-      leadsSortDirection: 'asc',
+      searchQueryLeads: "",
+      leadsSortField: "nom",
+      leadsSortDirection: "asc",
       leadsCurrentPage: 1,
       leadsItemsPerPage: 10,
 
       //section myTask
       filteredMyTask: [],
-      searchQueryMyTask: '',
-      MyTaskSortField: 'nom',
-      MyTaskSortDirection: 'asc',
+      searchQueryMyTask: "",
+      MyTaskSortField: "nom",
+      MyTaskSortDirection: "asc",
       MyTaskCurrentPage: 1,
       MyTaskItemsPerPage: 10,
 
-
       user: null,
       isSidebarOpen: false,
-    }
+    };
   },
   computed: {
     logoStyle() {
       return {
-        width: this.isMobile ? '30px' : '60px'
-      }
+        width: this.isMobile ? "30px" : "60px",
+      };
     },
     tachesUrgentes() {
-      return this.taches.filter(t => t.priorite === 'Urgent').length
+      return this.taches.filter((t) => t.priorite === "Urgent").length;
     },
     myTaskUrgente() {
-      return this.myTask.filter(t => t.priorite === 'Urgent').length
+      return this.myTask.filter((t) => t.priorite === "Urgent").length;
     },
     tachesEnCours() {
-      return this.taches.filter(t => !['Facturation'].includes(t.statut)).length
+      return this.taches.filter((t) => !["Facturation"].includes(t.statut))
+        .length;
     },
     myTaskEnCours() {
-      return this.myTask.filter(t => !['Facturation'].includes(t.statut)).length
+      return this.myTask.filter((t) => !["Facturation"].includes(t.statut))
+        .length;
     },
     nbTachesEnRetard() {
       const today = new Date();
-      return this.taches.filter(t => {
+      return this.taches.filter((t) => {
         const due = new Date(t.datefin);
-        return t.statut !== 'Facturation' && due < today;
+        return t.statut !== "Facturation" && due < today;
       }).length;
     },
     nbMyTaskEnRetard() {
       const today = new Date();
-      return this.myTask.filter(t => {
+      return this.myTask.filter((t) => {
         const due = new Date(t.datefin);
-        return t.statut !== 'Facturation' && due < today;
+        return t.statut !== "Facturation" && due < today;
       }).length;
     },
     paginatedTaches() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      const end = start + this.itemsPerPage
-      return this.filteredTaches.slice(start, end)
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredTaches.slice(start, end);
     },
     paginatedMyTask() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      const end = start + this.itemsPerPage
-      return this.myTask.slice(start, end)
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.myTask.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.filteredTaches.length / this.itemsPerPage)
+      return Math.ceil(this.filteredTaches.length / this.itemsPerPage);
     },
     visiblePages() {
-      const pages = []
-      const start = Math.max(1, this.currentPage - 2)
-      const end = Math.min(this.totalPages, this.currentPage + 2)
+      const pages = [];
+      const start = Math.max(1, this.currentPage - 2);
+      const end = Math.min(this.totalPages, this.currentPage + 2);
       for (let i = start; i <= end; i++) {
-        pages.push(i)
+        pages.push(i);
       }
-      return pages
+      return pages;
     },
     filteredTask() {
       const term = this.searchTask.toLowerCase().trim();
       if (!term) return this.taches;
-      return this.taches.filter(item =>
+      return this.taches.filter((item) =>
         item.titre.toLowerCase().includes(term)
       );
     },
@@ -1143,33 +1679,32 @@ export default {
       return pages;
     },
     totalPertes() {
-    let total = 0;
-    for (let perte of this.pertes) {
-      if (perte && !isNaN(perte.cout)) {
-        total += parseFloat(perte.cout); 
+      let total = 0;
+      for (let perte of this.pertes) {
+        if (perte && !isNaN(perte.cout)) {
+          total += parseFloat(perte.cout);
+        }
       }
-    }
-    return parseFloat(total.toFixed(2));
-  }
-
+      return parseFloat(total.toFixed(2));
+    },
   },
   async mounted() {
     await this.fetchTask();
     this.filterTaches();
     this.connectedUser();
     this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize);
+    window.addEventListener("resize", this.checkScreenSize);
     await this.fetchclients();
     this.filterClients();
     await this.fetchUsers();
     this.filterEmployes();
-    this.filterLeads()
+    this.filterLeads();
     await this.getUserTasks();
     await this.fetchPerte();
-    this.user = JSON.parse(localStorage.getItem('user'));
+    this.user = JSON.parse(localStorage.getItem("user"));
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkScreenSize);
+    window.removeEventListener("resize", this.checkScreenSize);
   },
   methods: {
     checkScreenSize() {
@@ -1219,83 +1754,90 @@ export default {
           toutesLesTaches = [...toutesLesTaches, ...response4.data];
         }
 
-        this.taches = toutesLesTaches.sort((a, b) => new Date(b.datedebut) - new Date(a.datedebut));
-        this.leads = toutesLesTaches.filter((task) => task.statut === 'Leads');
-
+        this.taches = toutesLesTaches.sort(
+          (a, b) => new Date(b.datedebut) - new Date(a.datedebut)
+        );
+        this.leads = toutesLesTaches.filter((task) => task.statut === "Leads");
       } catch (error) {
         this.error = "Erreur lors de la récupération des tâches";
         console.error(error);
       }
     },
     connectedUser() {
-      const localUser = localStorage.getItem('user');
+      const localUser = localStorage.getItem("user");
       this.username = JSON.parse(localUser).username;
     },
     async getUserTasks() {
       try {
-        const user = JSON.parse(localStorage.getItem("user"))
-        this.user = user
-        const id = user.id
-        let toutesLesTaches = []
-        const response = await getService.getEmployeAllTask(id)
-        toutesLesTaches = response.data
-        console.log("mes taches : ", toutesLesTaches)
-        this.myTask = toutesLesTaches.sort((a, b) => new Date(a.datedebut) - new Date(b.datedebut))
+        const user = JSON.parse(localStorage.getItem("user"));
+        this.user = user;
+        const id = user.id;
+        let toutesLesTaches = [];
+        const response = await getService.getEmployeAllTask(id);
+        toutesLesTaches = response.data;
+        console.log("mes taches : ", toutesLesTaches);
+        this.myTask = toutesLesTaches.sort(
+          (a, b) => new Date(a.datedebut) - new Date(b.datedebut)
+        );
       } catch (error) {
-        console.error("Erreur lors de la récupération des tâches", error)
+        console.error("Erreur lors de la récupération des tâches", error);
       }
     },
-      async fetchPerte() {
-        try {
-          this.perte = [];
-          const response = await getService.getPerte();
-          this.pertes = response.data;
-          console.log("voici les pertes " + response.data);
-        } catch (error) {
-          this.error = "Erreur lors de la récupération des utilisateurs";
-          console.error(error);
-        }
-      },
+    async fetchPerte() {
+      try {
+        this.perte = [];
+        const response = await getService.getPerte();
+        this.pertes = response.data;
+        console.log("voici les pertes " + response.data);
+      } catch (error) {
+        this.error = "Erreur lors de la récupération des utilisateurs";
+        console.error(error);
+      }
+    },
     changeSectionProfil() {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('myuserProfile')
-      this.previousSection = this.currentSection
-      this.currentSection = 'myuserProfile'
-      if (this.isSidebarOpen) this.isSidebarOpen = false
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("myuserProfile");
+      this.previousSection = this.currentSection;
+      this.currentSection = "myuserProfile";
+      if (this.isSidebarOpen) this.isSidebarOpen = false;
     },
 
     editUser(id) {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('userProfile')
-      this.currentSection = 'userProfile';
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("userProfile");
+      this.currentSection = "userProfile";
       this.userId = id;
     },
     editClient(id) {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('clientProfile')
-      this.currentSection = 'clientProfile';
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("clientProfile");
+      this.currentSection = "clientProfile";
       this.clientId = id;
     },
     editTask(type, id) {
-      try{
-      if(!type || !id) throw new Error();
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('taskProfile')
-      this.currentSection = 'taskProfile';
-      this.taskId = id;
-      this.endpoint = type;
-      }catch(error){
+      try {
+        if (!type || !id) throw new Error();
+        if (this.historyStack.length === 0)
+          this.historyStack.push(this.currentSection);
+        this.historyStack.push("taskProfile");
+        this.currentSection = "taskProfile";
+        this.taskId = id;
+        this.endpoint = type;
+      } catch (error) {
         console.error(error);
       }
     },
     goTo(section) {
-      this.historyStack.push(section)
-      this.currentSection = section
+      this.historyStack.push(section);
+      this.currentSection = section;
     },
     previous() {
       if (this.historyStack.length > 1) {
-        this.historyStack.pop()
-        this.currentSection = this.historyStack[this.historyStack.length - 1]
+        this.historyStack.pop();
+        this.currentSection = this.historyStack[this.historyStack.length - 1];
       }
     },
     clearnav() {
@@ -1332,11 +1874,11 @@ export default {
     },
     async deletePerte(id) {
       try {
-        const confirm = window.confirm("voulez vous supprimer cette perte ?")
+        const confirm = window.confirm("voulez vous supprimer cette perte ?");
         if (confirm) {
           const response = await deleteService.deletePerte(id);
           this.refreshSectionPerte();
-          if (!response) throw new Error()
+          if (!response) throw new Error();
         }
       } catch (error) {
         console.error(error);
@@ -1347,7 +1889,7 @@ export default {
       this.fetchTask();
     },
     refreshSectionPerte() {
-      this.currentSection = 'pertes';
+      this.currentSection = "pertes";
       this.fetchPerte();
     },
     refreshSectionUser() {
@@ -1359,170 +1901,182 @@ export default {
       this.refetchSectionClient();
     },
     logout() {
-      localStorage.removeItem('user')
-      this.$router.push('/login')
+      localStorage.removeItem("user");
+      this.$router.push("/login");
     },
     getPriorityClass(priorite) {
       const priorityClasses = {
-        'Urgent': 'bg-danger',
-        'Normal': 'bg-success',
-        'Bas': 'bg-info'
-      }
-      return priorityClasses[priorite] || 'badge-primary'
+        Urgent: "bg-danger",
+        Normal: "bg-success",
+        Bas: "bg-info",
+      };
+      return priorityClasses[priorite] || "badge-primary";
     },
     getTaskStatusClass(statut) {
       const taskStatusClasses = {
-        'Leads': 'bg-warning',
-        'Design': 'bg-primary',
-        'Approbation': 'bg-info',
-        'Impression': 'bg-secondary',
-        'Production': 'bg-success',
-        'Installation': 'bg-dark',
-        'Facturation': 'bg-danger',
-        'Termine': 'bg-dark'
-
-      }
-      return taskStatusClasses[statut] || 'badge-primary'
+        Leads: "bg-warning",
+        Design: "bg-primary",
+        Approbation: "bg-info",
+        Impression: "bg-secondary",
+        Production: "bg-success",
+        Installation: "bg-dark",
+        Facturation: "bg-danger",
+        Termine: "bg-dark",
+      };
+      return taskStatusClasses[statut] || "badge-primary";
     },
     getClientStatusClass(statut) {
       const clientStatusClasses = {
-        'Actif': 'bg-success',
-        'Inactif': 'bg-danger',
-        'Prospect': 'bg-info',
-      }
-      return clientStatusClasses[statut] || 'badge-primary'
+        Actif: "bg-success",
+        Inactif: "bg-danger",
+        Prospect: "bg-info",
+      };
+      return clientStatusClasses[statut] || "badge-primary";
     },
     filterTaches() {
-      let filtered = [...this.taches]
+      let filtered = [...this.taches];
       // Filtrage par recherche
       if (this.searchQueryTaches) {
-        const query = this.searchQueryTaches.toLowerCase()
-        filtered = filtered.filter(tache =>
-          tache.titre.toLowerCase().includes(query) ||
-          tache.id?.toString().includes(query) ||
-          tache.statut.toLowerCase().includes(query)
-        )
+        const query = this.searchQueryTaches.toLowerCase();
+        filtered = filtered.filter(
+          (tache) =>
+            tache.titre.toLowerCase().includes(query) ||
+            tache.id?.toString().includes(query) ||
+            tache.statut.toLowerCase().includes(query)
+        );
       }
       // Filtrage par priorité
       if (this.selectedPriorityFilter) {
-        filtered = filtered.filter(tache => tache.priorite === this.selectedPriorityFilter)
+        filtered = filtered.filter(
+          (tache) => tache.priorite === this.selectedPriorityFilter
+        );
       }
       // Filtrage par statut
       if (this.selectedStatusFilter) {
-        filtered = filtered.filter(tache => tache.statut === this.selectedStatusFilter)
+        filtered = filtered.filter(
+          (tache) => tache.statut === this.selectedStatusFilter
+        );
       }
-      this.filteredTaches = filtered
-      this.currentPage = 1 // Reset à la première page
+      this.filteredTaches = filtered;
+      this.currentPage = 1; // Reset à la première page
     },
     sortBy(field) {
       if (this.sortField === field) {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
       } else {
-        this.sortField = field
-        this.sortDirection = 'asc'
+        this.sortField = field;
+        this.sortDirection = "asc";
       }
 
       this.filteredTaches = [...this.filteredTaches].sort((a, b) => {
-        let aVal = a[field]
-        let bVal = b[field]
+        let aVal = a[field];
+        let bVal = b[field];
 
-        if (field === 'datefin' || field === 'datedebut') {
-          aVal = new Date(aVal)
-          bVal = new Date(bVal)
+        if (field === "datefin" || field === "datedebut") {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
         }
 
-        if (this.sortDirection === 'asc') {
-          return aVal > bVal ? 1 : -1
+        if (this.sortDirection === "asc") {
+          return aVal > bVal ? 1 : -1;
         } else {
-          return aVal < bVal ? 1 : -1
+          return aVal < bVal ? 1 : -1;
         }
-      })
+      });
       console.log("this.sortField : ", this.sortField);
       console.log("this.sortDirection : ", this.sortDirection);
       console.log("this.filteredTaches : ", this.filteredTaches.length);
     },
     clearSearch() {
-      this.searchQueryTaches = ''
-      this.filterTaches()
+      this.searchQueryTaches = "";
+      this.filterTaches();
     },
     selectRow(tache) {
-      this.selectedTask = tache
+      this.selectedTask = tache;
     },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page
+        this.currentPage = page;
       }
     },
     formatDate(dateString) {
       if (!dateString) {
-        return "indefini"
+        return "indefini";
       } else {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('fr-FR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        })
+        const date = new Date(dateString);
+        return date.toLocaleDateString("fr-FR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
       }
     },
     isOverdue(dateString, statut) {
       const today = new Date();
       const dueDate = new Date(dateString);
-      return statut !== 'Facturation' && dueDate < today;
+      return statut !== "Facturation" && dueDate < today;
     },
     getTaskIcon(type) {
       const icons = {
-        'ppf': 'bi bi-file-earmark-text',
-        'lettrage': 'bi bi-fonts',
-        'affichage': 'bi bi-display',
-        'default': 'bi bi-clipboard'
-      }
-      return icons[type] || icons.default
+        ppf: "bi bi-file-earmark-text",
+        lettrage: "bi bi-fonts",
+        affichage: "bi bi-display",
+        default: "bi bi-clipboard",
+      };
+      return icons[type] || icons.default;
     },
     getPriorityIcon(priority) {
       const icons = {
-        'Urgent': 'bi bi-exclamation-triangle-fill',
-        'Normal': 'bi bi-circle-fill',
-        'Bas': 'bi bi-arrow-down-circle-fill'
-      }
-      return icons[priority] || 'bi bi-circle-fill'
+        Urgent: "bi bi-exclamation-triangle-fill",
+        Normal: "bi bi-circle-fill",
+        Bas: "bi bi-arrow-down-circle-fill",
+      };
+      return icons[priority] || "bi bi-circle-fill";
     },
     getTaskRealId(tache) {
       switch (tache.typeTask) {
-        case 'ppf': return tache.idPpf
-        case 'lettrage': return tache.idLett
-        case 'affichage': return tache.idAff
-        default: return tache.id
+        case "ppf":
+          return tache.idPpf;
+        case "lettrage":
+          return tache.idLett;
+        case "affichage":
+          return tache.idAff;
+        default:
+          return tache.id;
       }
     },
     filterClients() {
       let filtered = [...this.clients];
       if (this.searchQueryClients) {
         const query = this.searchQueryClients.toLowerCase();
-        filtered = filtered.filter(client =>
-          client.nom.toLowerCase().includes(query) ||
-          client.entreprise?.toLowerCase().includes(query) ||
-          client.email?.toLowerCase().includes(query) ||
-          client.telephone?.toLowerCase().includes(query)
+        filtered = filtered.filter(
+          (client) =>
+            client.nom.toLowerCase().includes(query) ||
+            client.entreprise?.toLowerCase().includes(query) ||
+            client.email?.toLowerCase().includes(query) ||
+            client.telephone?.toLowerCase().includes(query)
         );
       }
       if (this.selectedClientStatus) {
-        filtered = filtered.filter(client => client.statut === this.selectedClientStatus);
+        filtered = filtered.filter(
+          (client) => client.statut === this.selectedClientStatus
+        );
       }
       this.filteredClients = filtered;
       this.clientCurrentPage = 1;
     },
     sortClients(field) {
       if (this.clientSortField === field) {
-        this.clientSortDirection = this.clientSortDirection === 'asc' ? 'desc' : 'asc';
+        this.clientSortDirection =
+          this.clientSortDirection === "asc" ? "desc" : "asc";
       } else {
         this.clientSortField = field;
-        this.clientSortDirection = 'asc';
+        this.clientSortDirection = "asc";
       }
       this.filteredClients.sort((a, b) => {
-        let aVal = a[field] || '';
-        let bVal = b[field] || '';
-        if (this.clientSortDirection === 'asc') {
+        let aVal = a[field] || "";
+        let bVal = b[field] || "";
+        if (this.clientSortDirection === "asc") {
           return aVal > bVal ? 1 : -1;
         } else {
           return aVal < bVal ? 1 : -1;
@@ -1535,19 +2089,20 @@ export default {
       }
     },
     clearClientSearch() {
-      this.searchQueryClients = '';
+      this.searchQueryClients = "";
       this.filterClients();
     },
     filterEmployes() {
       let filtered = [...this.users];
       if (this.searchQueryEmployes) {
         const query = this.searchQueryEmployes.toLowerCase();
-        filtered = filtered.filter(user =>
-          user.nom.toLowerCase().includes(query) ||
-          user.prenom?.toLowerCase().includes(query) ||
-          user.email?.toLowerCase().includes(query) ||
-          user.poste?.toLowerCase().includes(query) ||
-          user.role?.toLowerCase().includes(query)
+        filtered = filtered.filter(
+          (user) =>
+            user.nom.toLowerCase().includes(query) ||
+            user.prenom?.toLowerCase().includes(query) ||
+            user.email?.toLowerCase().includes(query) ||
+            user.poste?.toLowerCase().includes(query) ||
+            user.role?.toLowerCase().includes(query)
         );
       }
       this.filteredEmployes = filtered;
@@ -1555,15 +2110,16 @@ export default {
     },
     sortEmployes(field) {
       if (this.employeSortField === field) {
-        this.employeSortDirection = this.employeSortDirection === 'asc' ? 'desc' : 'asc';
+        this.employeSortDirection =
+          this.employeSortDirection === "asc" ? "desc" : "asc";
       } else {
         this.employeSortField = field;
-        this.employeSortDirection = 'asc';
+        this.employeSortDirection = "asc";
       }
       this.filteredEmployes.sort((a, b) => {
-        let aVal = a[field] || '';
-        let bVal = b[field] || '';
-        if (this.employeSortDirection === 'asc') {
+        let aVal = a[field] || "";
+        let bVal = b[field] || "";
+        if (this.employeSortDirection === "asc") {
           return aVal > bVal ? 1 : -1;
         } else {
           return aVal < bVal ? 1 : -1;
@@ -1576,7 +2132,7 @@ export default {
       }
     },
     clearEmployeSearch() {
-      this.searchQueryEmployes = '';
+      this.searchQueryEmployes = "";
       this.filterEmployes();
     },
     /*zone filtre et tri leads*/
@@ -1584,7 +2140,7 @@ export default {
       let filtered = [...this.leads];
       if (this.searchQueryLeads) {
         const query = this.searchQueryLeads.toLowerCase();
-        filtered = filtered.filter(lead =>
+        filtered = filtered.filter((lead) =>
           lead.titre.toLowerCase().includes(query)
         );
       }
@@ -1593,15 +2149,16 @@ export default {
     },
     sortLeads(field) {
       if (this.leadsSortField === field) {
-        this.leadsSortDirection = this.leadsSortDirection === 'asc' ? 'desc' : 'asc';
+        this.leadsSortDirection =
+          this.leadsSortDirection === "asc" ? "desc" : "asc";
       } else {
         this.leadsSortField = field;
-        this.leadsSortDirection = 'asc';
+        this.leadsSortDirection = "asc";
       }
       this.filteredLeads.sort((a, b) => {
-        let aVal = a[field] || '';
-        let bVal = b[field] || '';
-        if (this.leadsSortDirection === 'asc') {
+        let aVal = a[field] || "";
+        let bVal = b[field] || "";
+        if (this.leadsSortDirection === "asc") {
           return aVal > bVal ? 1 : -1;
         } else {
           return aVal < bVal ? 1 : -1;
@@ -1614,23 +2171,21 @@ export default {
       }
     },
     clearLeadsSearch() {
-      this.leadsQueryEmployes = '';
+      this.leadsQueryEmployes = "";
       this.filterEmployes();
     },
     /*fin zone leads*/
     closeSideBar() {
-      if (this.isMobile && this.isSidebarOpen)
-        this.isSidebarOpen = false;
-    }
+      if (this.isMobile && this.isSidebarOpen) this.isSidebarOpen = false;
+    },
   },
-
-}
+};
 </script>
 
 <style scoped>
 main {
   background-color: white;
-  color: #000
+  color: #000;
 }
 
 .page {
@@ -1984,7 +2539,7 @@ main {
 .task-id {
   font-weight: 600;
   color: #667eea;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .task-title {
@@ -2250,7 +2805,6 @@ main {
   }
 }
 
-
 @media (max-width: 767.98px) {
   .page {
     padding-top: 10px;
@@ -2365,7 +2919,7 @@ main {
   }
 }
 
-@media (orientation : landscape) {
+@media (orientation: landscape) {
   .nav-pills {
     display: flex;
     flex-direction: column;
@@ -2382,7 +2936,6 @@ main {
     flex-shrink: 2;
     flex-grow: 1;
   }
-
 }
 
 .mobile-navbar {
@@ -2429,7 +2982,7 @@ main {
 }
 
 .sidebar {
-  transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
   z-index: 1500;
 }
 
