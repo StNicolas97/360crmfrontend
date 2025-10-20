@@ -1460,7 +1460,11 @@
       </section>
 
       <section v-if="currentSection === 'myuserProfile'" class="section">
-        <myuserProfile :user-id="userId" @previous="previous()"></myuserProfile>
+        <myuserProfile
+          :user-id="userId"
+          @previous="previous()"
+          @update="refetchSectionUser()"
+        ></myuserProfile>
       </section>
     </main>
     <!--fin  Contenu principal -->
@@ -1775,12 +1779,30 @@ export default {
         let toutesLesTaches = [];
         const response = await getService.getEmployeAllTask(id);
         toutesLesTaches = response.data;
-        console.log("mes taches : ", toutesLesTaches);
+
+        console.log("📋 [getUserTasks] Mes tâches:", toutesLesTaches);
+
+        // 🔍 Débogage: afficher la structure de la première tâche
+        if (toutesLesTaches.length > 0) {
+          const premiereTache = toutesLesTaches[0];
+          console.log("🔍 [getUserTasks] Structure de la première tâche:", {
+            id: premiereTache.id,
+            typeTask: premiereTache.typeTask,
+            idPpf: premiereTache.idPpf,
+            idLett: premiereTache.idLett,
+            idAff: premiereTache.idAff,
+            titre: premiereTache.titre,
+          });
+        }
+
         this.myTask = toutesLesTaches.sort(
           (a, b) => new Date(a.datedebut) - new Date(b.datedebut)
         );
       } catch (error) {
-        console.error("Erreur lors de la récupération des tâches", error);
+        console.error(
+          "❌ [getUserTasks] Erreur lors de la récupération des tâches:",
+          error
+        );
       }
     },
     async fetchPerte() {
@@ -1819,15 +1841,31 @@ export default {
     },
     editTask(type, id) {
       try {
-        if (!type || !id) throw new Error();
+        console.log(
+          `🔍 [editTask] Tentative d'ouverture - Type: ${type}, ID: ${id}`
+        );
+
+        if (!type || !id) {
+          console.error(
+            `❌ [editTask] Données invalides - Type: ${type}, ID: ${id}`
+          );
+          alert("⚠️ Impossible d'ouvrir la tâche: données manquantes");
+          return;
+        }
+
         if (this.historyStack.length === 0)
           this.historyStack.push(this.currentSection);
         this.historyStack.push("taskProfile");
         this.currentSection = "taskProfile";
         this.taskId = id;
         this.endpoint = type;
+
+        console.log(
+          `✅ [editTask] Navigation vers taskProfile avec ID: ${id}, endpoint: ${type}`
+        );
       } catch (error) {
-        console.error(error);
+        console.error("❌ [editTask] Erreur:", error);
+        alert("⚠️ Erreur lors de l'ouverture de la tâche");
       }
     },
     goTo(section) {
@@ -2034,16 +2072,28 @@ export default {
       return icons[priority] || "bi bi-circle-fill";
     },
     getTaskRealId(tache) {
+      // ✅ Vérifier que l'ID spécifique existe, sinon utiliser tache.id
+      let realId;
+
       switch (tache.typeTask) {
         case "ppf":
-          return tache.idPpf;
+        case "PPF":
+          realId = tache.idPpf;
+          break;
         case "lettrage":
-          return tache.idLett;
+        case "LETTRAGE":
+          realId = tache.idLett;
+          break;
         case "affichage":
-          return tache.idAff;
+        case "AFFICHAGE":
+          realId = tache.idAff;
+          break;
         default:
-          return tache.id;
+          realId = tache.id;
       }
+
+      // ✅ Si l'ID spécifique est null/undefined, utiliser l'ID de la tâche principale
+      return realId || tache.id;
     },
     filterClients() {
       let filtered = [...this.clients];
