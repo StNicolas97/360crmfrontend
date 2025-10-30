@@ -63,7 +63,17 @@
               <li class="list-group-item" v-if="task.typeTask==='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.nom }} {{ task.prenom }}</a></li>
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
-              <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
+              <li class="list-group-item">
+                <strong>Prix :</strong>
+                <div class="row g-1">
+                  <div class="col-md-8">
+                    <input type="number" class="form-control" v-model="task.prix">
+                  </div>
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Note prix" v-model="task.notePrix">
+                  </div>
+                </div>
+              </li>
               <li class="list-group-item"><strong>Assigné :</strong> {{task.nomEmploye}}</li>
             </ul>
           </div>

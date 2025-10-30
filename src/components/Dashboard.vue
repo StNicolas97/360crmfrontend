@@ -448,9 +448,10 @@ export default {
     },
     nbTachesEnRetard() {
       const today = new Date();
-      return this.allTaches.filter(
-        (t) => t.statut !== "Facturation" && new Date(t.datefin) < today
-      ).length;
+      return this.allTaches.filter((t) => {
+        const due = t.datefin ? new Date(t.datefin) : today;
+        return t.statut !== "Facturation" && due < today;
+      }).length;
     },
     tachesEnCours() {
       return this.allTaches.filter((t) => !["Facturation"].includes(t.statut))

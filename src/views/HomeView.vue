@@ -146,7 +146,7 @@
             @mouseenter="hovered = 'employe'"
             @mouseleave="hovered = null"
           >
-            <i class="bi bi-person-fill-exclamation" :title="'Employés'"></i>
+            <i class="bi bi-person-fill-exclamation" :title="'Leads'"></i>
             <span v-if="isSidebarOpen === true" class="text-center mx-2"
               >Leads</span
             >
@@ -392,19 +392,19 @@
                   </div>
                 </th>
                 <th
-                  @click="sortClients('nom')"
-                  class="sortable d-none d-sm-table-cell"
-                >
-                  <div class="th-content">
-                    Nom <i class="bi bi-arrow-down-up sort-icon"></i>
-                  </div>
-                </th>
-                <th
                   @click="sortClients('prenom')"
                   class="sortable d-none d-sm-table-cell"
                 >
                   <div class="th-content">
                     Prenom <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
+                </th>
+                <th
+                  @click="sortClients('nom')"
+                  class="sortable d-none d-sm-table-cell"
+                >
+                  <div class="th-content">
+                    Nom <i class="bi bi-arrow-down-up sort-icon"></i>
                   </div>
                 </th>
                 <th
@@ -440,7 +440,7 @@
                 <td class="d-none d-md-table-cell">{{ client.entreprise }}</td>
                 <td>
                   <div class="d-flex flex-column">
-                    <span>{{ client.nom }}</span>
+                    <span>{{ client.prenom }}</span>
                     <small class="text-muted d-md-none">{{
                       client.entreprise
                     }}</small>
@@ -449,7 +449,7 @@
                     }}</small>
                   </div>
                 </td>
-                <td class="d-none d-sm-table-cell">{{ client.prenom }}</td>
+                <td class="d-none d-sm-table-cell">{{ client.nom }}</td>
                 <td class="d-none d-lg-table-cell">{{ client.email }}</td>
                 <td class="d-none d-sm-table-cell">{{ client.telephone }}</td>
                 <td>
@@ -1591,14 +1591,14 @@ export default {
     nbTachesEnRetard() {
       const today = new Date();
       return this.taches.filter((t) => {
-        const due = new Date(t.datefin);
+        const due = t.datefin ? new Date(t.datefin) : today;
         return t.statut !== "Facturation" && due < today;
       }).length;
     },
     nbMyTaskEnRetard() {
       const today = new Date();
       return this.myTask.filter((t) => {
-        const due = new Date(t.datefin);
+        const due = t.datefin ? new Date(t.datefin) : today;
         return t.statut !== "Facturation" && due < today;
       }).length;
     },

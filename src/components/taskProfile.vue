@@ -72,7 +72,17 @@
               <li class="list-group-item" v-if="task.typeTask==='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong>{{ task.prenom }}  {{ task.nom }}</a></li>
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
-              <li class="list-group-item"><strong>Prix :</strong> <input type="number" class="form-control" v-model="task.prix"></li>
+              <li class="list-group-item">
+                <strong>Prix :</strong>
+                <div class="row g-1">
+                  <div class="col-md-8">
+                    <input type="number" class="form-control" v-model="task.prix">
+                  </div>
+                  <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Note prix" v-model="task.notePrix">
+                  </div>
+                </div>
+              </li>
               <li class="list-group-item"><strong>Assigné :</strong>
                 <select
                   v-model="task.idAssigne"
@@ -152,10 +162,6 @@
                   <select class="form-select" v-model="task.courtoisie">
                     <option value="#2">Ford Fusion #2</option>
                     <option value="#3">Ford Fusion #3</option>
-                    <option value="#4">Ford Fusion #4</option>
-                    <option value="#5">Ford Fusion #5</option>
-                    <option value="#6">Ford Fusion #6</option>
-                    <option value="#7">Ford Fusion #7</option>
                   </select>
                 </li>
                 <li class="list-group-item"><strong>Pièce jointe :</strong> <input type="file" class="form-control" @change="handleFileUpload"></li>
@@ -293,10 +299,22 @@ export default {
                 }
             }
         },
+        dateTreatment() {
+          const datedebut = this.task.datedebut ? this.task.datedebut : null;
+          const datefin = this.task.datefin ? this.task.datefin : null;
+          const datecommande = this.task.datecommande ?? this.task.createdAt ?? null;
+
+          return {
+            ...this.task,
+            datecommande,
+            datedebut,
+            datefin
+          };
+        },
         async updateTask() {
             const id = this.task.idTache;
             const url = this.task.typeTask;
-            const data = this.task;
+            const data = this.dateTreatment();
             try {
           const response = await updateService.updateTask(url, id, data);
           this.$emit('updateTask');

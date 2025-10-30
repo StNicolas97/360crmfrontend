@@ -1,91 +1,194 @@
 <template>
   <div class="d-flex page bg-dark">
-
     <!-- Section Barre de navigation -->
-    <div class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar" 
-    :class="{'sidebar-mobile': isMobile, 'sidebar-open': isSidebarOpen, 'sidebar-closed': !isSidebarOpen && isMobile}">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center">
-        <img class="fs-4 img-fluid" src="../assets/Logo 360 AutoWrap_Blanc.png" :style="logoStyle">
+    <div
+      class="d-flex flex-column flex-shrink-2 p-3 bg-dark sidebar"
+      :class="{
+        'sidebar-mobile': isMobile,
+        'sidebar-open': isSidebarOpen,
+        'sidebar-closed': !isSidebarOpen && isMobile,
+      }"
+    >
+      <a
+        href="/"
+        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none justify-content-center"
+      >
+        <img
+          class="fs-4 img-fluid"
+          src="../assets/Logo 360 AutoWrap_Blanc.png"
+          :style="logoStyle"
+        />
       </a>
-      <hr class="text-white">
+      <hr class="text-white" />
       <ul class="nav nav-pills flex-column mb-auto" @click="clearnav()">
         <li class="nav-item">
-          <a href="#" @click.prevent="currentSection = 'dashboard';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center"
-            :class="{ 'active': currentSection === 'dashboard' }"
-            @mouseenter="hovered = 'dashboard'" @mouseleave="hovered = null">
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'dashboard';
+              isSidebarOpen = false;
+            "
+            class="nav-link d-flex justify-content-center align-items-center"
+            :class="{ active: currentSection === 'dashboard' }"
+            @mouseenter="hovered = 'dashboard'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-house-door" :title="'Dashboard'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Dashboard</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Dashboard</span
+            >
           </a>
         </li>
         <li>
-          <a href="#" @click.prevent="currentSection = 'calendrier';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'calendrier' }"
-            @mouseenter="hovered = 'calendrier'" @mouseleave="hovered = null">
-            <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Calendrier</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" @click.prevent="currentSection = 'table';isSidebarOpen = false" class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'table' }"
-            @mouseenter="hovered = 'table'" @mouseleave="hovered = null">
-            <i class="bi bi-table" :title="'Tableau'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Tableau</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" @click.prevent="currentSection = 'pertes'; fetchPerte(); isSidebarOpen = false"
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'calendrier';
+              isSidebarOpen = false;
+            "
             class="nav-link d-flex justify-content-center align-items-center text-white"
-            :class="{ 'active': currentSection === 'pertes' }" @mouseenter="hovered = 'pertes'"
-            @mouseleave="hovered = null">
+            :class="{ active: currentSection === 'calendrier' }"
+            @mouseenter="hovered = 'calendrier'"
+            @mouseleave="hovered = null"
+          >
+            <i class="bi bi-calendar-range" :title="'Calendrier'"></i>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Calendrier</span
+            >
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'table';
+              isSidebarOpen = false;
+            "
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ active: currentSection === 'table' }"
+            @mouseenter="hovered = 'table'"
+            @mouseleave="hovered = null"
+          >
+            <i class="bi bi-table" :title="'Tableau'"></i>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Tableau</span
+            >
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            @click.prevent="
+              currentSection = 'pertes';
+              fetchPerte();
+              isSidebarOpen = false;
+            "
+            class="nav-link d-flex justify-content-center align-items-center text-white"
+            :class="{ active: currentSection === 'pertes' }"
+            @mouseenter="hovered = 'pertes'"
+            @mouseleave="hovered = null"
+          >
             <i class="bi bi-archive" :title="'pertes'"></i>
-            <span v-if="isSidebarOpen === true" class="text-center mx-2">Pertes</span>
+            <span v-if="isSidebarOpen === true" class="text-center mx-2"
+              >Pertes</span
+            >
           </a>
         </li>
       </ul>
-      <hr class="text-white">
+      <hr class="text-white" />
       <div class="dropdown mb-4 d-flex justify-content-center" v-if="!isMobile">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" width="32" height="32" class="rounded-circle me-2 img-fluid">
+        <a
+          href="#"
+          class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1"
+          id="dropdownUser1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="../assets/avatar/profile-icon-design-free-vector.jpg"
+            alt=""
+            width="32"
+            height="32"
+            class="rounded-circle me-2 img-fluid"
+          />
         </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-          <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
+        <ul
+          class="dropdown-menu dropdown-menu-dark text-small shadow"
+          aria-labelledby="dropdownUser1"
+        >
           <li>
-            <hr class="dropdown-divider">
+            <a
+              class="dropdown-item"
+              href="#"
+              @click.prevent="changeSectionProfil"
+              >Profil</a
+            >
           </li>
-          <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+          </li>
         </ul>
       </div>
     </div>
 
-        <!-- Navbar mobile/tablette -->
-        <nav class="mobile-navbar d-md-none">
-          <button
-            class="btn btn-hamburger"
-            @click="isSidebarOpen = !isSidebarOpen"
-            aria-label="Ouvrir le menu">
-            <i class="bi bi-list"></i>
-          </button>
-          <span class="navbar-title"><img src="../assets/Logo 360 AutoWrap_Blanc.png" alt="" class="img-fluid"
-            style="width: 30%;position : relative; left: 30%;"></span>
-          <div class="dropdown d-flex justify-content-center" v-if="isMobile">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1" id="dropdownUser1"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="../assets/avatar/profile-icon-design-free-vector.jpg" alt="" class="rounded-circle me-2 img-fluid" style="width: 30%;position : relative; left: 30%;">
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-              <li><a class="dropdown-item" href="#" @click.prevent="changeSectionProfil">Profil</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href="#" @click="logout">Déconnexion</a></li>
-            </ul>
-          </div>
-        </nav>
+    <!-- Navbar mobile/tablette -->
+    <nav class="mobile-navbar d-md-none">
+      <button
+        class="btn btn-hamburger"
+        @click="isSidebarOpen = !isSidebarOpen"
+        aria-label="Ouvrir le menu"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+      <span class="navbar-title"
+        ><img
+          src="../assets/Logo 360 AutoWrap_Blanc.png"
+          alt=""
+          class="img-fluid"
+          style="width: 30%; position: relative; left: 30%"
+      /></span>
+      <div class="dropdown d-flex justify-content-center" v-if="isMobile">
+        <a
+          href="#"
+          class="d-flex align-items-center text-white text-decoration-none dropdown-toggle justify-content-center flex-shrink-1"
+          id="dropdownUser1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            src="../assets/avatar/profile-icon-design-free-vector.jpg"
+            alt=""
+            class="rounded-circle me-2 img-fluid"
+            style="width: 30%; position: relative; left: 30%"
+          />
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-dark text-small shadow"
+          aria-labelledby="dropdownUser1"
+        >
+          <li>
+            <a
+              class="dropdown-item"
+              href="#"
+              @click.prevent="changeSectionProfil"
+              >Profil</a
+            >
+          </li>
+          <li>
+            <hr class="dropdown-divider" />
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" @click="logout">Déconnexion</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
     <!-- Contenu principal -->
-    <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">  
+    <main class="flex-grow-1 p-3 main-content" @click="closeSideBar">
       <section v-if="currentSection === 'dashboard'" class="section">
         <div class="dashboard-header mb-4">
           <h2 class="dashboard-title">
@@ -118,28 +221,45 @@
             <div class="col-md-6">
               <div class="search-container">
                 <i class="bi bi-search search-icon"></i>
-                <input 
-                  type="text" 
-                  class="form-control search-input" 
+                <input
+                  type="text"
+                  class="form-control search-input"
                   v-model="searchQueryTaches"
                   placeholder="Rechercher une tâche..."
                   @input="filterTaches"
+                />
+                <button
+                  v-if="searchQueryTaches"
+                  @click="clearSearch"
+                  class="btn-clear"
                 >
-                <button v-if="searchQueryTaches" @click="clearSearch" class="btn-clear">
                   <i class="bi bi-x"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedPriorityFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select"
+                v-model="selectedPriorityFilter"
+                @change="filterTaches"
+              >
                 <option value="">Toutes les priorités</option>
                 <option value="Urgent">Urgent</option>
                 <option value="Normal">Normal</option>
                 <option value="Bas">Bas</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
               </select>
             </div>
             <div class="col-md-3">
-              <select class="form-select filter-select" v-model="selectedStatusFilter" @change="filterTaches">
+              <select
+                class="form-select filter-select"
+                v-model="selectedStatusFilter"
+                @change="filterTaches"
+              >
                 <option value="">Tous les statuts</option>
                 <option value="Leads">Leads</option>
                 <option value="Design">Design</option>
@@ -194,11 +314,14 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="tache in paginatedTaches" :key="tache.idTache" 
-                    class="table-row" 
-                    @click="selectRow(tache)"
-                    :class="{ 'selected': selectedTask?.id === tache.id }" 
-                    @dblclick="editTask(tache.typeTask, getTaskRealId(tache))">
+                <tr
+                  v-for="tache in paginatedTaches"
+                  :key="tache.idTache"
+                  class="table-row"
+                  @click="selectRow(tache)"
+                  :class="{ selected: selectedTask?.id === tache.id }"
+                  @dblclick="editTask(tache.typeTask, getTaskRealId(tache))"
+                >
                   <td>
                     <span class="task-id">#{{ tache.id }}</span>
                   </td>
@@ -210,31 +333,51 @@
                   </td>
                   <td>
                     <div class="date-container">
-                      <span class="date-text">{{ formatDate(tache.datefin) }}</span>
-                      <span v-if="isOverdue(tache.datefin, tache.statut)" class="overdue-badge">
+                      <span class="date-text">{{
+                        formatDate(tache.datefin)
+                      }}</span>
+                      <span
+                        v-if="isOverdue(tache.datefin, tache.statut)"
+                        class="overdue-badge"
+                      >
                         <i class="bi bi-exclamation-triangle"></i>
                       </span>
                     </div>
                   </td>
                   <td>
-                    <span :class="'badge priority-badge ' + getPriorityClass(tache.priorite)">
-                      <i :class="getPriorityIcon(tache.priorite)" class="me-1"></i>
+                    <span
+                      :class="
+                        'badge priority-badge ' +
+                        getPriorityClass(tache.priorite)
+                      "
+                    >
+                      <i
+                        :class="getPriorityIcon(tache.priorite)"
+                        class="me-1"
+                      ></i>
                       {{ tache.priorite }}
                     </span>
                   </td>
                   <td>
-                    <span :class="'badge status-badge ' + getTaskStatusClass(tache.statut)">
+                    <span
+                      :class="
+                        'badge status-badge ' + getTaskStatusClass(tache.statut)
+                      "
+                    >
                       <div class="status-indicator"></div>
                       {{ tache.statut }}
                     </span>
                   </td>
                   <td class="text-center">
                     <div class="action-buttons">
-                      <button 
+                      <button
                         @click="editTask(tache.typeTask, getTaskRealId(tache))"
-                        @touchstart="editTask(tache.typeTask, getTaskRealId(tache))"
+                        @touchstart="
+                          editTask(tache.typeTask, getTaskRealId(tache))
+                        "
                         class="btn btn-action btn-view"
-                        title="Voir les détails">
+                        title="Voir les détails"
+                      >
                         <i class="bi bi-eye"></i>
                       </button>
                       <!-- <button 
@@ -248,7 +391,7 @@
                 </tr>
               </tbody>
             </table>
-            
+
             <!-- Message si aucune tâche -->
             <div v-if="filteredTaches.length === 0" class="no-data">
               <i class="bi bi-inbox"></i>
@@ -261,25 +404,40 @@
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                  <a class="page-link" @click.prevent="changePage(currentPage - 1)">
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage - 1)"
+                  >
                     <i class="bi bi-chevron-left"></i>
                   </a>
                 </li>
-                <li class="page-item" 
-                    v-for="page in visiblePages" 
-                    :key="page"
-                    :class="{ active: page === currentPage }">
-                  <a class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
+                <li
+                  class="page-item"
+                  v-for="page in visiblePages"
+                  :key="page"
+                  :class="{ active: page === currentPage }"
+                >
+                  <a class="page-link" @click.prevent="changePage(page)">{{
+                    page
+                  }}</a>
                 </li>
-                <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                  <a class="page-link" @click.prevent="changePage(currentPage + 1)">
+                <li
+                  class="page-item"
+                  :class="{ disabled: currentPage === totalPages }"
+                >
+                  <a
+                    class="page-link"
+                    @click.prevent="changePage(currentPage + 1)"
+                  >
                     <i class="bi bi-chevron-right"></i>
                   </a>
                 </li>
               </ul>
             </nav>
             <div class="pagination-info">
-              Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }} sur {{ filteredTaches.length }} tâches
+              Affichage {{ (currentPage - 1) * itemsPerPage + 1 }} à
+              {{ Math.min(currentPage * itemsPerPage, filteredTaches.length) }}
+              sur {{ filteredTaches.length }} tâches
             </div>
           </div>
         </div>
@@ -289,24 +447,32 @@
       <section v-if="currentSection === 'pertes'" class="section">
         <h2 class="section-title">Pertes</h2>
         <div
-          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3">
+          class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between mb-4 gap-3"
+        >
           <!-- <div class="order-2 order-lg-1">
             <p class="mb-0">Affichage {{ ((clientCurrentPage - 1) * clientItemsPerPage) + 1 }} à {{
               Math.min(clientCurrentPage * clientItemsPerPage, filteredClients.length) }} sur {{ filteredClients.length
               }} clients</p>
           </div> -->
           <div
-            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2">
+            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-between gap-2 w-100 w-lg-auto order-1 order-lg-2"
+          >
             <div class="search-container">
               <!-- <i class="bi bi-search search-icon"></i>
               <input type="text" class="form-control search-input" v-model="searchQueryClients"
                 placeholder="Rechercher une perte..." @input="filterClients">
               <button v-if="searchQueryClients" @click="clearClientSearch" class="btn-clear"><i
                   class="bi bi-x"></i></button> -->
-              <span class="btn btn-danger">Total Pertes : {{ totalPertes }} $</span>
+              <span class="btn btn-danger"
+                >Total Pertes : {{ totalPertes }} $</span
+              >
             </div>
             <div class="text-center text-sm-end">
-              <i class="bi bi-archive action-icon" data-bs-toggle="modal" data-bs-target="#perteModal"></i>
+              <i
+                class="bi bi-archive action-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#perteModal"
+              ></i>
             </div>
           </div>
         </div>
@@ -315,22 +481,41 @@
             <thead>
               <tr>
                 <th @click="sortPertes('typeVinyle')" class="sortable">
-                  <div class="th-content">Type de Vinyle <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Type de Vinyle <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortPertes('typeLaminier')" class="sortable">
-                  <div class="th-content">Type de Laminier <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Type de Laminier
+                    <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortPertes('dimensions')" class="sortable d-none d-md-table-cell">
-                  <div class="th-content">Dimensions <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortPertes('dimensions')"
+                  class="sortable d-none d-md-table-cell"
+                >
+                  <div class="th-content">
+                    Dimensions <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
-                <th @click="sortPertes('raison')" class="sortable d-none d-lg-table-cell">
-                  <div class="th-content">Raison <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                <th
+                  @click="sortPertes('raison')"
+                  class="sortable d-none d-lg-table-cell"
+                >
+                  <div class="th-content">
+                    Raison <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th @click="sortPertes('cout')" class="sortable">
-                  <div class="th-content">Coût <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Coût <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th class="sortable">
-                  <div class="th-content">Par <i class="bi bi-arrow-down-up sort-icon"></i></div>
+                  <div class="th-content">
+                    Par <i class="bi bi-arrow-down-up sort-icon"></i>
+                  </div>
                 </th>
                 <th>Actions</th>
               </tr>
@@ -340,7 +525,9 @@
                 <td>
                   <div class="d-flex flex-column">
                     <span>{{ perte.typeVinyle }}</span>
-                    <small class="text-muted d-md-none">{{ perte.typeLaminier }}</small>
+                    <small class="text-muted d-md-none">{{
+                      perte.typeLaminier
+                    }}</small>
                   </div>
                 </td>
                 <td class="d-none d-md-table-cell">{{ perte.typeLaminier }}</td>
@@ -349,7 +536,9 @@
                 <td>
                   <span class="badge bg-danger">{{ perte.cout }} $</span>
                 </td>
-                <td class="d-none d-lg-table-cell">{{ perte.prenom }} {{ perte.nom }}</td>
+                <td class="d-none d-lg-table-cell">
+                  {{ perte.prenom }} {{ perte.nom }}
+                </td>
                 <td>
                   <i class="bi bi-trash" @click="deletePerte(perte.id)"></i>
                 </td>
@@ -385,26 +574,40 @@
         </div>
       </section>
 
-      <section v-if="currentSection === 'calendrier'" class="section" id="calendrier">
+      <section
+        v-if="currentSection === 'calendrier'"
+        class="section"
+        id="calendrier"
+      >
         <div class="contain-calendar">
-          <Calendar @view="editTask"/>
+          <Calendar @view="editTask" />
         </div>
       </section>
 
       <section v-if="currentSection === 'table'" class="section" id="table">
         <h2 class="section-title">Tableau</h2>
-        <Kanban @view="editTask"/>
+        <Kanban @view="editTask" />
       </section>
-      
+
       <section v-if="currentSection === 'taskProfile'" class="section">
-        <taskProfile :id-task="taskId" :end-point="endpoint" @previous="previous()"
-          @delete="refreshSectionTaskAfterDelete()" @updateTask="refreshSectionTask()"
-          @showclient="editClient($event, id)"></taskProfile>
+        <taskProfile
+          :id-task="taskId"
+          :end-point="endpoint"
+          @previous="previous()"
+          @delete="refreshSectionTaskAfterDelete()"
+          @updateTask="refreshSectionTask()"
+          @showclient="editClient($event, id)"
+        ></taskProfile>
       </section>
 
       <section v-if="currentSection === 'clientProfile'" class="section">
-        <clientProfile :client-id="clientId" @previous="previous()" @delete="refreshSectionClient()" @view="editTask"
-          @update="refetchSectionClient()">
+        <clientProfile
+          :client-id="clientId"
+          @previous="previous()"
+          @delete="refreshSectionClient()"
+          @view="editTask"
+          @update="refetchSectionClient()"
+        >
         </clientProfile>
       </section>
 
@@ -413,24 +616,23 @@
       </section>
 
       <PerteModal @submitPerte="refreshSectionPerte"></PerteModal>
-
     </main>
   </div>
 </template>
 
 <script>
-import Calendar from '../components/Calendar.vue'
-import Kanban from '../components/Kanban.vue'
-import Dashboard from '../components/Dashboard.vue'
-import PerteModal from '@/components/PerteModal.vue'
-import taskProfile from '@/components/taskProfile.vue'
-import clientProfile from '@/components/clientProfile.vue'
-import { getService } from '../api/services/get.service' 
-import { deleteService } from '@/api/services/delete.service'
-import myuserProfile from '@/components/myuserProfile.vue' 
+import Calendar from "../components/Calendar.vue";
+import Kanban from "../components/Kanban.vue";
+import Dashboard from "../components/Dashboard.vue";
+import PerteModal from "@/components/PerteModal.vue";
+import taskProfile from "@/components/taskProfile.vue";
+import clientProfile from "@/components/clientProfile.vue";
+import { getService } from "../api/services/get.service";
+import { deleteService } from "@/api/services/delete.service";
+import myuserProfile from "@/components/myuserProfile.vue";
 
 export default {
-  name: 'EmployeView',
+  name: "EmployeView",
   components: {
     Calendar,
     Kanban,
@@ -438,104 +640,107 @@ export default {
     PerteModal,
     taskProfile,
     clientProfile,
-    myuserProfile
+    myuserProfile,
   },
   data() {
     return {
-      currentSection: 'dashboard',
-      previousSection: '',
-      role: '',
+      currentSection: "dashboard",
+      previousSection: "",
+      role: "",
       taches: [],
       filteredTaches: [],
-      perte : [],
+      perte: [],
       historyStack: [],
       taskId: null,
-      endpoint: '',
+      endpoint: "",
       error: null,
-      username: '',
+      username: "",
       hovered: null,
       user: null,
-      searchQueryTaches: '',
-      selectedPriorityFilter: '',
-      selectedStatusFilter: '',
+      searchQueryTaches: "",
+      selectedPriorityFilter: "",
+      selectedStatusFilter: "",
       selectedTask: null,
-      sortField: 'datedebut',
-      sortDirection: 'asc',
+      sortField: "datedebut",
+      sortDirection: "asc",
       currentPage: 1,
       itemsPerPage: 10,
       isSidebarOpen: false,
       isMobile: false,
-    }
+    };
   },
   computed: {
     logoStyle() {
       return {
-        width: this.isMobile ? '30px' : '60px'
-      }
+        width: this.isMobile ? "30px" : "60px",
+      };
     },
     tachesUrgentes() {
-      return this.taches.filter(t => t.priorite === 'Urgent').length
+      return this.taches.filter((t) => t.priorite === "Urgent").length;
     },
     tachesEnCours() {
-      return this.taches.filter(t => !['Facturation'].includes(t.statut)).length
+      return this.taches.filter((t) => !["Facturation"].includes(t.statut))
+        .length;
     },
     nbTachesEnRetard() {
       const today = new Date();
-      return this.taches.filter(t => {
+      return this.taches.filter((t) => {
         const due = new Date(t.datefin);
-        return t.statut !== 'Facturation' && due < today;
+        return t.statut !== "Facturation" && due < today;
       }).length;
     },
     paginatedTaches() {
-      const start = (this.currentPage - 1) * this.itemsPerPage
-      const end = start + this.itemsPerPage
-      return this.filteredTaches.slice(start, end)
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredTaches.slice(start, end);
     },
     totalPages() {
-      return Math.ceil(this.filteredTaches.length / this.itemsPerPage)
+      return Math.ceil(this.filteredTaches.length / this.itemsPerPage);
     },
     visiblePages() {
-      const pages = []
-      const start = Math.max(1, this.currentPage - 2)
-      const end = Math.min(this.totalPages, this.currentPage + 2)
-      
+      const pages = [];
+      const start = Math.max(1, this.currentPage - 2);
+      const end = Math.min(this.totalPages, this.currentPage + 2);
+
       for (let i = start; i <= end; i++) {
-        pages.push(i)
+        pages.push(i);
       }
-      return pages
+      return pages;
     },
     totalPertes() {
       let total = 0;
       for (let perte of this.pertes) {
         if (perte && !isNaN(perte.cout)) {
-          total += parseFloat(perte.cout); 
+          total += parseFloat(perte.cout);
         }
       }
       return parseFloat(total.toFixed(2));
-    }
+    },
   },
   async mounted() {
-    await this.getUserTasks()
+    await this.getUserTasks();
     await this.fetchPerte();
-    this.filterTaches()
+    this.filterTaches();
     this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize);
+    window.addEventListener("resize", this.checkScreenSize);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkScreenSize);
+    window.removeEventListener("resize", this.checkScreenSize);
   },
   methods: {
     async getUserTasks() {
       try {
-        const user = JSON.parse(localStorage.getItem("user"))
-        this.user = user
-        const id = user.id
-        let toutesLesTaches = []
-        const response = await getService.getEmployeAllTask(id)
-        toutesLesTaches = response.data
-        this.taches = toutesLesTaches.sort((a, b) => new Date(a.datedebut) - new Date(b.datedebut))
+        const user = JSON.parse(localStorage.getItem("user"));
+        this.user = user;
+        const id = user.id;
+        let toutesLesTaches = [];
+        const response = await getService.getEmployeAllTask(id);
+        toutesLesTaches = response.data;
+        this.taches = toutesLesTaches.sort(
+          (a, b) => new Date(a.datedebut) - new Date(b.datedebut)
+        );
       } catch (error) {
-        console.error("Erreur lors de la récupération des tâches", error)
+        console.error("Erreur lors de la récupération des tâches", error);
       }
     },
     async fetchPerte() {
@@ -549,76 +754,81 @@ export default {
         console.error(error);
       }
     },
-    
+
     filterTaches() {
-      let filtered = [...this.taches]
-      
+      let filtered = [...this.taches];
+
       // Filtrage par recherche
       if (this.searchQueryTaches) {
-        const query = this.searchQueryTaches.toLowerCase()
-        filtered = filtered.filter(tache => 
-          tache.titre.toLowerCase().includes(query) ||
-          tache.id.toString().includes(query) ||
-          tache.statut.toLowerCase().includes(query)
-        )
+        const query = this.searchQueryTaches.toLowerCase();
+        filtered = filtered.filter(
+          (tache) =>
+            tache.titre.toLowerCase().includes(query) ||
+            tache.id.toString().includes(query) ||
+            tache.statut.toLowerCase().includes(query)
+        );
       }
-      
+
       // Filtrage par priorité
       if (this.selectedPriorityFilter) {
-        filtered = filtered.filter(tache => tache.priorite === this.selectedPriorityFilter)
+        filtered = filtered.filter(
+          (tache) => tache.priorite === this.selectedPriorityFilter
+        );
       }
-      
+
       // Filtrage par statut
       if (this.selectedStatusFilter) {
-        filtered = filtered.filter(tache => tache.statut === this.selectedStatusFilter)
+        filtered = filtered.filter(
+          (tache) => tache.statut === this.selectedStatusFilter
+        );
       }
-      
-      this.filteredTaches = filtered
-      this.currentPage = 1 // Reset à la première page
+
+      this.filteredTaches = filtered;
+      this.currentPage = 1; // Reset à la première page
     },
-    
+
     sortBy(field) {
       if (this.sortField === field) {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+        this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
       } else {
-        this.sortField = field
-        this.sortDirection = 'asc'
+        this.sortField = field;
+        this.sortDirection = "asc";
       }
-      
+
       this.filteredTaches.sort((a, b) => {
-        let aVal = a[field]
-        let bVal = b[field]
-        
-        if (field === 'datefin' || field === 'datedebut') {
-          aVal = new Date(aVal)
-          bVal = new Date(bVal)
+        let aVal = a[field];
+        let bVal = b[field];
+
+        if (field === "datefin" || field === "datedebut") {
+          aVal = new Date(aVal);
+          bVal = new Date(bVal);
         }
-        
-        if (this.sortDirection === 'asc') {
-          return aVal > bVal ? 1 : -1
+
+        if (this.sortDirection === "asc") {
+          return aVal > bVal ? 1 : -1;
         } else {
-          return aVal < bVal ? 1 : -1
+          return aVal < bVal ? 1 : -1;
         }
-      })
+      });
     },
-    
+
     clearSearch() {
-      this.searchQueryTaches = ''
-      this.filterTaches()
+      this.searchQueryTaches = "";
+      this.filterTaches();
     },
     checkScreenSize() {
       this.isMobile = window.innerWidth < 768;
     },
     selectRow(tache) {
-      this.selectedTask = tache
+      this.selectedTask = tache;
     },
     async deletePerte(id) {
       try {
-        const confirm = window.confirm("voulez vous supprimer cette perte ?")
+        const confirm = window.confirm("voulez vous supprimer cette perte ?");
         if (confirm) {
           const response = await deleteService.deletePerte(id);
           this.refreshSectionPerte();
-          if (!response) throw new Error()
+          if (!response) throw new Error();
         }
       } catch (error) {
         console.error(error);
@@ -626,104 +836,111 @@ export default {
     },
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
-        this.currentPage = page
+        this.currentPage = page;
       }
     },
-    
+
     formatDate(dateString) {
-      const date = new Date(dateString)
-      return date.toLocaleDateString('fr-FR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
-      })
+      const date = new Date(dateString);
+      return date.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
     },
-    
+
     isOverdue(dateString, statut) {
       const today = new Date();
       const dueDate = new Date(dateString);
-      return statut !== 'Facturation' && dueDate < today;
+      return statut !== "Facturation" && dueDate < today;
     },
-    
+
     getTaskIcon(type) {
       const icons = {
-        'ppf': 'bi bi-file-earmark-text',
-        'lettrage': 'bi bi-fonts',
-        'affichage': 'bi bi-display',
-        'default': 'bi bi-clipboard'
-      }
-      return icons[type] || icons.default
+        ppf: "bi bi-file-earmark-text",
+        lettrage: "bi bi-fonts",
+        affichage: "bi bi-display",
+        default: "bi bi-clipboard",
+      };
+      return icons[type] || icons.default;
     },
-    
+
     getPriorityIcon(priority) {
       const icons = {
-        'Urgent': 'bi bi-exclamation-triangle-fill',
-        'Normal': 'bi bi-circle-fill',
-        'Bas': 'bi bi-arrow-down-circle-fill'
-      }
-      return icons[priority] || 'bi bi-circle-fill'
+        Urgent: "bi bi-exclamation-triangle-fill",
+        Normal: "bi bi-circle-fill",
+        Bas: "bi bi-arrow-down-circle-fill",
+      };
+      return icons[priority] || "bi bi-circle-fill";
     },
-    
+
     quickEdit(tache) {
       // Fonction pour modification rapide
     },
-    
+
     connectedUser() {
-      const localUser = localStorage.getItem('user')
-      this.username = JSON.parse(localUser).username
-      this.role = JSON.parse(localUser).role
+      const localUser = localStorage.getItem("user");
+      this.username = JSON.parse(localUser).username;
+      this.role = JSON.parse(localUser).role;
     },
-    
+
     getTaskRealId(tache) {
       switch (tache.typeTask) {
-        case 'ppf': return tache.idPpf
-        case 'lettrage': return tache.idLett
-        case 'affichage': return tache.idAff
+        case "ppf":
+          return tache.idPpf;
+        case "lettrage":
+          return tache.idLett;
+        case "affichage":
+          return tache.idAff;
       }
     },
-    
-     editTask(type, id) {
-      try{
-      if(!type || !id) throw new Error();
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('taskProfile')
-      this.currentSection = 'taskProfile';
-      this.taskId = id;
-      this.endpoint = type;
-      }catch(error){
+
+    editTask(type, id) {
+      try {
+        if (!type || !id) throw new Error();
+        if (this.historyStack.length === 0)
+          this.historyStack.push(this.currentSection);
+        this.historyStack.push("taskProfile");
+        this.currentSection = "taskProfile";
+        this.taskId = id;
+        this.endpoint = type;
+      } catch (error) {
         console.error(error);
       }
     },
     editClient(id) {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('clientProfile')
-      this.currentSection = 'clientProfile';
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("clientProfile");
+      this.currentSection = "clientProfile";
       this.clientId = id;
     },
     editUser(id) {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('userProfile')
-      this.currentSection = 'userProfile';
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("userProfile");
+      this.currentSection = "userProfile";
       this.userId = id;
     },
-    
+
     changeSectionProfil() {
-      if (this.historyStack.length === 0) this.historyStack.push(this.currentSection)
-      this.historyStack.push('myuserProfile')
-      this.previousSection = this.currentSection
-      this.currentSection = 'myuserProfile'
-      if (this.isSidebarOpen) this.isSidebarOpen = false
+      if (this.historyStack.length === 0)
+        this.historyStack.push(this.currentSection);
+      this.historyStack.push("myuserProfile");
+      this.previousSection = this.currentSection;
+      this.currentSection = "myuserProfile";
+      if (this.isSidebarOpen) this.isSidebarOpen = false;
     },
-    
+
     previous() {
       if (this.historyStack.length > 1) {
-        this.historyStack.pop()
-        this.currentSection = this.historyStack[this.historyStack.length - 1]
+        this.historyStack.pop();
+        this.currentSection = this.historyStack[this.historyStack.length - 1];
       }
     },
     goTo(section) {
-      this.historyStack.push(section)
-      this.currentSection = section
+      this.historyStack.push(section);
+      this.currentSection = section;
     },
     clearnav() {
       this.historyStack.length = 0;
@@ -735,63 +952,62 @@ export default {
       this.filterTaches();
     },
     refreshSectionTaskAfterDelete() {
-      this.currentSection = 'dashboard';
+      this.currentSection = "dashboard";
       this.fetchTask();
     },
-    
+
     refreshSectionUser() {
-      this.currentSection = 'employe'
+      this.currentSection = "employe";
     },
-    
+
     refreshSectionClient() {
-      this.currentSection = 'clients'
+      this.currentSection = "clients";
     },
     refreshSectionPerte() {
-      this.currentSection = 'pertes';
+      this.currentSection = "pertes";
       this.fetchPerte();
     },
-    
+
     logout() {
-      localStorage.removeItem('user')
-      this.$router.push('/login')
+      localStorage.removeItem("user");
+      this.$router.push("/login");
     },
 
     getPriorityClass(priorite) {
       const priorityClasses = {
-        'Urgent': 'priority-urgent',
-        'Normal': 'priority-normal',
-        'Bas': 'priority-low'
-      }
-      return priorityClasses[priorite] || 'priority-normal'
+        Urgent: "priority-urgent",
+        Normal: "priority-normal",
+        Bas: "priority-low",
+      };
+      return priorityClasses[priorite] || "priority-normal";
     },
-    
+
     getTaskStatusClass(statut) {
       const taskStatusClasses = {
-        'Leads': 'status-leads',
-        'Design': 'status-design',
-        'Approbation': 'status-approval',
-        'Impression': 'status-print',
-        'Production': 'status-production',
-        'Installation': 'status-installation',
-        'Facturation': 'status-billing'
-      }
-      return taskStatusClasses[statut] || 'status-default'
+        Leads: "status-leads",
+        Design: "status-design",
+        Approbation: "status-approval",
+        Impression: "status-print",
+        Production: "status-production",
+        Installation: "status-installation",
+        Facturation: "status-billing",
+      };
+      return taskStatusClasses[statut] || "status-default";
     },
-    
+
     getClientStatusClass(statut) {
       const clientStatusClasses = {
-        'Actif': 'bg-success',
-        'Inactif': 'bg-danger',
-        'Prospect': 'bg-info',
-      }
-      return clientStatusClasses[statut] || 'badge-primary'
+        Actif: "bg-success",
+        Inactif: "bg-danger",
+        Prospect: "bg-info",
+      };
+      return clientStatusClasses[statut] || "badge-primary";
     },
-    closeSideBar(){
-      if(this.isMobile && this.isSidebarOpen) 
-      this.isSidebarOpen = false;
-    }
-  }
-}
+    closeSideBar() {
+      if (this.isMobile && this.isSidebarOpen) this.isSidebarOpen = false;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -877,7 +1093,7 @@ main {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .search-container {
@@ -938,7 +1154,7 @@ main {
 .table-container {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -989,7 +1205,7 @@ main {
 .table-modern tbody tr:hover {
   background-color: #f8f9ff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .table-modern tbody tr.selected {
@@ -1011,7 +1227,7 @@ main {
 .task-id {
   font-weight: 600;
   color: #667eea;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .task-title {
@@ -1036,9 +1252,15 @@ main {
 }
 
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Badges de priorité */
@@ -1298,7 +1520,7 @@ main {
   white-space: nowrap;
   z-index: 100;
   font-size: 0.95em;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-link {
@@ -1348,31 +1570,30 @@ main {
   .dashboard-stats {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
-  
+
   .section-title {
     font-size: 1.3rem;
   }
 
-  .sidebar{
+  .sidebar {
     display: flex;
     flex-direction: column;
-    flex-wrap : nowrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     align-content: center;
   }
 }
 
-
 @media (max-width: 767.98px) {
   .page {
     padding-top: 10px;
   }
-  
+
   .sidebar {
     display: flex;
     flex-direction: column;
-    flex-wrap : nowrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     align-content: center;
@@ -1380,46 +1601,46 @@ main {
     min-width: 80px;
     padding: 0.5rem !important;
   }
-  
+
   .sidebar-mobile {
     width: 70px;
     min-width: 70px;
   }
 
-  .rounded-circle{
+  .rounded-circle {
     width: 10%;
   }
-  
+
   .main-content {
     padding: 1rem !important;
   }
-  
+
   .sidebar .nav-link i {
     font-size: 1.4rem;
   }
-  
+
   .sidebar-tooltip {
     left: 50px;
     font-size: 0.85em;
   }
-  
+
   .section-title {
     font-size: 1.2rem;
   }
-  
+
   .search-input {
     min-width: 150px;
   }
-  
+
   .action-icon {
     font-size: 1.1rem;
   }
-  
+
   .table td,
   .table th {
     padding: 0.5rem;
   }
-  
+
   .badge {
     font-size: 0.7rem;
     padding: 0.25em 0.5em;
@@ -1431,63 +1652,63 @@ main {
     width: 60px;
     min-width: 60px;
   }
-  
+
   .sidebar-mobile {
     width: 50px;
     min-width: 50px;
   }
-  
+
   .main-content {
     padding: 0.5rem !important;
   }
-  
+
   .sidebar .nav-link i {
     font-size: 1.2rem;
   }
-  
+
   .sidebar-tooltip {
     left: 40px;
     font-size: 0.8em;
   }
-  
+
   .section-title {
     font-size: 1.1rem;
   }
-  
+
   .search-input {
     min-width: 120px;
   }
-  
+
   .table td,
   .table th {
     padding: 0.25rem;
     font-size: 0.9rem;
   }
-  
+
   .badge {
     font-size: 0.65rem;
     padding: 0.2em 0.4em;
   }
-  
+
   .action-icon {
     font-size: 1rem;
   }
-  
+
   .dropdown-menu {
     font-size: 0.9rem;
   }
 }
 
-@media (orientation : landscape) {
-    body{
+@media (orientation: landscape) {
+  body {
     scrollbar-width: 20px;
   }
 
-  .img-ls{
+  .img-ls {
     width: 5px;
   }
 
-  .nav-pills{
+  .nav-pills {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -1498,12 +1719,11 @@ main {
     scrollbar-width: none;
   }
 
-  .nav-item{
+  .nav-item {
     flex-basis: 20%;
     flex-shrink: 2;
     flex-grow: 1;
   }
-
 }
 
 .mobile-navbar {
@@ -1517,7 +1737,7 @@ main {
   display: flex;
   align-items: center;
   padding: 0 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
 .btn-hamburger {
@@ -1549,7 +1769,7 @@ main {
 }
 
 .sidebar {
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
   z-index: 1500;
 }
 
@@ -1561,7 +1781,7 @@ main {
     height: 100vh;
     min-width: 180px;
     max-width: 80vw;
-    box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.18);
     background: #222;
     transform: translateX(-110%);
   }
@@ -1575,7 +1795,7 @@ main {
 
 @media (max-width: 767.98px) {
   .main-content {
-    padding-top: 60px !important; 
+    padding-top: 60px !important;
   }
 }
 </style>

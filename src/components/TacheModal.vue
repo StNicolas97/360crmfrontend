@@ -258,16 +258,26 @@
                   v-model="ppf.vitre"
                 />
               </div>
-              <div class="mb-3">
-                <label for="prix" class="form-label">Prix avant taxes</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="prix"
-                  v-model="ppf.prix"
-                  step="0.01"
-                />
-                <span id="alertPrix"></span>
+              <!-- Ligne prix et notePrix pour PPF -->
+              <div class="row mb-3" v-if="formData.typeTravel === 'PPF'">
+                <div class="col-md-8">
+                  <label for="prix" class="form-label">Prix avant taxes</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="prix"
+                    v-model="ppf.prix"
+                    step="0.01"
+                  />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Note prix"
+                    v-model="ppf.notePrix"
+                  />
+                </div>
               </div>
               <div class="mb-3">
                 <label for="financement" class="form-label">Financement</label>
@@ -412,7 +422,7 @@
                   >
                     <option value="" disabled>Sélectionnez un client</option>
                     <option
-                      v-for="client in clients"
+                      v-for="client in entreprise"
                       :key="client.id"
                       :value="client.id"
                     >
@@ -587,16 +597,25 @@
                   id="quantiteOeilletAffichage"
                 />
               </div>
-              <div class="mb-3">
-                <label for="prixAffichage" class="form-label">Prix</label>
-                <input
-                  type="number"
-                  name="prixAffichage"
-                  class="form-control"
-                  id="prixAffichage"
-                  v-model="affichage.prix"
-                />
-                <span id="alertPrix"></span>
+              <!-- Ligne prix et notePrix pour Affichage -->
+              <div class="row mb-3" v-if="formData.typeTravel === 'affichage'">
+                <div class="col-md-8">
+                  <label for="prixAffichage" class="form-label">Prix</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="prixAffichage"
+                    v-model="affichage.prix"
+                  />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Note prix"
+                    v-model="affichage.notePrix"
+                  />
+                </div>
               </div>
             </div>
 
@@ -691,7 +710,7 @@
                   >
                     <option value="" disabled>Sélectionnez un client</option>
                     <option
-                      v-for="client in clients"
+                      v-for="client in entreprise"
                       :key="client.id"
                       :value="client.id"
                     >
@@ -854,16 +873,25 @@
                   />
                 </div>
               </fieldset>
-              <div class="mb-3">
-                <label for="prix" class="form-label">Prix</label>
-                <input
-                  type="number"
-                  name="prix"
-                  class="form-control"
-                  id="prix"
-                  v-model="lettrage.prix"
-                />
-                <span id="alertPrix"></span>
+              <!-- Ligne prix et notePrix pour Lettrage -->
+              <div class="row mb-3" v-if="formData.typeTravel === 'lettrage'">
+                <div class="col-md-8">
+                  <label for="prixLettrage" class="form-label">Prix</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="prixLettrage"
+                    v-model="lettrage.prix"
+                  />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Note prix"
+                    v-model="lettrage.notePrix"
+                  />
+                </div>
               </div>
             </div>
 
@@ -1107,6 +1135,7 @@ export default {
         courtoisie: "",
         fichier: "",
         informations: "",
+        notePrix: "",
       },
       lettrage: {
         titre: "",
@@ -1131,6 +1160,7 @@ export default {
         imprimante: "",
         description: "",
         prix: null,
+        notePrix: "",
       },
       affichage: {
         titre: "",
@@ -1156,6 +1186,7 @@ export default {
         prix: null,
         fichier: "",
         description: "",
+        notePrix: "",
       },
       soustraitant: {
         titre: "",
@@ -1433,6 +1464,13 @@ export default {
     },
     handleFileUpload(event) {
       this.formData.pieceJointe = event.target.files[0];
+    },
+  },
+  computed: {
+    entreprise() {
+      return this.clients.filter(
+        (e) => e.entreprise !== null && e.entreprise.length > 0
+      );
     },
   },
 };
