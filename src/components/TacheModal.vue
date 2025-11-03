@@ -132,6 +132,7 @@
                   <label for="client">Client</label>
                   <select
                     v-model="ppf.idClient"
+                    @change="onClientChange('PPF')"
                     class="form-control"
                     id="client"
                     name="client"
@@ -416,6 +417,7 @@
                   <label for="client">Client</label>
                   <select
                     v-model="affichage.idClient"
+                    @change="onClientChange('affichage')"
                     class="form-control"
                     id="client"
                     name="client"
@@ -433,6 +435,24 @@
                   <span class="bi bi-person-add" @click="addClient"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
+                  <label for="contact">Contact (optionnel)</label>
+                  <select
+                    v-model="affichage.idContact"
+                    class="form-control"
+                    id="contact"
+                    name="contact"
+                  >
+                    <option :value="null">Aucun</option>
+                    <option
+                      v-for="c in clientContacts"
+                      :key="c.id"
+                      :value="c.id"
+                    >
+                      {{ c.prenom || "" }} {{ c.nom || "" }} - {{ c.telephone }}
+                    </option>
+                  </select>
+                </div>
+                <div class="input-with-icon col-md-12 mt-2">
                   <label for="employe">Assigné à</label>
                   <select
                     v-model="affichage.idAssigne"
@@ -704,6 +724,7 @@
                   <label for="client">Client</label>
                   <select
                     v-model="lettrage.idClient"
+                    @change="onClientChange('lettrage')"
                     class="form-control"
                     id="client"
                     name="client"
@@ -721,6 +742,24 @@
                   <span class="bi bi-person-add" @click="addClient"></span>
                 </div>
                 <div class="input-with-icon col-md-6">
+                  <label for="contact">Contact (optionnel)</label>
+                  <select
+                    v-model="lettrage.idContact"
+                    class="form-control"
+                    id="contact"
+                    name="contact"
+                  >
+                    <option :value="null">Aucun</option>
+                    <option
+                      v-for="c in clientContacts"
+                      :key="c.id"
+                      :value="c.id"
+                    >
+                      {{ c.prenom || "" }} {{ c.nom || "" }} - {{ c.telephone }}
+                    </option>
+                  </select>
+                </div>
+                <div class="input-with-icon col-md-12 mt-2">
                   <label for="employe">Assigné à</label>
                   <select
                     v-model="lettrage.idAssigne"
@@ -1109,6 +1148,7 @@ export default {
     return {
       clients: [],
       employes: [],
+      clientContacts: [],
       formData: {
         typeTravel: "PPF",
       },
@@ -1124,6 +1164,7 @@ export default {
         priorite: "",
         idClient: null,
         idAssigne: null,
+        idContact: null,
         vehicule: "",
         vin: "",
         couleur: "",
@@ -1149,6 +1190,7 @@ export default {
         priorite: "",
         idClient: null,
         idAssigne: null,
+        idContact: null,
         modele: "",
         specs: "",
         annee: null,
@@ -1174,6 +1216,7 @@ export default {
         priorite: "",
         idClient: null,
         idAssigne: null,
+        idContact: null,
         quantite: null,
         typePapier: "",
         typeLaminage: "",
@@ -1228,6 +1271,26 @@ export default {
     }
   },
   methods: {
+    async onClientChange(type) {
+      try {
+        let clientId = null;
+        if (type === "PPF") clientId = this.ppf.idClient;
+        else if (type === "affichage") clientId = this.affichage.idClient;
+        else if (type === "lettrage") clientId = this.lettrage.idClient;
+
+        if (!clientId) {
+          this.clientContacts = [];
+          return;
+        }
+        const response = await getService.getContactsByClient(clientId);
+        this.clientContacts = Array.isArray(response?.data)
+          ? response.data
+          : [];
+      } catch (e) {
+        this.clientContacts = [];
+        console.error("Erreur chargement contacts client", e);
+      }
+    },
     async afterSubmit() {
       this.$emit("submit");
       await eventBus.emit("submitCal");

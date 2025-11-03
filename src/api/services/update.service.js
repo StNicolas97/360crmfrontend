@@ -48,4 +48,13 @@ export const updateService = {
       "erreur lors de la mise à jour"
     );
   },
+  async updateContact(contactId, contactData) {
+    try {
+      const response = await instance.put(`/clientcontact/contact/${contactId}`, contactData);
+      console.log("Contact mis à jour avec succès", response.data);
+      return response;
+    } catch (error) {
+      console.error("erreur lors de la mise à jour", error);
+    }
+  },
 };

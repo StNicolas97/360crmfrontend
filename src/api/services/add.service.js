@@ -69,4 +69,13 @@ export const addService = {
       "une erreur est survenue lors de l'ajout "
     );
   },
+  async addContact(clientId, contact) {
+    try {
+      const response = await instance.post(`/clientcontact/client/${clientId}/contacts`, contact);
+      console.log("Contact ajouté avec succès", response.data);
+      return response;
+    } catch (error) {
+      console.error("une erreur est survenue lors de l'ajout ", error);
+    }
+  },
 };

@@ -71,6 +71,23 @@
               </li>
               <li class="list-group-item" v-if="task.typeTask==='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong>{{ task.prenom }}  {{ task.nom }}</a></li>
               <li class="list-group-item" v-if="task.typeTask!=='PPF'" @click="showClient(task.idClient)" style="cursor: pointer;"><a><strong>Client :</strong> {{ task.entreprise }}</a></li>
+              <li class="list-group-item" v-if="task.idClient && task.typeTask !== 'PPF'">
+                <strong>Contact :</strong>
+                <select 
+                  v-model="task.idContact" 
+                  class="form-select" 
+                  @change="updateContact"
+                >
+                  <option :value="null">Aucun contact</option>
+                  <option
+                    v-for="clientContact in clientContacts"
+                    :key="clientContact.id"
+                    :value="clientContact.id"
+                  >
+                    {{ getContactDisplayName(clientContact) }}
+                  </option>
+                </select>
+              </li>
               <li class="list-group-item"><strong>Identifiant :</strong> {{ task.idTache }}</li>
               <li class="list-group-item">
                 <strong>Prix :</strong>
@@ -249,7 +266,9 @@ export default {
             task: {
             },
             employes : [],
-            role: ''
+            role: '',
+            contact: null,
+            clientContacts: []
         }
     },
     computed : {
@@ -270,6 +289,12 @@ export default {
     async mounted() {
         await this.fetchTask();
         await this.fetchUsers();
+        if (this.task?.idClient) {
+          await this.fetchClientContacts(this.task.idClient);
+        }
+        if (this.task?.idContact && this.task?.idClient) {
+          await this.fetchContact(this.task.idClient, this.task.idContact);
+        }
     }
     , methods: {
         async fetchTask() {
@@ -284,6 +309,52 @@ export default {
             } catch (error) {
                 console.error("Erreur lors de la récupération de la tâche :", error);
             }
+        },
+        async fetchContact(clientId, contactId){
+          try{
+            const response = await getService.getContactForClient(clientId, contactId);
+            this.contact = response?.data || null;
+          }catch(e){
+            this.contact = null;
+          }
+        },
+        async fetchClientContacts(clientId) {
+          try {
+            const response = await getService.getContactsByClient(clientId);
+            this.clientContacts = response?.data || [];
+          } catch (error) {
+            console.error("Erreur lors de la récupération des contacts du client :", error);
+            this.clientContacts = [];
+          }
+        },
+        getContactDisplayName(contact) {
+          const nom = contact.nom || '';
+          const prenom = contact.prenom || '';
+          const telephone = contact.telephone || '';
+          const fullName = `${prenom} ${nom}`.trim();
+          if (fullName && telephone) {
+            return `${fullName} - ${telephone}`;
+          } else if (fullName) {
+            return fullName;
+          } else if (telephone) {
+            return telephone;
+          }
+          return 'Contact sans nom';
+        },
+        async updateContact() {
+          // La mise à jour sera faite automatiquement lors de l'appel à updateTask
+          // On peut aussi faire une mise à jour immédiate si nécessaire
+          if (this.task?.idTache) {
+            try {
+              const data = this.dateTreatment();
+              data.idContact = this.task.idContact || null;
+              const url = this.task.typeTask;
+              const id = this.task.idTache;
+              await updateService.updateTask(url, id, data);
+            } catch (error) {
+              console.error("Erreur lors de la mise à jour du contact :", error);
+            }
+          }
         },
         async deleteTask() {
             const id = this.task.idTache;

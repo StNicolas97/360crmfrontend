@@ -51,4 +51,13 @@ export const deleteService = {
       "une erreur est survenue lors de la suppression"
     );
   },
+  async deleteContact(id) {
+    try {
+      const response = await instance.delete(`/clientcontact/contact/${id}`);
+      console.log("Contact suprrimé avec succès");
+      return response;
+    } catch (error) {
+      console.error("une erreur est survenue lors de la suppression", error);
+    }
+  },
 };

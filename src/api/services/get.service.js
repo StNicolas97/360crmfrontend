@@ -18,11 +18,18 @@ export const getService = {
       "Erreur lors de la récupération des clients"
     ),
   
-  getClientContacts : () => handleRequest(
-    "clientcontact/client/contacts",
-    "Liste des clients et leurs contacts",
-    "Erreur lors de la récupération des clients"
-  ),
+  getContactsByClient: (clientId) =>
+    handleRequest(
+      `/clientcontact/client/${clientId}/contacts`,
+      "Contacts du client récupérés",
+      "Erreur lors de la récupération des contacts du client"
+    ),
+  getContactForClient: (clientId, contactId) =>
+    handleRequest(
+      `/clientcontact/client/${clientId}/contacts/${contactId}`,
+      "Contact du client récupéré",
+      "Erreur lors de la récupération du contact du client"
+    ),
   
   getPpf: () =>
     handleRequest(
