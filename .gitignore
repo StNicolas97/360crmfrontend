@@ -33,3 +33,28 @@ coverage
 env/
 venv/
 .env
+# Documentation
+Documentation/
+*.docx
+*.pdf
+
+# Migrations et dumps SQL
+migrations/
+migration/
+*.sql
+
+# Données sensibles
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+*.p12
+*.pfx
+token.json
+credentials*.json
+*.csv
+*.backup
+*.bak
+uploads/
