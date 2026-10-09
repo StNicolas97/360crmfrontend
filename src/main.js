@@ -6,8 +6,13 @@ import App from "./App.vue";
 import router from "./router";
 
 const app = createApp(App);
-const pinia = createPinia();
 
+// Pinia avant le routeur : les gardes de navigation utilisent le store d'authentification
+app.use(createPinia());
 app.use(router);
-app.use(pinia);
+
+app.config.errorHandler = (error, instance, info) => {
+  console.error(`[Vue] ${info}`, error);
+};
+
 app.mount("#app");

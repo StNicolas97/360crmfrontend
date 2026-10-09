@@ -8,11 +8,16 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
-  ],
+    // Outils de développement inutiles pendant les tests
+    !process.env.VITEST && vueDevTools(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
+  },
+  test: {
+    environment: 'jsdom',
+    include: ['tests/**/*.test.js'],
   },
 })
