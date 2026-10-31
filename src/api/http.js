@@ -2,14 +2,12 @@ import axios from "axios";
 import { getToken, clearSession } from "./session";
 
 // Adresse de l'API :
-// - production : VITE_API_URL est OBLIGATOIRE au moment du build (vite.config.js fait échouer le build sinon).
-//   Aucune adresse de secours codée en dur : un build mal configuré doit échouer, pas viser une autre instance.
+// - production : VITE_API_URL fourni au build ; à défaut, l'API est appelée sur la même origine (URL relative).
 // - développement : l'API locale est utilisée par défaut (jamais la production par accident).
 export const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:3000" : "");
 
 if (!API_BASE_URL) {
-  // Garde-fou si le build a contourné la vérification de vite.config.js
-  throw new Error("VITE_API_URL manquant : l'adresse de l'API doit être fournie au build de production.");
+  console.warn("VITE_API_URL absent : les appels à l'API partent vers l'origine du site.");
 }
 
 // Délai maximal d'une requête : sur le wifi de l'atelier, mieux vaut une erreur claire qu'un bouton qui tourne sans fin.

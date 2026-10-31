@@ -4,7 +4,7 @@ services:
   - type: web
     name: crm360-frontend
     runtime: static
-    # npm ci : installation reproductible depuis package-lock.json ; le build échoue si VITE_API_URL manque
+    # npm ci : installation reproductible depuis package-lock.json ; VITE_API_URL = adresse publique de crm360-api
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:

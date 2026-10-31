@@ -9,12 +9,10 @@ export default defineConfig(({ command, mode }) => {
   // VITE_API_URL vient des variables d'environnement (Render, CI) ou des fichiers .env* du mode courant
   const env = loadEnv(mode, process.cwd(), 'VITE_')
 
-  // Un build de production sans adresse d'API doit échouer : plus d'URL de secours codée en dur.
-  // Build local de vérification : VITE_API_URL=http://localhost:3000 npm run build
+  // Sans VITE_API_URL, le build passe quand même (Deploy Previews) : l'API est alors appelée sur la même origine.
+  // À rendre bloquant avant la mise en production (voir data/audit/13-plan-deploiement.md).
   if (command === 'build' && mode === 'production' && !env.VITE_API_URL) {
-    throw new Error(
-      'VITE_API_URL est obligatoire pour le build de production (ex. VITE_API_URL=https://api.exemple.com npm run build).'
-    )
+    console.warn('⚠ VITE_API_URL absent : le build appellera l\'API sur sa propre origine.')
   }
 
   return {
