@@ -10,9 +10,10 @@ import { useUsersStore } from "@/stores/users";
 import { useClientsStore } from "@/stores/clients";
 import { useUiStore } from "@/stores/ui";
 import { errorMessage } from "@/api";
-import { STATUSES, TASK_TYPES, TASK_TYPE_LIST, CLOSED_STATUS } from "@/constants/task";
+import { STATUSES, TASK_TYPES, TASK_TYPE_LIST, CLOSED_STATUS, statusLabel } from "@/constants/task";
 import { dueLabel, normalizeText } from "@/utils/format";
-import { isLate, taskRoute } from "@/utils/task";
+import { isLate, taskRoute, taskTitle } from "@/utils/task";
+import { canEditTask } from "@/utils/permissions";
 
 const tasks = useTasksStore();
 const auth = useAuthStore();
@@ -22,9 +23,10 @@ const ui = useUiStore();
 const router = useRouter();
 
 onMounted(() => {
+  // Échec visible : la vue affiche ErrorState à partir de tasks.error
   tasks.fetch().catch(() => {});
-  clients.fetch().catch(() => {});
-  if (auth.isAdmin) users.fetch().catch(() => {});
+  clients.fetch().catch(ui.onLoadError("Liste des clients indisponible"));
+  if (auth.isAdmin) users.fetch().catch(ui.onLoadError("Liste des employés indisponible"));
 });
 
 const columns = STATUSES.filter((s) => s.value !== CLOSED_STATUS);
@@ -53,11 +55,20 @@ const byColumn = computed(() => {
   return groups;
 });
 
+// Droits sur une carte : admin ou employé assigné (même règle que le serveur, qui renvoie 403 sinon).
+// Une carte non modifiable reste consultable (clic, Entrée) mais n'est ni déplaçable ni modifiable ici.
+const canMove = (task) => canEditTask(auth, task);
+
 // Glisser-déposer
 const dragged = ref(null);
 const overColumn = ref(null);
 
 function onDragStart(event, task) {
+  // Garde-fou : une carte non modifiable ne doit pas pouvoir être glissée
+  if (!canMove(task)) {
+    event.preventDefault();
+    return;
+  }
   dragged.value = task;
   event.dataTransfer.effectAllowed = "move";
   event.dataTransfer.setData("text/plain", String(task.id));
@@ -73,10 +84,10 @@ async function onDrop(statut) {
 }
 
 async function move(task, statut) {
-  if (task.statut === statut) return;
+  if (task.statut === statut || !canMove(task)) return;
   try {
     const response = await tasks.moveTo(task, statut);
-    ui.notify(`« ${task.titre} » déplacée vers ${statut}`);
+    ui.notify(`« ${taskTitle(task)} » déplacée vers l'étape ${statusLabel(statut)}`);
     if (response?.mailSent === false) ui.notify("Le courriel au client n'a pas pu être envoyé", "warning");
   } catch (e) {
     ui.notifyError(errorMessage(e, "Le déplacement a échoué"));
@@ -84,9 +95,10 @@ async function move(task, statut) {
 }
 
 async function close(task) {
+  if (!canMove(task)) return;
   const ok = await ui.confirm({
     title: "Terminer la tâche",
-    message: `Marquer « ${task.titre} » comme terminée ? Le client sera averti par courriel.`,
+    message: `Marquer « ${taskTitle(task)} » comme terminée ? Le client sera averti par courriel.`,
     confirmLabel: "Terminer",
     variant: "success",
   });
@@ -94,11 +106,21 @@ async function close(task) {
 }
 
 const open = (task) => router.push(taskRoute(task));
+
+// Sous-titre : sur écran tactile, le glisser-déposer HTML5 est peu fiable (iOS, Android) ;
+// on indique donc le sélecteur d'étape, toujours visible sous chaque carte.
+const isTouch = typeof window !== "undefined" && window.matchMedia?.("(hover: none), (pointer: coarse)").matches;
+const subtitle = isTouch
+  ? "Changez l'étape avec le sélecteur sous chaque carte"
+  : "Glissez une carte ou utilisez le sélecteur d'étape";
+
+// Premier chargement : squelette au lieu d'un faux « Aucune tâche »
+const firstLoad = computed(() => tasks.loading && !tasks.loaded);
 </script>
 
 <template>
   <div class="kanban-page">
-    <PageHeader title="Production" subtitle="Glissez une carte pour changer son étape">
+    <PageHeader title="Tableau de production" :subtitle="subtitle">
       <template #actions>
         <button type="button" class="btn btn-light btn-icon" aria-label="Actualiser" title="Actualiser" :disabled="tasks.loading" @click="tasks.fetch({ force: true })">
           <i class="bi bi-arrow-clockwise" :class="{ spin: tasks.loading }"></i>
@@ -121,7 +143,8 @@ const open = (task) => router.push(taskRoute(task));
       </select>
     </div>
 
-    <div class="kanban-board">
+    <p v-if="firstLoad" class="visually-hidden" role="status">Chargement des tâches…</p>
+    <div class="kanban-board" :aria-busy="firstLoad">
       <section
         v-for="col in columns"
         :key="col.value"
@@ -133,7 +156,7 @@ const open = (task) => router.push(taskRoute(task));
         @drop.prevent="onDrop(col.value)"
       >
         <header class="kanban-column-header" :class="`border-${col.color}`">
-          <span>{{ col.label }}</span>
+          <span class="kanban-column-title" :title="col.label">{{ col.label }}</span>
           <span class="badge rounded-pill" :class="`text-bg-${col.color}`">{{ byColumn[col.value].length }}</span>
         </header>
 
@@ -142,8 +165,8 @@ const open = (task) => router.push(taskRoute(task));
             v-for="task in byColumn[col.value]"
             :key="task.id"
             class="kanban-card"
-            :class="{ urgent: task.priorite === 'Urgent', dragging: dragged?.id === task.id }"
-            draggable="true"
+            :class="{ urgent: task.priorite === 'Urgent', dragging: dragged?.id === task.id, readonly: !canMove(task) }"
+            :draggable="canMove(task) ? 'true' : 'false'"
             tabindex="0"
             @dragstart="onDragStart($event, task)"
             @dragend="onDragEnd"
@@ -151,20 +174,20 @@ const open = (task) => router.push(taskRoute(task));
             @keydown.enter="open(task)"
           >
             <div class="d-flex justify-content-between gap-2">
-              <span class="kanban-card-type"><i class="bi" :class="TASK_TYPES[task.type]?.icon"></i> {{ TASK_TYPES[task.type]?.label }} · #{{ task.id }}</span>
+              <span class="kanban-card-type text-truncate"><i class="bi" :class="TASK_TYPES[task.type]?.icon"></i> {{ TASK_TYPES[task.type]?.label }} · #{{ task.id }}</span>
               <span v-if="task.priorite === 'Urgent'" class="badge text-bg-danger">Urgent</span>
             </div>
-            <h3 class="kanban-card-title">{{ task.titre }}</h3>
+            <h3 class="kanban-card-title">{{ taskTitle(task) }}</h3>
             <div class="kanban-card-meta">
               <span class="text-truncate"><i class="bi bi-person"></i> {{ clients.labelOf(task.idClient, task.type !== "ppf") }}</span>
               <span :class="{ 'text-danger fw-semibold': isLate(task) }"><i class="bi bi-clock"></i> {{ dueLabel(task.datefin) }}</span>
             </div>
             <div v-if="auth.isAdmin" class="kanban-card-assignee">
               <span class="color-dot" :style="{ background: users.colorOf(task.idAssigne) }"></span>
-              {{ users.nameOf(task.idAssigne) }}
+              <span class="text-truncate">{{ users.nameOf(task.idAssigne) }}</span>
             </div>
-            <!-- Changement d'étape sans glisser-déposer (mobile, clavier) -->
-            <div class="kanban-card-actions" @click.stop>
+            <!-- Changement d'étape sans glisser-déposer (mobile, clavier) : seulement si la carte est modifiable -->
+            <div v-if="canMove(task)" class="kanban-card-actions" @click.stop>
               <select
                 class="form-select form-select-sm"
                 :value="task.statut"
@@ -174,11 +197,15 @@ const open = (task) => router.push(taskRoute(task));
                 <option v-for="s in columns" :key="s.value" :value="s.value">{{ s.label }}</option>
               </select>
               <button type="button" class="btn btn-sm btn-outline-success" title="Terminer" aria-label="Terminer la tâche" @click="close(task)">
-                <i class="bi bi-check2"></i>
+                <i class="bi bi-check2" aria-hidden="true"></i><span class="ms-1">Terminer</span>
               </button>
             </div>
+            <p v-else class="kanban-card-readonly"><i class="bi bi-lock" aria-hidden="true"></i> Lecture seule</p>
           </article>
-          <p v-if="!byColumn[col.value].length" class="kanban-empty">Aucune tâche</p>
+          <template v-if="firstLoad">
+            <div v-for="n in 2" :key="n" class="kanban-skeleton" aria-hidden="true"></div>
+          </template>
+          <p v-else-if="!byColumn[col.value].length" class="kanban-empty">Aucune tâche</p>
         </div>
       </section>
     </div>

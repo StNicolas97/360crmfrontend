@@ -38,10 +38,12 @@ Documentation/
 *.docx
 *.pdf
 
-# Migrations et dumps SQL
-migrations/
+# Exports et dumps de données (Loi 25 : jamais dans git).
+# Les migrations de schéma (crm/backend/migrations/) sont versionnées.
+dumps/
+*.dump
+*.sql.gz
 migration/
-*.sql
 
 # Données sensibles
 .env

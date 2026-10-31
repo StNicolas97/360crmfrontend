@@ -9,9 +9,9 @@ import { useAuthStore } from "@/stores/auth";
 import { useUsersStore } from "@/stores/users";
 import { useClientsStore } from "@/stores/clients";
 import { useUiStore } from "@/stores/ui";
-import { STATUSES, TASK_TYPES } from "@/constants/task";
+import { STATUSES, TASK_TYPES, CLOSED_STATUS } from "@/constants/task";
 import { dueLabel } from "@/utils/format";
-import { isLate, isDueToday, isUrgent, taskRoute } from "@/utils/task";
+import { isLate, isDueToday, isUrgent, taskRoute, taskTitle } from "@/utils/task";
 
 const tasks = useTasksStore();
 const auth = useAuthStore();
@@ -20,9 +20,11 @@ const clients = useClientsStore();
 const ui = useUiStore();
 
 function load(force = false) {
+  // Échec visible : la vue affiche ErrorState à partir de tasks.error
   tasks.fetch({ force }).catch(() => {});
-  clients.fetch().catch(() => {});
-  if (auth.isAdmin) users.fetch().catch(() => {});
+  // Listes de référence (noms) : sans elles, l'écran afficherait « — » en silence
+  clients.fetch().catch(ui.onLoadError("Liste des clients indisponible"));
+  if (auth.isAdmin) users.fetch().catch(ui.onLoadError("Liste des employés indisponible"));
 }
 onMounted(() => load());
 
@@ -42,7 +44,7 @@ const byStatus = computed(() => {
   const counts = Object.fromEntries(STATUSES.map((s) => [s.value, 0]));
   for (const t of active.value) if (t.statut in counts) counts[t.statut]++;
   const max = Math.max(1, ...Object.values(counts));
-  return STATUSES.filter((s) => s.value !== "Termine").map((s) => ({ ...s, count: counts[s.value], width: (counts[s.value] / max) * 100 }));
+  return STATUSES.filter((s) => s.value !== CLOSED_STATUS).map((s) => ({ ...s, count: counts[s.value], width: (counts[s.value] / max) * 100 }));
 });
 
 // Admin : charge par employé et clients les plus actifs
@@ -100,7 +102,7 @@ const greeting = computed(() => {
           <li v-for="t in today" :key="t.id">
             <RouterLink :to="taskRoute(t)" class="task-list-item">
               <i class="bi" :class="TASK_TYPES[t.type]?.icon"></i>
-              <span class="flex-grow-1 text-truncate">{{ t.titre }}</span>
+              <span class="flex-grow-1 text-truncate">{{ taskTitle(t) }}</span>
               <StatusBadge :value="t.statut" />
             </RouterLink>
           </li>
@@ -115,7 +117,7 @@ const greeting = computed(() => {
         <ul v-else class="task-list">
           <li v-for="t in urgent" :key="t.id">
             <RouterLink :to="taskRoute(t)" class="task-list-item">
-              <span class="flex-grow-1 text-truncate">{{ t.titre }}</span>
+              <span class="flex-grow-1 text-truncate">{{ taskTitle(t) }}</span>
               <small :class="isLate(t) ? 'text-danger fw-semibold' : 'text-muted'">{{ dueLabel(t.datefin) }}</small>
             </RouterLink>
           </li>
@@ -130,7 +132,7 @@ const greeting = computed(() => {
         <ul v-else class="task-list">
           <li v-for="t in late" :key="t.id">
             <RouterLink :to="taskRoute(t)" class="task-list-item">
-              <span class="flex-grow-1 text-truncate">{{ t.titre }}</span>
+              <span class="flex-grow-1 text-truncate">{{ taskTitle(t) }}</span>
               <small class="text-danger fw-semibold">{{ dueLabel(t.datefin) }}</small>
             </RouterLink>
           </li>
@@ -140,7 +142,7 @@ const greeting = computed(() => {
       <section class="card-panel">
         <div class="panel-header">
           <h2 class="panel-title">Par étape</h2>
-          <RouterLink :to="{ name: 'kanban' }" class="small">Production</RouterLink>
+          <RouterLink :to="{ name: 'kanban' }" class="small">Tableau de production</RouterLink>
         </div>
         <ul class="list-unstyled mb-0 bar-list">
           <li v-for="s in byStatus" :key="s.value">
@@ -191,7 +193,7 @@ const greeting = computed(() => {
         <ul v-else class="task-list">
           <li v-for="t in upcoming" :key="t.id">
             <RouterLink :to="taskRoute(t)" class="task-list-item">
-              <span class="flex-grow-1 text-truncate">{{ t.titre }}</span>
+              <span class="flex-grow-1 text-truncate">{{ taskTitle(t) }}</span>
               <small class="text-muted">{{ dueLabel(t.datefin) }}</small>
             </RouterLink>
           </li>

@@ -1,0 +1,35 @@
+# Intégration continue du frontend : tests + build de vérification à chaque push / pull request.
+# Aucun déploiement ici : Render construit et publie le site (voir render.yaml).
+name: CI frontend
+
+on:
+  push:
+    branches: [main, corrections-audit]
+  pull_request:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installation reproductible
+        run: npm ci
+
+      - name: Tests (Vitest)
+        run: npm test
+
+      - name: Audit des dépendances de production
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true # signalé dans le journal, ne bloque pas encore la CI
+
+      - name: Build de vérification
+        # Adresse factice : le build de production exige VITE_API_URL (voir vite.config.js)
+        run: npm run build
+        env:
+          VITE_API_URL: https://api.example.invalid

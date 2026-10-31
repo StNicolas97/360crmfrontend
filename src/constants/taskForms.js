@@ -10,6 +10,8 @@
 
 import {
   STATUSES,
+  STEP_LABEL,
+  priorityLabel,
   PRIORITIES,
   PPF_COUVERTURES,
   PPF_PRODUITS,
@@ -27,8 +29,9 @@ const field = {
   heureFin: { key: "heurefin", label: "Heure", type: "time", col: 5 },
   assignee: { key: "idAssigne", label: "Assigné à", type: "user", required: true, adminOnly: true, col: 6 },
   contact: { key: "idContact", label: "Contact", type: "contact", col: 6 },
-  priorite: { key: "priorite", label: "Priorité", type: "select", options: PRIORITIES, col: 6 },
-  statut: { key: "statut", label: "Statut", type: "select", options: STATUSES, col: 6, editOnly: true },
+  // legacyLabel : une ancienne priorité 1 à 5 s'affiche « À reclasser (n) » dans la liste
+  priorite: { key: "priorite", label: "Priorité", type: "select", options: PRIORITIES, legacyLabel: priorityLabel, col: 6 },
+  statut: { key: "statut", label: STEP_LABEL, type: "select", options: STATUSES, col: 6, editOnly: true },
   prix: { key: "prix", label: "Prix avant taxes ($)", type: "number", step: "0.01", min: 0, col: 7 },
   notePrix: { key: "notePrix", label: "Note sur le prix", type: "text", col: 5 },
 };
@@ -153,30 +156,5 @@ export const NOTE_FIELDS = [
   { key: "datefin", label: "Fin", type: "date", col: 6 },
 ];
 
-export const allFields = (sections) => sections.flatMap((section) => section.fields);
-
-// Objet vide pour un formulaire de création
-export function emptyForm(sections, defaults = {}) {
-  const form = {};
-  for (const f of allFields(sections)) form[f.key] = f.type === "select" ? "" : null;
-  return { ...form, ...defaults };
-}
-
-// Validation simple et cohérente pour tous les formulaires
-export function validateForm(form, fields) {
-  const errors = {};
-  for (const f of fields) {
-    const value = form[f.key];
-    if (f.required && (value === null || value === undefined || value === "")) {
-      errors[f.key] = "Ce champ est obligatoire";
-    } else if (f.type === "number" && value !== null && value !== "" && Number.isNaN(Number(value))) {
-      errors[f.key] = "Valeur numérique attendue";
-    } else if (f.type === "number" && f.min !== undefined && value !== null && value !== "" && Number(value) < f.min) {
-      errors[f.key] = `La valeur minimale est ${f.min}`;
-    }
-  }
-  if (form.datedebut && form.datefin && form.datefin < form.datedebut) {
-    errors.datefin = "La date de fin doit être après la date de début";
-  }
-  return errors;
-}
+// Utilitaires génériques déplacés dans utils/forms.js ; ré-exportés ici pour compatibilité
+export { allFields, emptyForm, validateForm } from "@/utils/forms";

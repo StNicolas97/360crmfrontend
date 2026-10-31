@@ -13,9 +13,10 @@ const open = computed({
 
 <template>
   <BaseModal v-model="open" :title="ui.confirmState?.title" size="sm">
-    <p class="mb-0">{{ ui.confirmState?.message }}</p>
+    <p class="mb-0 text-pre-line">{{ ui.confirmState?.message }}</p>
     <template #footer>
-      <button type="button" class="btn btn-light" @click="ui.closeConfirm(false)">Annuler</button>
+      <!-- Focus initial sur « Annuler » : une validation par réflexe (Entrée) ne déclenche pas l'action -->
+      <button type="button" class="btn btn-light" data-autofocus @click="ui.closeConfirm(false)">Annuler</button>
       <button
         type="button"
         class="btn"

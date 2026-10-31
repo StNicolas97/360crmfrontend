@@ -1,0 +1,39 @@
+# Blueprint Render : site statique du CRM (frontend Vue/Vite).
+# Rien n'est déployé par ce fichier tant que l'humain ne l'a pas relié à Render et validé.
+services:
+  - type: web
+    name: crm360-frontend
+    runtime: static
+    # npm ci : installation reproductible depuis package-lock.json ; le build échoue si VITE_API_URL manque
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Adresse publique de l'API (backend). À renseigner dans le tableau de bord Render, jamais dans le dépôt.
+      - key: VITE_API_URL
+        sync: false
+      - key: NODE_VERSION
+        value: "22"
+    # Application à page unique : toutes les adresses renvoient index.html (même rôle que public/_redirects)
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      # Fichiers de build nommés avec une empreinte : cache long et immuable
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      # index.html toujours revalidé : un nouveau déploiement est pris en compte immédiatement
+      - path: /index.html
+        name: Cache-Control
+        value: no-cache
+      # En-têtes de sécurité impossibles en <meta> (voir index.html)
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

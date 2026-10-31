@@ -6,7 +6,7 @@ import TaskTable from "@/components/tasks/TaskTable.vue";
 import { useTasksStore } from "@/stores/tasks";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
-import { isLate, isUrgent } from "@/utils/task";
+import { isLate, isUrgent, isClosed } from "@/utils/task";
 
 // scope : "all" (toutes), "mine" (assignées à moi), "leads" (prospects)
 const props = defineProps({ scope: { type: String, default: "all" } });
@@ -14,6 +14,7 @@ const props = defineProps({ scope: { type: String, default: "all" } });
 const tasks = useTasksStore();
 const auth = useAuthStore();
 const ui = useUiStore();
+// Échec visible : la vue affiche ErrorState à partir de tasks.error
 onMounted(() => tasks.fetch().catch(() => {}));
 
 const config = {
@@ -30,7 +31,7 @@ const list = computed(() => {
 });
 
 const summary = computed(() => {
-  const active = list.value.filter((t) => t.statut !== "Termine");
+  const active = list.value.filter((t) => !isClosed(t));
   return `${active.length} active(s) · ${active.filter(isUrgent).length} urgente(s) · ${active.filter(isLate).length} en retard`;
 });
 </script>

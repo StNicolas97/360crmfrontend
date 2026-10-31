@@ -6,11 +6,12 @@ import TablePagination from "@/components/ui/TablePagination.vue";
 import SearchInput from "@/components/ui/SearchInput.vue";
 import StatusBadge from "@/components/ui/StatusBadge.vue";
 import { useTable } from "@/composables/useTable";
-import { STATUSES, PRIORITIES, TASK_TYPES, TASK_TYPE_LIST } from "@/constants/task";
+import { STATUSES, PRIORITIES, TASK_TYPES, TASK_TYPE_LIST, STEP_LABEL } from "@/constants/task";
 import { useClientsStore } from "@/stores/clients";
 import { useUsersStore } from "@/stores/users";
+import { useUiStore } from "@/stores/ui";
 import { formatDate } from "@/utils/format";
-import { isLate, taskRoute } from "@/utils/task";
+import { isLate, taskRoute, taskTitle } from "@/utils/task";
 
 // Liste de tâches avec recherche, filtres, tri et pagination.
 const props = defineProps({
@@ -25,8 +26,10 @@ const props = defineProps({
 const router = useRouter();
 const clients = useClientsStore();
 const users = useUsersStore();
-clients.fetch().catch(() => {});
-if (props.showAssignee) users.fetch().catch(() => {});
+const ui = useUiStore();
+// Listes de référence pour les noms : un échec est signalé (sinon « — » / « Non assigné » en silence)
+clients.fetch().catch(ui.onLoadError("Liste des clients indisponible"));
+if (props.showAssignee) users.fetch().catch(ui.onLoadError("Liste des employés indisponible"));
 
 // PPF : client particulier (nom) ; lettrage / affichage : entreprise
 function clientName(task) {
@@ -50,7 +53,7 @@ const columns = computed(() =>
     props.showAssignee && { key: "assignee", label: "Assigné", sortable: true, class: "d-none d-lg-table-cell" },
     { key: "datefin", label: "Échéance", sortable: true, class: "d-none d-sm-table-cell" },
     { key: "priorite", label: "Priorité", sortable: true, class: "d-none d-md-table-cell" },
-    { key: "statut", label: "Statut", sortable: true },
+    { key: "statut", label: STEP_LABEL, sortable: true },
   ].filter(Boolean)
 );
 
@@ -65,8 +68,8 @@ const open = (task) => task.subId && router.push(taskRoute(task));
         <option value="">Tous les types</option>
         <option v-for="t in TASK_TYPE_LIST" :key="t.key" :value="t.key">{{ t.label }}</option>
       </select>
-      <select v-model="table.filters.statut" class="form-select toolbar-select" aria-label="Filtrer par statut">
-        <option value="">Tous les statuts</option>
+      <select v-model="table.filters.statut" class="form-select toolbar-select" aria-label="Filtrer par étape">
+        <option value="">Toutes les étapes</option>
         <option v-for="s in STATUSES" :key="s.value" :value="s.value">{{ s.label }}</option>
       </select>
       <select v-model="table.filters.priorite" class="form-select toolbar-select" aria-label="Filtrer par priorité">
@@ -93,7 +96,7 @@ const open = (task) => task.subId && router.push(taskRoute(task));
         <div class="d-flex align-items-center gap-2 min-w-0">
           <i class="bi text-muted" :class="TASK_TYPES[row.type]?.icon" :title="TASK_TYPES[row.type]?.label"></i>
           <div class="min-w-0">
-            <div class="fw-semibold text-truncate">{{ row.titre }}</div>
+            <div class="fw-semibold text-truncate">{{ taskTitle(row) }}</div>
             <small class="text-muted d-md-none">{{ clientName(row) }}</small>
           </div>
         </div>
@@ -108,7 +111,7 @@ const open = (task) => task.subId && router.push(taskRoute(task));
       <template #cell-datefin="{ row }">
         <span :class="{ 'text-danger fw-semibold': isLate(row) }">
           {{ formatDate(row.datefin) }}
-          <i v-if="isLate(row)" class="bi bi-exclamation-triangle-fill ms-1" title="En retard"></i>
+          <i v-if="isLate(row)" class="bi bi-exclamation-triangle-fill ms-1" aria-hidden="true"></i><span v-if="isLate(row)" class="ms-1 small">En retard</span>
         </span>
       </template>
       <template #cell-priorite="{ row }"><StatusBadge :value="row.priorite" kind="priority" /></template>

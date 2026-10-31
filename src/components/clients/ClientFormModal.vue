@@ -1,9 +1,11 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import FormFields from "@/components/ui/FormFields.vue";
-import { CLIENT_FIELDS, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { CLIENT_FIELDS } from "@/constants/forms";
+// Contrôle aussi le format des champs de type "email"
+import { validateForm } from "@/utils/forms";
+import { focusFirstInvalid } from "@/utils/focus";
 import { useClientsStore } from "@/stores/clients";
 import { useUiStore } from "@/stores/ui";
 import { errorMessage } from "@/api";
@@ -17,6 +19,9 @@ const blank = () => ({ prenom: "", nom: "", entreprise: "", email: "", telephone
 const form = ref(blank());
 const errors = ref({});
 const saving = ref(false);
+const formEl = ref(null);
+// Saisie commencée : Échap, clic extérieur ou Annuler demandent confirmation
+const dirty = computed(() => Object.entries(blank()).some(([key, value]) => String(form.value[key] ?? "") !== String(value ?? "")));
 
 watch(open, (isOpen) => {
   if (isOpen) {
@@ -27,16 +32,16 @@ watch(open, (isOpen) => {
 
 async function submit() {
   errors.value = validateForm(form.value, CLIENT_FIELDS);
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (Object.keys(errors.value).length) {
+    focusFirstInvalid(formEl.value);
+    return;
+  }
 
   saving.value = true;
   try {
+    // POST /client renvoie { client } (client.controller.js) ; plus de synchronisation QuickBooks à la création
     const response = await clients.create(form.value);
-    ui.notify(
-      response.quickbooks === false ? "Client créé (non synchronisé avec QuickBooks)" : "Client créé",
-      response.quickbooks === false ? "warning" : "success"
-    );
+    ui.notify("Client créé", "success");
     emit("saved", response.client);
     open.value = false;
   } catch (error) {
@@ -48,8 +53,8 @@ async function submit() {
 </script>
 
 <template>
-  <BaseModal v-model="open" title="Nouveau client" size="lg">
-    <form id="client-form" novalidate @submit.prevent="submit">
+  <BaseModal v-model="open" title="Nouveau client" size="lg" :dirty="dirty">
+    <form id="client-form" ref="formEl" novalidate autocomplete="off" @submit.prevent="submit">
       <FormFields v-model="form" :fields="CLIENT_FIELDS" :errors="errors" />
     </form>
     <template #footer="{ close }">

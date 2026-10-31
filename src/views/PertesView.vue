@@ -19,6 +19,7 @@ const auth = useAuthStore();
 const ui = useUiStore();
 const createOpen = ref(false);
 
+// Échec visible : la vue affiche ErrorState à partir de pertes.error
 onMounted(() => pertes.fetch().catch(() => {}));
 
 const table = useTable(toRef(pertes, "items"), {
@@ -74,9 +75,17 @@ async function remove(perte) {
     </div>
 
     <DataTable :columns="columns" :rows="table.rows.value" :sort="table.sort" :loading="pertes.loading" empty-text="Aucune perte déclarée" @sort="table.toggleSort">
+      <!-- Sur tablette et téléphone, les colonnes masquées (laminage, dimensions, raison) passent sous le vinyle -->
+      <template #cell-typeVinyle="{ row }">
+        <div class="fw-semibold">{{ row.typeVinyle || "—" }}</div>
+        <small v-if="row.typeLaminier" class="d-block text-muted d-md-none">Laminage : {{ row.typeLaminier }}</small>
+        <small v-if="row.dimensions" class="d-block text-muted d-lg-none">Dimensions : {{ row.dimensions }}</small>
+        <small v-if="row.raison" class="d-block text-muted d-xl-none">Raison : {{ row.raison }}</small>
+        <small class="d-block text-muted d-sm-none">{{ formatDate(row.createdAt) }}</small>
+      </template>
       <template #cell-cout="{ row }"><span class="fw-semibold text-danger">{{ formatMoney(row.cout) }}</span></template>
       <template #cell-actions="{ row }">
-        <button v-if="canDelete(row)" type="button" class="btn btn-sm btn-light btn-icon text-danger" aria-label="Supprimer" @click="remove(row)">
+        <button v-if="canDelete(row)" type="button" class="btn btn-sm btn-light btn-icon text-danger" :aria-label="`Supprimer la perte ${row.typeVinyle || ''}`" title="Supprimer" @click="remove(row)">
           <i class="bi bi-trash"></i>
         </button>
       </template>

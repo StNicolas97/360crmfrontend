@@ -4,7 +4,7 @@ import { ROLES } from "@/api/session";
 export const NAVIGATION = [
   { name: "dashboard", label: "Tableau de bord", icon: "bi-speedometer2" },
   { name: "calendar", label: "Calendrier", icon: "bi-calendar3" },
-  { name: "kanban", label: "Production", icon: "bi-kanban" },
+  { name: "kanban", label: "Tableau de production", icon: "bi-kanban" }, // distinct de l'étape « Production »
   { name: "my-tasks", label: "Mes tâches", icon: "bi-briefcase" },
   { name: "tasks", label: "Toutes les tâches", icon: "bi-list-task", roles: [ROLES.ADMIN] },
   { name: "leads", label: "Leads", icon: "bi-funnel", roles: [ROLES.ADMIN] },

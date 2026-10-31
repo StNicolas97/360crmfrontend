@@ -11,15 +11,19 @@ import { useTable } from "@/composables/useTable";
 import { useUsersStore } from "@/stores/users";
 import { useTasksStore } from "@/stores/tasks";
 import { ROLE_OPTIONS } from "@/constants/forms";
+import { useUiStore } from "@/stores/ui";
 
 const users = useUsersStore();
 const tasks = useTasksStore();
 const router = useRouter();
+const ui = useUiStore();
 const createOpen = ref(false);
 
 onMounted(() => {
+  // Échec visible : la vue affiche ErrorState à partir de users.error
   users.fetch().catch(() => {});
-  tasks.fetch().catch(() => {});
+  // Sans les tâches, la colonne « charge » serait fausse : on le signale
+  tasks.fetch().catch(ui.onLoadError("Charge des employés indisponible (tâches non chargées)"));
 });
 
 const activeCount = (id) => tasks.active.filter((t) => t.idAssigne === id).length;

@@ -15,4 +15,10 @@ app.config.errorHandler = (error, instance, info) => {
   console.error(`[Vue] ${info}`, error);
 };
 
+// Promesses rejetées sans gestionnaire : au minimum visibles dans la console
+// (remontée vers un endpoint de journalisation : à prévoir avec le backend, voir 09-deploiement)
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[Promesse non gérée]", event.reason);
+});
+
 app.mount("#app");

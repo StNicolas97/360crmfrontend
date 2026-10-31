@@ -12,6 +12,8 @@ const credentials = ref({ username: "", password: "" });
 const showPassword = ref(false);
 const loading = ref(false);
 const errorMessage = ref("");
+// Arrivée depuis l'intercepteur 401 (api/http.js) : on explique pourquoi la connexion est redemandée
+const sessionExpired = route.query.expired === "1";
 
 // Retour à la page demandée avant la connexion (chemins internes uniquement)
 function redirectTarget() {
@@ -40,6 +42,9 @@ async function submit() {
       <h1 class="h4 text-center mb-1">Connexion</h1>
       <p class="text-muted text-center small mb-4">Gestion des travaux de l'atelier</p>
 
+      <div v-if="sessionExpired && !errorMessage" class="alert alert-warning py-2 small" role="status">
+        <i class="bi bi-clock-history me-1"></i>Votre session a expiré. Reconnectez-vous pour revenir à la page en cours.
+      </div>
       <div v-if="errorMessage" class="alert alert-danger py-2 small" role="alert">
         <i class="bi bi-exclamation-circle me-1"></i>{{ errorMessage }}
       </div>
