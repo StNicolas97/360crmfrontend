@@ -2,11 +2,16 @@
 import { ref, onMounted } from "vue";
 import { filesApi, errorMessage } from "@/api";
 import { useUiStore } from "@/stores/ui";
+import { useAuthStore } from "@/stores/auth";
+import { saveBlob, readBlobError } from "@/utils/download";
+import { canDeleteOwned } from "@/utils/permissions";
 import { formatDate } from "@/utils/format";
 
 // Pièces jointes d'une tâche (stockées par le backend dans /uploads, accès protégé par jeton)
 const props = defineProps({ taskId: { type: Number, required: true } });
 const ui = useUiStore();
+const auth = useAuthStore();
+const downloading = ref(null); // id du fichier en cours de téléchargement
 
 const files = ref([]);
 const loading = ref(true);
@@ -48,14 +53,17 @@ async function onSelect(event) {
   }
 }
 
-async function openFile(file) {
+// Téléchargement avec le jeton (fichiers protégés), puis enregistrement local sous le nom d'origine.
+// Jamais d'ouverture dans un onglet du CRM (voir utils/download.js).
+async function downloadFile(file) {
+  downloading.value = file.id;
   try {
-    const blob = await filesApi.download(file.filename);
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank", "noopener");
-    setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    const blob = await filesApi.download(file);
+    saveBlob(blob, file.originalname || file.filename);
   } catch (e) {
-    ui.notifyError(errorMessage(e, "Le fichier n'a pas pu être ouvert"));
+    ui.notifyError(errorMessage(await readBlobError(e), "Le fichier n'a pas pu être téléchargé"));
+  } finally {
+    downloading.value = null;
   }
 }
 
@@ -96,12 +104,14 @@ const iconFor = (mime = "") =>
     <p v-else-if="!files.length" class="text-muted text-center py-2 mb-0">Aucune pièce jointe</p>
     <ul v-else class="list-unstyled mb-0 contact-list">
       <li v-for="file in files" :key="file.id" class="contact-item">
-        <button type="button" class="btn btn-link p-0 text-start min-w-0 text-decoration-none" @click="openFile(file)">
-          <i class="bi me-2" :class="iconFor(file.mimetype)"></i>
+        <button type="button" class="btn btn-link p-0 text-start min-w-0 text-decoration-none" :disabled="downloading === file.id" :title="'Télécharger ' + file.originalname" @click="downloadFile(file)">
+          <span v-if="downloading === file.id" class="spinner-border spinner-border-sm me-2"></span>
+          <i v-else class="bi me-2" :class="iconFor(file.mimetype)"></i>
           <span class="text-truncate">{{ file.originalname }}</span>
           <small class="text-muted d-block">{{ sizeLabel(file.size) }} · {{ formatDate(file.createdAt) }}</small>
         </button>
-        <button type="button" class="btn btn-sm btn-light btn-icon text-danger" aria-label="Supprimer" @click="remove(file)">
+        <!-- Suppression : admin, ou auteur du fichier si le serveur renvoie son identifiant -->
+        <button v-if="canDeleteOwned(auth, file)" type="button" class="btn btn-sm btn-light btn-icon text-danger flex-shrink-0" :aria-label="`Supprimer ${file.originalname}`" title="Supprimer" @click="remove(file)">
           <i class="bi bi-trash"></i>
         </button>
       </li>

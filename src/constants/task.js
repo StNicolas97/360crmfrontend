@@ -15,12 +15,17 @@ export function typeKey(typeTask) {
 }
 
 export const CLOSED_STATUS = "Termine";
+export const LEADS_STATUS = "Leads";
 // Statuts pour lesquels une tâche n'est plus considérée en retard
 export const NOT_LATE_STATUSES = ["Facturation", CLOSED_STATUS];
 
+// Vocabulaire de l'interface : le champ « statut » d'une tâche s'affiche partout « Étape »
+// (étape du flux de production). Les valeurs envoyées à l'API ne changent pas.
+export const STEP_LABEL = "Étape";
+
 // Ordre du processus de production (colonnes du tableau)
 export const STATUSES = [
-  { value: "Leads", label: "Leads", color: "warning" },
+  { value: LEADS_STATUS, label: "Leads", color: "warning" },
   { value: "PPF", label: "PPF", color: "dark" },
   { value: "Design", label: "Design", color: "primary" },
   { value: "Approbation", label: "Approbation", color: "info" },
@@ -31,12 +36,20 @@ export const STATUSES = [
   { value: CLOSED_STATUS, label: "Terminé", color: "dark" },
 ];
 
+// Priorités proposées : un seul système, par libellés
 export const PRIORITIES = [
   { value: "Urgent", label: "Urgent", color: "danger", icon: "bi-exclamation-triangle-fill" },
   { value: "Normal", label: "Normal", color: "success", icon: "bi-circle-fill" },
   { value: "Basse", label: "Basse", color: "info", icon: "bi-arrow-down-circle-fill" },
-  ...["1", "2", "3", "4", "5"].map((n) => ({ value: n, label: n, color: "secondary", icon: "bi-circle" })),
 ];
+// Anciennes priorités numériques (1 à 5) encore présentes en base : affichées « À reclasser (n) »,
+// jamais proposées à la saisie. La valeur stockée reste inchangée tant qu'on ne la modifie pas.
+const LEGACY_PRIORITIES = ["1", "2", "3", "4", "5"].map((n) => ({
+  value: n,
+  label: `À reclasser (${n})`,
+  color: "secondary",
+  icon: "bi-question-circle",
+}));
 
 export const CLIENT_STATUSES = [
   { value: "Actif", label: "Actif", color: "success" },
@@ -46,7 +59,10 @@ export const CLIENT_STATUSES = [
 
 const byValue = (list) => Object.fromEntries(list.map((item) => [item.value, item]));
 export const STATUS_BY_VALUE = byValue(STATUSES);
-export const PRIORITY_BY_VALUE = { ...byValue(PRIORITIES), Bas: byValue(PRIORITIES).Basse };
+export const PRIORITY_BY_VALUE = { ...byValue(PRIORITIES), ...byValue(LEGACY_PRIORITIES), Bas: byValue(PRIORITIES).Basse };
+// Libellés affichés (étape, priorité) à partir des valeurs stockées
+export const statusLabel = (value) => STATUS_BY_VALUE[value]?.label ?? String(value ?? "");
+export const priorityLabel = (value) => PRIORITY_BY_VALUE[value]?.label ?? String(value ?? "");
 export const CLIENT_STATUS_BY_VALUE = byValue(CLIENT_STATUSES);
 
 // Options propres aux formulaires

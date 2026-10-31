@@ -1,16 +1,20 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import FormFields from "@/components/ui/FormFields.vue";
 import { contactsApi, errorMessage } from "@/api";
-import { CONTACT_FIELDS, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { CONTACT_FIELDS } from "@/constants/forms";
+// Contrôle aussi le format des champs de type "email"
+import { validateForm } from "@/utils/forms";
+import { focusFirstInvalid } from "@/utils/focus";
 import { useUiStore } from "@/stores/ui";
+import { useAuthStore } from "@/stores/auth";
 import { fullName } from "@/utils/format";
 
 // Contacts d'un client : liste, ajout et modification dans une modale, suppression confirmée
 const props = defineProps({ clientId: { type: Number, required: true } });
 const ui = useUiStore();
+const auth = useAuthStore(); // suppression réservée aux admins (contrôlée aussi par le serveur)
 
 const contacts = ref([]);
 const loading = ref(true);
@@ -19,6 +23,9 @@ const editing = ref(null); // contact en cours de modification, null = création
 const form = ref({});
 const errors = ref({});
 const saving = ref(false);
+const formEl = ref(null);
+const snapshot = ref("{}"); // contenu à l'ouverture : détecte une saisie en cours
+const dirty = computed(() => JSON.stringify(form.value) !== snapshot.value);
 
 async function load() {
   loading.value = true;
@@ -36,13 +43,16 @@ function openForm(contact = null) {
   editing.value = contact;
   form.value = contact ? { ...contact } : { prenom: "", nom: "", telephone: "", email: "", poste: "" };
   errors.value = {};
+  snapshot.value = JSON.stringify(form.value);
   modalOpen.value = true;
 }
 
 async function save() {
   errors.value = validateForm(form.value, CONTACT_FIELDS);
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (Object.keys(errors.value).length) {
+    focusFirstInvalid(formEl.value);
+    return;
+  }
   saving.value = true;
   try {
     if (editing.value) await contactsApi.update(editing.value.id, form.value);
@@ -93,19 +103,19 @@ async function remove(contact) {
             {{ [contact.poste, contact.telephone, contact.email].filter(Boolean).join(" · ") }}
           </small>
         </div>
-        <div class="d-flex gap-1">
-          <button type="button" class="btn btn-sm btn-light btn-icon" aria-label="Modifier" @click="openForm(contact)">
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-light btn-icon" :aria-label="`Modifier ${fullName(contact, 'le contact')}`" title="Modifier" @click="openForm(contact)">
             <i class="bi bi-pencil"></i>
           </button>
-          <button type="button" class="btn btn-sm btn-light btn-icon text-danger" aria-label="Supprimer" @click="remove(contact)">
+          <button v-if="auth.isAdmin" type="button" class="btn btn-sm btn-light btn-icon text-danger" :aria-label="`Supprimer ${fullName(contact, 'le contact')}`" title="Supprimer" @click="remove(contact)">
             <i class="bi bi-trash"></i>
           </button>
         </div>
       </li>
     </ul>
 
-    <BaseModal v-model="modalOpen" :title="editing ? 'Modifier le contact' : 'Nouveau contact'">
-      <form id="contact-form" novalidate @submit.prevent="save">
+    <BaseModal v-model="modalOpen" :title="editing ? 'Modifier le contact' : 'Nouveau contact'" :dirty="dirty">
+      <form id="contact-form" ref="formEl" novalidate autocomplete="off" @submit.prevent="save">
         <FormFields v-model="form" :fields="CONTACT_FIELDS" :errors="errors" />
       </form>
       <template #footer="{ close }">

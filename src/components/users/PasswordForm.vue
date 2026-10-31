@@ -4,6 +4,7 @@ import { PASSWORD_MIN_LENGTH } from "@/constants/forms";
 import { useUsersStore } from "@/stores/users";
 import { useUiStore } from "@/stores/ui";
 import { errorMessage } from "@/api";
+import { focusFirstInvalid } from "@/utils/focus";
 
 // Changement de mot de passe. Pour son propre compte, le mot de passe actuel est exigé.
 const props = defineProps({
@@ -16,6 +17,12 @@ const ui = useUiStore();
 const form = ref({ currentPassword: "", newPassword: "", confirm: "" });
 const errors = ref({});
 const saving = ref(false);
+const formEl = ref(null);
+// Attributs ARIA : message d'erreur relié au champ (lu par le lecteur d'écran)
+const aria = (key, extra) => ({
+  "aria-invalid": errors.value[key] ? "true" : undefined,
+  "aria-describedby": [errors.value[key] && `${key}-error`, extra].filter(Boolean).join(" ") || undefined,
+});
 
 const strength = computed(() => {
   const p = form.value.newPassword;
@@ -32,7 +39,10 @@ async function submit() {
   if (props.requireCurrent && !form.value.currentPassword) errors.value.currentPassword = "Obligatoire";
   if (form.value.newPassword.length < PASSWORD_MIN_LENGTH) errors.value.newPassword = `Au moins ${PASSWORD_MIN_LENGTH} caractères`;
   if (form.value.newPassword !== form.value.confirm) errors.value.confirm = "Les mots de passe ne correspondent pas";
-  if (Object.keys(errors.value).length) return;
+  if (Object.keys(errors.value).length) {
+    focusFirstInvalid(formEl.value);
+    return;
+  }
 
   saving.value = true;
   try {
@@ -51,24 +61,24 @@ async function submit() {
 </script>
 
 <template>
-  <form class="card-panel" novalidate autocomplete="off" @submit.prevent="submit">
+  <form ref="formEl" class="card-panel" novalidate autocomplete="off" @submit.prevent="submit">
     <h2 class="panel-title mb-3">{{ requireCurrent ? "Changer mon mot de passe" : "Réinitialiser le mot de passe" }}</h2>
     <div v-if="requireCurrent" class="mb-3">
       <label for="pwd-current" class="form-label">Mot de passe actuel</label>
-      <input id="pwd-current" v-model="form.currentPassword" type="password" class="form-control" :class="{ 'is-invalid': errors.currentPassword }" autocomplete="current-password" />
-      <div class="invalid-feedback">{{ errors.currentPassword }}</div>
+      <input id="pwd-current" v-model="form.currentPassword" type="password" class="form-control" :class="{ 'is-invalid': errors.currentPassword }" autocomplete="current-password" v-bind="aria('currentPassword')" />
+      <div id="currentPassword-error" class="invalid-feedback">{{ errors.currentPassword }}</div>
     </div>
     <div class="mb-3">
       <label for="pwd-new" class="form-label">Nouveau mot de passe</label>
-      <input id="pwd-new" v-model="form.newPassword" type="password" class="form-control" :class="{ 'is-invalid': errors.newPassword }" autocomplete="new-password" />
-      <div class="invalid-feedback">{{ errors.newPassword }}</div>
+      <input id="pwd-new" v-model="form.newPassword" type="password" class="form-control" :class="{ 'is-invalid': errors.newPassword }" autocomplete="new-password" v-bind="aria('newPassword', 'pwd-new-hint')" />
+      <div id="newPassword-error" class="invalid-feedback">{{ errors.newPassword }}</div>
       <div class="password-meter mt-2" :data-score="strength" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-      <small class="text-muted">{{ PASSWORD_MIN_LENGTH }} caractères minimum ; mélangez majuscules, chiffres et symboles.</small>
+      <small id="pwd-new-hint" class="text-muted">{{ PASSWORD_MIN_LENGTH }} caractères minimum ; mélangez majuscules, chiffres et symboles.</small>
     </div>
     <div class="mb-3">
       <label for="pwd-confirm" class="form-label">Confirmer</label>
-      <input id="pwd-confirm" v-model="form.confirm" type="password" class="form-control" :class="{ 'is-invalid': errors.confirm }" autocomplete="new-password" />
-      <div class="invalid-feedback">{{ errors.confirm }}</div>
+      <input id="pwd-confirm" v-model="form.confirm" type="password" class="form-control" :class="{ 'is-invalid': errors.confirm }" autocomplete="new-password" v-bind="aria('confirm')" />
+      <div id="confirm-error" class="invalid-feedback">{{ errors.confirm }}</div>
     </div>
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn btn-outline-primary" :disabled="saving || !form.newPassword">

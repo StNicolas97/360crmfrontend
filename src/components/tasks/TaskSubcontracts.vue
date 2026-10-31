@@ -1,15 +1,19 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import FormFields from "@/components/ui/FormFields.vue";
 import { subcontractsApi, errorMessage } from "@/api";
-import { SUBCONTRACT_FIELDS, validateForm } from "@/constants/taskForms";
+import { SUBCONTRACT_FIELDS } from "@/constants/taskForms";
+import { validateForm } from "@/utils/forms";
+import { focusFirstInvalid } from "@/utils/focus";
 import { useUiStore } from "@/stores/ui";
+import { useAuthStore } from "@/stores/auth";
 import { formatDate, formatMoney } from "@/utils/format";
 
 // Travaux confiés à un sous-traitant pour une tâche donnée
 const props = defineProps({ taskId: { type: Number, required: true } });
 const ui = useUiStore();
+const auth = useAuthStore(); // suppression réservée aux admins (contrôlée aussi par le serveur)
 
 const items = ref([]);
 const loading = ref(true);
@@ -17,6 +21,8 @@ const modalOpen = ref(false);
 const form = ref({});
 const errors = ref({});
 const saving = ref(false);
+const formEl = ref(null);
+const dirty = computed(() => Object.values(form.value).some((value) => value !== null && value !== ""));
 
 async function load() {
   loading.value = true;
@@ -38,7 +44,10 @@ function openForm() {
 
 async function save() {
   errors.value = validateForm(form.value, SUBCONTRACT_FIELDS);
-  if (Object.keys(errors.value).length) return;
+  if (Object.keys(errors.value).length) {
+    focusFirstInvalid(formEl.value);
+    return;
+  }
   saving.value = true;
   try {
     await subcontractsApi.create({ ...form.value, idTache: props.taskId });
@@ -85,14 +94,14 @@ async function remove(item) {
             <template v-if="item.prix"> · {{ formatMoney(item.prix) }}</template>
           </small>
         </div>
-        <button type="button" class="btn btn-sm btn-light btn-icon text-danger" aria-label="Supprimer" @click="remove(item)">
+        <button v-if="auth.isAdmin" type="button" class="btn btn-sm btn-light btn-icon text-danger" :aria-label="`Supprimer « ${item.titre} »`" title="Supprimer" @click="remove(item)">
           <i class="bi bi-trash"></i>
         </button>
       </li>
     </ul>
 
-    <BaseModal v-model="modalOpen" title="Ajouter de la sous-traitance" size="lg">
-      <form id="subcontract-form" novalidate @submit.prevent="save">
+    <BaseModal v-model="modalOpen" title="Ajouter de la sous-traitance" size="lg" :dirty="dirty">
+      <form id="subcontract-form" ref="formEl" novalidate @submit.prevent="save">
         <FormFields v-model="form" :fields="SUBCONTRACT_FIELDS" :errors="errors" />
       </form>
       <template #footer="{ close }">

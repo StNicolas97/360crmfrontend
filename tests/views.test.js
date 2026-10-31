@@ -31,7 +31,13 @@ vi.mock("@/api", () => {
     tasksApi: {
       listByType: vi.fn((endpoint) => Promise.resolve(endpoint === "ppf" ? [ppfRow] : endpoint === "lettrage" ? [lettrageRow] : [])),
       get: ok(detail),
-      calendar: ok([]),
+      // /tache/all : forme « tâche principale » (id = tâche, idPpf/idLett = sous-tâche).
+      // Le store admin utilise désormais cette seule route au lieu de /ppf + /lettrage + /affichage.
+      all: ok([
+        { ...ppfRow, id: 1, idPpf: 10, idTache: undefined },
+        { ...lettrageRow, id: 2, idLett: 20, idTache: undefined },
+      ]),
+      invoice: ok({ qboInvoiceId: "99", qboInvoiceNumber: "1001" }),
     },
     subcontractsApi: { byTask: ok([{ id: 1, titre: "Impression", sousTraitant: "Fournisseur", dateEnvoi: "2025-01-02" }]) },
     filesApi: { byTask: ok({ files: [] }) },

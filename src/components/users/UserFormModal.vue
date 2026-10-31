@@ -2,8 +2,10 @@
 import { ref, watch, computed } from "vue";
 import BaseModal from "@/components/ui/BaseModal.vue";
 import FormFields from "@/components/ui/FormFields.vue";
-import { USER_FIELDS, PASSWORD_MIN_LENGTH, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { USER_FIELDS, PASSWORD_MIN_LENGTH } from "@/constants/forms";
+// Contrôle aussi le format des champs de type "email"
+import { validateForm } from "@/utils/forms";
+import { focusFirstInvalid } from "@/utils/focus";
 import { useUsersStore } from "@/stores/users";
 import { useUiStore } from "@/stores/ui";
 import { errorMessage } from "@/api";
@@ -20,6 +22,8 @@ const blank = () => ({ prenom: "", nom: "", username: "", role: "employee", emai
 const form = ref(blank());
 const errors = ref({});
 const saving = ref(false);
+const formEl = ref(null);
+const dirty = computed(() => Object.entries(blank()).some(([key, value]) => String(form.value[key] ?? "") !== String(value ?? "")));
 
 watch(open, (isOpen) => {
   if (isOpen) {
@@ -33,8 +37,10 @@ async function submit() {
   if (form.value.password && form.value.password.length < PASSWORD_MIN_LENGTH) {
     errors.value.password = `Au moins ${PASSWORD_MIN_LENGTH} caractères`;
   }
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (Object.keys(errors.value).length) {
+    focusFirstInvalid(formEl.value);
+    return;
+  }
 
   saving.value = true;
   try {
@@ -50,8 +56,8 @@ async function submit() {
 </script>
 
 <template>
-  <BaseModal v-model="open" title="Nouvel employé" size="lg">
-    <form id="user-form" novalidate autocomplete="off" @submit.prevent="submit">
+  <BaseModal v-model="open" title="Nouvel employé" size="lg" :dirty="dirty">
+    <form id="user-form" ref="formEl" novalidate autocomplete="off" @submit.prevent="submit">
       <FormFields v-model="form" :fields="fields" :errors="errors" />
     </form>
     <template #footer="{ close }">

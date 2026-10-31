@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useRouter } from "vue-router";
 import PageHeader from "@/components/ui/PageHeader.vue";
 import FormFields from "@/components/ui/FormFields.vue";
 import StatusBadge from "@/components/ui/StatusBadge.vue";
@@ -8,13 +8,12 @@ import ErrorState from "@/components/ui/ErrorState.vue";
 import TaskTable from "@/components/tasks/TaskTable.vue";
 import ClientContacts from "@/components/clients/ClientContacts.vue";
 import EmailModal from "@/components/shared/EmailModal.vue";
-import { clientsApi, errorMessage } from "@/api";
-import { CLIENT_FIELDS, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { errorMessage } from "@/api";
+import { CLIENT_FIELDS } from "@/constants/forms";
+import { useEditableRecord } from "@/composables/useEditableRecord";
 import { useClientsStore } from "@/stores/clients";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
-import { normalizeTask, uniqueTasks } from "@/utils/task";
 import { clientLabel, fullName } from "@/utils/format";
 
 const props = defineProps({ id: { type: [String, Number], required: true } });
@@ -25,52 +24,51 @@ const clients = useClientsStore();
 const auth = useAuthStore();
 const ui = useUiStore();
 
-const client = ref(null);
-const form = ref({});
-const errors = ref({});
+// client = version enregistrée, form = version en cours d'édition (voir useEditableRecord)
+const { record: client, form, errors, dirty, setRecord, cancel, validate, payload, discard } = useEditableRecord(CLIENT_FIELDS);
 const tasks = ref([]);
+const tasksError = ref(null);
 const loading = ref(true);
-const loadingTasks = ref(true);
+const loadingTasks = ref(false);
 const loadError = ref(null);
 const saving = ref(false);
 const emailOpen = ref(false);
 
-const dirty = computed(
-  () => client.value && CLIENT_FIELDS.some((f) => String(form.value[f.key] ?? "") !== String(client.value[f.key] ?? ""))
-);
+async function loadTasks() {
+  loadingTasks.value = true;
+  tasksError.value = null;
+  try {
+    tasks.value = await clients.tasksOf(clientId.value);
+  } catch (e) {
+    tasks.value = [];
+    tasksError.value = errorMessage(e, "Impossible de charger les tâches du client");
+  } finally {
+    loadingTasks.value = false;
+  }
+}
 
 async function load() {
   loading.value = true;
   loadError.value = null;
   try {
-    client.value = await clientsApi.get(clientId.value);
-    form.value = { ...client.value };
+    setRecord(await clients.fetchOne(clientId.value));
   } catch (e) {
     loadError.value = errorMessage(e, "Client introuvable");
+    return; // fiche introuvable : inutile de charger ses tâches
   } finally {
     loading.value = false;
   }
-  loadingTasks.value = true;
-  try {
-    tasks.value = uniqueTasks((await clientsApi.tasks(clientId.value)).map(normalizeTask));
-  } catch {
-    tasks.value = [];
-  } finally {
-    loadingTasks.value = false;
-  }
+  await loadTasks();
 }
 onMounted(load);
 
 async function save() {
-  errors.value = validateForm(form.value, CLIENT_FIELDS);
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (!validate()) return;
   saving.value = true;
   try {
-    const payload = Object.fromEntries(CLIENT_FIELDS.map((f) => [f.key, form.value[f.key]]));
-    const response = await clients.update(clientId.value, payload);
-    client.value = response.client ?? { ...client.value, ...payload };
-    form.value = { ...client.value };
+    const values = payload();
+    const response = await clients.update(clientId.value, values);
+    setRecord(response.client ?? { ...client.value, ...values });
     ui.notify("Client mis à jour");
   } catch (e) {
     ui.notifyError(errorMessage(e, "La mise à jour a échoué"));
@@ -89,17 +87,12 @@ async function remove() {
   try {
     await clients.remove(clientId.value);
     ui.notify("Client supprimé");
-    client.value = null;
+    discard();
     router.replace({ name: "clients" });
   } catch (e) {
     ui.notifyError(errorMessage(e, "La suppression a échoué"));
   }
 }
-
-onBeforeRouteLeave(async () =>
-  !dirty.value ||
-  ui.confirm({ title: "Modifications non enregistrées", message: "Quitter sans enregistrer ?", confirmLabel: "Quitter", variant: "warning" })
-);
 </script>
 
 <template>
@@ -138,7 +131,7 @@ onBeforeRouteLeave(async () =>
           <h2 class="panel-title mb-3">Coordonnées</h2>
           <FormFields v-model="form" :fields="CLIENT_FIELDS" :errors="errors" />
           <div class="d-flex justify-content-end gap-2 mt-3">
-            <button type="button" class="btn btn-light" :disabled="!dirty" @click="form = { ...client }">Annuler</button>
+            <button type="button" class="btn btn-light" :disabled="!dirty" @click="cancel">Annuler</button>
             <button type="submit" class="btn btn-primary" :disabled="!dirty || saving">
               <span v-if="saving" class="spinner-border spinner-border-sm me-1"></span>Enregistrer
             </button>
@@ -149,7 +142,8 @@ onBeforeRouteLeave(async () =>
 
       <section class="mt-4">
         <h2 class="panel-title mb-3">Tâches du client</h2>
-        <TaskTable :tasks="tasks" :loading="loadingTasks" :show-filters="tasks.length > 5" empty-text="Aucune tâche pour ce client" />
+        <ErrorState v-if="tasksError" :message="tasksError" @retry="loadTasks" />
+        <TaskTable v-else :tasks="tasks" :loading="loadingTasks" :show-filters="tasks.length > 5" empty-text="Aucune tâche pour ce client" />
       </section>
 
       <EmailModal v-model="emailOpen" :recipient="client.email || ''" :name="fullName(client, '')" />

@@ -16,6 +16,7 @@ const clients = useClientsStore();
 const router = useRouter();
 const createOpen = ref(false);
 
+// Échec visible : la vue affiche ErrorState à partir de clients.error
 onMounted(() => clients.fetch().catch(() => {}));
 
 const table = useTable(

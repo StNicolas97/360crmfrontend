@@ -1,12 +1,12 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import PageHeader from "@/components/ui/PageHeader.vue";
 import FormFields from "@/components/ui/FormFields.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
 import PasswordForm from "@/components/users/PasswordForm.vue";
-import { usersApi, errorMessage } from "@/api";
-import { USER_FIELDS, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { errorMessage } from "@/api";
+import { USER_FIELDS } from "@/constants/forms";
+import { useEditableRecord } from "@/composables/useEditableRecord";
 import { useAuthStore } from "@/stores/auth";
 import { useUsersStore } from "@/stores/users";
 import { useUiStore } from "@/stores/ui";
@@ -17,21 +17,19 @@ const users = useUsersStore();
 const ui = useUiStore();
 
 const fields = USER_FIELDS.filter((f) => !["role", "username"].includes(f.key));
-const profile = ref(null);
-const form = ref({});
-const errors = ref({});
+// profile = version enregistrée, form = version en cours d'édition ; gagne la garde de sortie et l'annulation
+const { record: profile, form, errors, dirty, setRecord, cancel, validate, payload: editedValues, commit } = useEditableRecord(fields);
 const loading = ref(true);
 const loadError = ref(null);
 const saving = ref(false);
 
-const dirty = computed(() => profile.value && fields.some((f) => String(form.value[f.key] ?? "") !== String(profile.value[f.key] ?? "")));
 
 async function load() {
   loading.value = true;
   loadError.value = null;
   try {
-    profile.value = await usersApi.get(auth.user.id);
-    form.value = { ...profile.value, couleur: profile.value.couleur || "#6c757d" };
+    const found = await users.fetchOne(auth.user.id);
+    setRecord({ ...found, couleur: found.couleur || "#6c757d" });
   } catch (e) {
     loadError.value = errorMessage(e, "Impossible de charger votre profil");
   } finally {
@@ -41,14 +39,12 @@ async function load() {
 onMounted(load);
 
 async function save() {
-  errors.value = validateForm(form.value, fields);
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (!validate()) return;
   saving.value = true;
   try {
-    const payload = Object.fromEntries(fields.map((f) => [f.key, form.value[f.key]]));
+    const payload = editedValues();
     await users.update(auth.user.id, payload);
-    profile.value = { ...profile.value, ...payload };
+    commit(payload);
     auth.updateLocalUser({ nom: payload.nom, prenom: payload.prenom });
     ui.notify("Profil mis à jour");
   } catch (e) {
@@ -69,6 +65,7 @@ async function save() {
         <h2 class="panel-title mb-3">Mes informations</h2>
         <FormFields v-model="form" :fields="fields" :errors="errors" />
         <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-light" :disabled="!dirty" @click="cancel">Annuler</button>
           <button type="submit" class="btn btn-primary" :disabled="!dirty || saving">
             <span v-if="saving" class="spinner-border spinner-border-sm me-1"></span>Enregistrer
           </button>

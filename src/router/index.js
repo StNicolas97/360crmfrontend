@@ -17,7 +17,7 @@ const routes = [
       { path: "", redirect: { name: "dashboard" } },
       { path: "tableau-de-bord", name: "dashboard", component: () => import("../views/DashboardView.vue"), meta: { title: "Tableau de bord" } },
       { path: "calendrier", name: "calendar", component: () => import("../views/CalendarView.vue"), meta: { title: "Calendrier" } },
-      { path: "production", name: "kanban", component: () => import("../views/KanbanView.vue"), meta: { title: "Production" } },
+      { path: "production", name: "kanban", component: () => import("../views/KanbanView.vue"), meta: { title: "Tableau de production" } },
       { path: "mes-taches", name: "my-tasks", component: () => import("../views/TasksView.vue"), props: { scope: "mine" }, meta: { title: "Mes tâches" } },
       { path: "taches", name: "tasks", component: () => import("../views/TasksView.vue"), props: { scope: "all" }, meta: { title: "Tâches", roles: ADMIN } },
       { path: "leads", name: "leads", component: () => import("../views/TasksView.vue"), props: { scope: "leads" }, meta: { title: "Leads", roles: ADMIN } },

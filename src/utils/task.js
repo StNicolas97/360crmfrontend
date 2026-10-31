@@ -1,4 +1,4 @@
-import { typeKey, NOT_LATE_STATUSES, CLOSED_STATUS } from "@/constants/task";
+import { typeKey, NOT_LATE_STATUSES, CLOSED_STATUS, PPF_COUVERTURES } from "@/constants/task";
 import { daysFromToday, toISODate } from "./format";
 
 // Les différentes routes de l'API renvoient des tâches de formes différentes :
@@ -41,6 +41,15 @@ export function isDueToday(task) {
 }
 
 export const isUrgent = (task) => task.priorite === "Urgent" && !isClosed(task);
+
+// Titre affiché : pour un PPF, le titre stocké est la valeur technique de la couverture
+// (« Argentp », « teintées »…) ; on affiche son libellé (« Kit Argent + », « Vitres teintées »).
+const COUVERTURE_LABELS = Object.fromEntries(PPF_COUVERTURES.map((c) => [c.value, c.label]));
+export function taskTitle(task) {
+  if (!task) return "";
+  const titre = task.titre ?? "";
+  return (task.type === "ppf" && COUVERTURE_LABELS[titre]) || titre || "Sans titre";
+}
 
 // Route de la fiche d'une tâche
 export function taskRoute(task) {

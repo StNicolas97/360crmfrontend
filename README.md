@@ -17,7 +17,7 @@ calendrier, fiches clients, gestion des employés et suivi des pertes de matéri
 
 ## Stack
 
-**Vue 3** · **Vite** · **Pinia** · **Vue Router** · **Axios** · **Bootstrap 5** · **Sass** · **FullCalendar** · **Vitest**
+**Vue 3** · **Vite** · **Pinia** · **Vue Router** · **Axios** · **Bootstrap 5** · **FullCalendar** · **Vitest**
 
 ## Compétences mises en œuvre
 
@@ -37,3 +37,20 @@ npm install
 cp .env.example .env.local   # définir VITE_API_URL
 npm run dev
 ```
+
+## Build de production
+
+`VITE_API_URL` est **obligatoire** au build de production : sans elle, `vite build` échoue
+(plus d'adresse d'API de secours codée en dur). Node 22 est requis (`engines`).
+
+```bash
+# Build réel : l'adresse de l'API est fournie par l'hébergeur (Render) ou la CI
+VITE_API_URL=https://api.exemple.com npm run build
+
+# Build local de vérification uniquement
+VITE_API_URL=http://localhost:3000 npm run build
+```
+
+- `render.yaml` : site statique Render (`npm ci && npm run build`, publication de `dist`, réécriture SPA, cache `/assets/*`).
+- `public/_redirects` : réécriture SPA conservée pour les hébergeurs compatibles Netlify.
+- `.github/workflows/ci.yml` : tests et build de vérification (adresse d'API factice) à chaque push.

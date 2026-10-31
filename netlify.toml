@@ -1,0 +1,36 @@
+# Configuration Netlify du frontend (site statique Vue/Vite).
+# Les valeurs de ce fichier s'appliquent à tous les contextes : production, Deploy Previews, branches.
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Adresse publique de l'API (Render). Pas un secret : elle figure dans le JavaScript livré.
+  VITE_API_URL = "https://three60crmbackend-s0qd.onrender.com"
+
+# Application à page unique : même rôle que public/_redirects
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Fichiers de build nommés avec une empreinte : cache long et immuable
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# index.html toujours revalidé : un nouveau déploiement est pris en compte immédiatement
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# En-têtes de sécurité impossibles en <meta> (voir index.html)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1,18 +1,17 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useRouter } from "vue-router";
 import PageHeader from "@/components/ui/PageHeader.vue";
 import FormFields from "@/components/ui/FormFields.vue";
 import ErrorState from "@/components/ui/ErrorState.vue";
 import TaskTable from "@/components/tasks/TaskTable.vue";
 import PasswordForm from "@/components/users/PasswordForm.vue";
-import { usersApi, errorMessage } from "@/api";
-import { USER_FIELDS, EMAIL_PATTERN } from "@/constants/forms";
-import { validateForm } from "@/constants/taskForms";
+import { errorMessage } from "@/api";
+import { USER_FIELDS } from "@/constants/forms";
+import { useEditableRecord } from "@/composables/useEditableRecord";
 import { useUsersStore } from "@/stores/users";
 import { useAuthStore } from "@/stores/auth";
 import { useUiStore } from "@/stores/ui";
-import { normalizeTask, uniqueTasks } from "@/utils/task";
 import { fullName } from "@/utils/format";
 
 // Fiche employé (administrateur)
@@ -24,25 +23,23 @@ const users = useUsersStore();
 const auth = useAuthStore();
 const ui = useUiStore();
 
-const user = ref(null);
-const form = ref({});
-const errors = ref({});
+// user = version enregistrée, form = version en cours d'édition (voir useEditableRecord)
+const { record: user, form, errors, dirty, setRecord, validate, payload: editedValues, commit, discard } = useEditableRecord(USER_FIELDS);
 const tasks = ref([]);
 const loading = ref(true);
 const loadError = ref(null);
 const saving = ref(false);
 
 const isSelf = computed(() => userId.value === auth.user?.id);
-const dirty = computed(() => user.value && USER_FIELDS.some((f) => String(form.value[f.key] ?? "") !== String(user.value[f.key] ?? "")));
 
 async function load() {
   loading.value = true;
   loadError.value = null;
   try {
-    const [found, rawTasks] = await Promise.all([usersApi.get(userId.value), usersApi.tasks(userId.value)]);
-    user.value = found;
-    form.value = { ...found, couleur: found.couleur || "#6c757d" };
-    tasks.value = uniqueTasks(rawTasks.map(normalizeTask));
+    const [found, list] = await Promise.all([users.fetchOne(userId.value), users.tasksOf(userId.value)]);
+    // Couleur par défaut appliquée à la version enregistrée : la fiche n'apparaît pas « modifiée » à l'ouverture
+    setRecord({ ...found, couleur: found.couleur || "#6c757d" });
+    tasks.value = list;
   } catch (e) {
     loadError.value = errorMessage(e, "Employé introuvable");
   } finally {
@@ -52,15 +49,12 @@ async function load() {
 onMounted(load);
 
 async function save() {
-  errors.value = validateForm(form.value, USER_FIELDS);
-  if (form.value.email && !EMAIL_PATTERN.test(form.value.email)) errors.value.email = "Courriel invalide";
-  if (Object.keys(errors.value).length) return;
+  if (!validate()) return;
   saving.value = true;
   try {
-    const payload = Object.fromEntries(USER_FIELDS.map((f) => [f.key, form.value[f.key]]));
+    const payload = editedValues();
     await users.update(userId.value, payload);
-    user.value = { ...user.value, ...payload };
-    form.value = { ...user.value };
+    commit(payload);
     if (isSelf.value) auth.updateLocalUser({ nom: payload.nom, prenom: payload.prenom });
     ui.notify("Employé mis à jour");
   } catch (e) {
@@ -80,17 +74,13 @@ async function remove() {
   try {
     await users.remove(userId.value);
     ui.notify("Employé supprimé");
-    user.value = null;
+    discard();
     router.replace({ name: "users" });
   } catch (e) {
     ui.notifyError(errorMessage(e, "La suppression a échoué"));
   }
 }
 
-onBeforeRouteLeave(async () =>
-  !dirty.value ||
-  ui.confirm({ title: "Modifications non enregistrées", message: "Quitter sans enregistrer ?", confirmLabel: "Quitter", variant: "warning" })
-);
 </script>
 
 <template>
